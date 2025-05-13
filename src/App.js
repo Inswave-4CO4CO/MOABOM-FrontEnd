@@ -10,9 +10,9 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 const App = () => {
   return (
-    <ChakraProvider>
+    <ChakraProvider value={defaultSystem}>
       <Router>
-        <GlobalStyle value={defaultSystem} />
+        <GlobalStyle />
         <Header />
         <Navbar />
         <Routes>

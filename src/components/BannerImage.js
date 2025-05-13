@@ -1,24 +1,9 @@
-import { Heading, Stack, Text } from "@chakra-ui/react";
-import styled from "styled-components";
-
-const Image = styled.img`
-  opacity: 0.7;
-  object-fit: cover;
-  width: 100%;
-  max-height: 650px;
-  object-position: center;
-`;
-
-const BannerImageContainer = styled.div`
-  position: relative;
-`;
-
-const TextContainer = styled(Stack)`
-  position: absolute;
-  top: ${(props) => (props.$isDetail ? "65%" : "75%")};
-  left: 8%;
-  color: white;
-`;
+import { Heading, Text } from "@chakra-ui/react";
+import {
+  BannerImageContainer,
+  Image,
+  TextContainer,
+} from "../styles/components/BannerImage";
 
 const BannerImage = ({
   rating,
