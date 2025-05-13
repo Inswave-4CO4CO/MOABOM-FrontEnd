@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { CountSpan, TextContainer, TextSpan } from "../styles/components/Text";
 
 export const Text = ({ text, count }) => {
   return (
@@ -8,15 +8,3 @@ export const Text = ({ text, count }) => {
     </TextContainer>
   );
 };
-
-const TextContainer = styled.div`
-  font-weight: bold;
-`;
-const TextSpan = styled.span`
-  font-size: 20px;
-`;
-const CountSpan = styled.span`
-  color: #ffa07a;
-  position: relative;
-  bottom: 0.2em;
-`;

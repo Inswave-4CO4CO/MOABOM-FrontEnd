@@ -6,31 +6,23 @@ import ProfilePage from "./pages/ProfilePage";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import GlobalStyle from "./styles/GlobalStyle";
-import { Footer } from "./components/Footer";
-import { ProfileIcon } from "./components/ProfileIcon";
-import { Text } from "./components/Text";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 const App = () => {
   return (
-    <Router>
-      <GlobalStyle />
-      <Header />
-      <Navbar />
-      <ProfileIcon
-        imagePath={"image/kimheewon.png"}
-        name={"김희원"}
-        role={"주연"}
-        cast={"약선"}
-      />
+    <ChakraProvider value={defaultSystem}>
+      <Router>
+        <GlobalStyle />
+        <Header />
+        <Navbar />
 
-      <Text text={"넷플릭스"} count={5} />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-      </Routes>
-      <Footer />
-    </Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Routes>
+      </Router>
+    </ChakraProvider>
   );
 };
 
