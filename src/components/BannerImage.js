@@ -15,7 +15,7 @@ const BannerImageContainer = styled.div`
 
 const TextContainer = styled(Stack)`
   position: absolute;
-  top: 70%;
+  top: 65%;
   left: 8%;
   color: white;
 `;
@@ -33,13 +33,14 @@ const BannerImage = ({
   ageRating,
   releaseDate,
   imdbRating,
-  isDetail,
+  isDetail = false,
 }) => {
   // rating 추후 추가 예정
   return (
     <BannerImageContainer>
       <Image src={src} />
       <TextContainer gap="1">
+        {isDetail && <Title size="4xl">{rating}</Title>}
         <Title size="6xl">{title}</Title>
         {isDetail && (
           <>
@@ -49,7 +50,9 @@ const BannerImage = ({
             <Text textStyle="lg">
               {runningTime} · {ageRating}
             </Text>
-            <Text textStyle="lg">{releaseDate}</Text>
+            <Text textStyle="lg">
+              {releaseDate} · {imdbRating}
+            </Text>
           </>
         )}
       </TextContainer>
