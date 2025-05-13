@@ -1,4 +1,4 @@
-import { Heading } from "@chakra-ui/react";
+import { Heading, Stack, Text } from "@chakra-ui/react";
 import styled from "styled-components";
 
 const Image = styled.img`
@@ -13,18 +13,46 @@ const BannerImageContainer = styled.div`
   position: relative;
 `;
 
-const Title = styled(Heading)`
-  color: white;
+const TextContainer = styled(Stack)`
   position: absolute;
-  top: 75%;
-  left: 10%;
+  top: 70%;
+  left: 8%;
+  color: white;
 `;
 
-const BannerImage = ({ src, title }) => {
+const Title = styled(Heading)``;
+
+const BannerImage = ({
+  rating,
+  src,
+  title,
+  genre,
+  category,
+  madeIn,
+  runningTime,
+  ageRating,
+  releaseDate,
+  imdbRating,
+  isDetail,
+}) => {
+  // rating 추후 추가 예정
   return (
     <BannerImageContainer>
       <Image src={src} />
-      <Title size="6xl">{title}</Title>
+      <TextContainer gap="1">
+        <Title size="6xl">{title}</Title>
+        {isDetail && (
+          <>
+            <Text textStyle="lg">
+              {genre}, {category} · {madeIn}
+            </Text>
+            <Text textStyle="lg">
+              {runningTime} · {ageRating}
+            </Text>
+            <Text textStyle="lg">{releaseDate}</Text>
+          </>
+        )}
+      </TextContainer>
     </BannerImageContainer>
   );
 };
