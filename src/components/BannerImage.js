@@ -15,12 +15,10 @@ const BannerImageContainer = styled.div`
 
 const TextContainer = styled(Stack)`
   position: absolute;
-  top: 65%;
+  top: ${(props) => (props.$isDetail ? "65%" : "75%")};
   left: 8%;
   color: white;
 `;
-
-const Title = styled(Heading)``;
 
 const BannerImage = ({
   rating,
@@ -39,9 +37,9 @@ const BannerImage = ({
   return (
     <BannerImageContainer>
       <Image src={src} />
-      <TextContainer gap="1">
-        {isDetail && <Title size="4xl">{rating}</Title>}
-        <Title size="6xl">{title}</Title>
+      <TextContainer $isDetail={isDetail} gap="1">
+        {isDetail && <Heading size="4xl">{rating}</Heading>}
+        <Heading size="6xl">{title}</Heading>
         {isDetail && (
           <>
             <Text textStyle="lg">
