@@ -6,11 +6,11 @@ import ProfilePage from "./pages/ProfilePage";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import GlobalStyle from "./styles/GlobalStyle";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 
 const App = () => {
   return (
-    <ChakraProvider>
+    <ChakraProvider value={defaultSystem}>
       <Router>
         <GlobalStyle />
         <Header />
