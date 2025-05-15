@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import MoabomLogo from "../assets/svg/모아봄.svg";
+import MoabomLogo from "../assets/svg/moabom.svg";
 import BodyButton from "../components/BodyButton";
 import { PasswordInput } from "../components/ui/password-input";
 import { LoginContainer } from "../styles/pages/LoginPage";
