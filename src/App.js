@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import GlobalStyle from "./styles/GlobalStyle";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { ContentDetailPage } from "./pages/ContentDetailPage";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/detail" element={<ContentDetailPage />} />
         </Routes>
       </Router>
     </ChakraProvider>

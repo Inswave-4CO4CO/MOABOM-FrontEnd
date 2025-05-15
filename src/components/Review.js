@@ -15,15 +15,7 @@ import {
   Icon,
 } from "../styles/components/Review";
 
-export const Review = ({
-  imagePath,
-  nickname,
-  date,
-  text,
-  rating,
-  title,
-  isUser,
-}) => {
+const Review = ({ imagePath, nickname, date, text, rating, title, isUser }) => {
   return (
     <ReviewContainer>
       <ReviewHeader>
@@ -64,3 +56,5 @@ export const Review = ({
     </ReviewContainer>
   );
 };
+
+export default Review;

@@ -4,7 +4,7 @@ import {
   ProfileName,
 } from "../styles/components/ProfileIcon";
 
-export const ProfileIcon = ({ imagePath, name, role, cast }) => {
+const ProfileIcon = ({ imagePath, name, role, cast }) => {
   return (
     <ProfileContainer>
       <ProfileImage src={imagePath} alt={name} />
@@ -16,3 +16,5 @@ export const ProfileIcon = ({ imagePath, name, role, cast }) => {
     </ProfileContainer>
   );
 };
+
+export default ProfileIcon;

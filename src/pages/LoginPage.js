@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import Button from '../components/Button';
+import React, { useState } from "react";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = () => {
     // 로그인 처리 로직
-    console.log('Logging in with', email, password);
+    console.log("Logging in with", email, password);
   };
 
   return (
@@ -25,7 +24,6 @@ const LoginPage = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button onClick={handleLogin}>Login</Button>
     </div>
   );
 };
