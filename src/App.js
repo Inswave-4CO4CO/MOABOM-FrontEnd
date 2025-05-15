@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import GlobalStyle from "./styles/GlobalStyle";
 import { Button, ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import HeaderButton from "./components/HeaderButton";
+import SignupPage from "./pages/SignupPage";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/signup" element={<SignupPage />} />
         </Routes>
       </Router>
     </ChakraProvider>

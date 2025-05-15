@@ -17,6 +17,7 @@ import MoabomLogo from "../assets/svg/모아봄.svg";
 import GoogleLogo from "../assets/images/Google.png";
 import BodyButton from "../components/BodyButton";
 import { PasswordInput } from "../components/ui/password-input";
+import { useNavigate } from "react-router-dom";
 
 const LoginContainer = styled(Box)`
   margin-top: 20px;
@@ -51,6 +52,8 @@ const LoginPage = () => {
     console.log("Logging in with", email, password);
   };
 
+  const navigate = useNavigate();
+
   return (
     <Center>
       <Stack spacing={2}>
@@ -62,15 +65,11 @@ const LoginPage = () => {
             <form style={{ width: "100%" }} onSubmit={handleLogin}>
               <VStack spacing={4} align="stretch">
                 <Text>아이디</Text>
-                <Group attached w="full" maxW="sm">
-                  <Input
-                    size="lg"
-                    style={{ backgroundColor: "white", borderRadius: "10px" }}
-                    flex="1"
-                    placeholder="아이디"
-                  />
-                  <BodyButton size="lg">아이디 확인</BodyButton>
-                </Group>
+                <Input
+                  size="lg"
+                  style={{ backgroundColor: "white", borderRadius: "10px" }}
+                  placeholder="아이디"
+                />
                 <Text>비밀번호</Text>
                 <PasswordInput
                   size="lg"
@@ -109,7 +108,10 @@ const LoginPage = () => {
                 비밀번호 찾기
               </Text>
               <Text>|</Text>
-              <Text _hover={{ textDecoration: "underline", cursor: "pointer" }}>
+              <Text
+                _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                onClick={() => navigate("/signup")}
+              >
                 회원가입
               </Text>
             </HStack>
