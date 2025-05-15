@@ -1,5 +1,4 @@
 import {
-  Box,
   Center,
   Group,
   Image,
@@ -9,20 +8,10 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import styled from "styled-components";
 import MoabomLogo from "../assets/svg/모아봄.svg";
 import BodyButton from "../components/BodyButton";
 import { PasswordInput } from "../components/ui/password-input";
-
-const LoginContainer = styled(Box)`
-  margin-top: 20px;
-  border: 1px solid #dcdcdc;
-  background-color: #fff8f0;
-  border-radius: 24px;
-  padding: 48px 36px 24px 36px;
-  min-width: 380px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-`;
+import { LoginContainer } from "../styles/pages/LoginPage";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
