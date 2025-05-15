@@ -5,7 +5,8 @@ import ProfilePage from "./pages/ProfilePage";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import GlobalStyle from "./styles/GlobalStyle";
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { Button, ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import HeaderButton from "./components/HeaderButton";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Router>
         <GlobalStyle />
         <Header />
+        <HeaderButton>안녕</HeaderButton>
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
