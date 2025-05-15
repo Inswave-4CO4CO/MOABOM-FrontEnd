@@ -1,8 +1,5 @@
 import {
-  Box,
-  Button,
   Center,
-  Group,
   HStack,
   Image,
   Input,
@@ -12,7 +9,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import styled from "styled-components";
 import MoabomLogo from "../assets/svg/모아봄.svg";
 import GoogleLogo from "../assets/images/Google.png";
 import BodyButton from "../components/BodyButton";
@@ -21,13 +17,13 @@ import { useNavigate } from "react-router-dom";
 import { LoginContainer, SocialButton } from "../styles/pages/LoginPage";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
     // 로그인 처리 로직
-    console.log("Logging in with", email, password);
+    console.log("Logging in with", userId, password);
   };
 
   const navigate = useNavigate();
