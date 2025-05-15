@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Button from '../components/Button';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +24,6 @@ const LoginPage = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Button onClick={handleLogin}>Login</Button>
     </div>
   );
 };

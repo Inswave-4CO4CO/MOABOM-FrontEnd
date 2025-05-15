@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import GlobalStyle from "./styles/GlobalStyle";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import BodyButton from "./components/BodyButton";
 
 const App = () => {
   return (
@@ -20,6 +21,8 @@ const App = () => {
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </Router>
+      <BodyButton width="150px">프로필 관리</BodyButton>
+      <BodyButton width="200px">OTT 추천받기</BodyButton>
     </ChakraProvider>
   );
 };
