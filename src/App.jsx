@@ -5,9 +5,11 @@ import ProfilePage from "./pages/ProfilePage";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
 import GlobalStyle from "./styles/GlobalStyle";
-import { Button, ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import HeaderButton from "./components/HeaderButton";
 import SignupPage from "./pages/SignupPage";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import BodyButton from "./components/BodyButton";
 
 const App = () => {
   return (
@@ -24,6 +26,8 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
         </Routes>
       </Router>
+      <BodyButton width="150px">프로필 관리</BodyButton>
+      <BodyButton width="200px">OTT 추천받기</BodyButton>
     </ChakraProvider>
   );
 };
