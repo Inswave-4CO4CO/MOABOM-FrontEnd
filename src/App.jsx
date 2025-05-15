@@ -8,7 +8,6 @@ import GlobalStyle from "./styles/GlobalStyle";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import HeaderButton from "./components/HeaderButton";
 import SignupPage from "./pages/SignupPage";
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import BodyButton from "./components/BodyButton";
 
 const App = () => {

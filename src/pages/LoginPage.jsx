@@ -9,12 +9,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import MoabomLogo from "../assets/svg/모아봄.svg";
+import MoabomLogo from "../assets/svg/moabom.svg";
 import GoogleLogo from "../assets/images/Google.png";
 import BodyButton from "../components/BodyButton";
-import { PasswordInput } from "../components/ui/password-input";
 import { useNavigate } from "react-router-dom";
 import { LoginContainer, SocialButton } from "../styles/pages/LoginPage";
+import { PasswordInput } from "../components/PasswordInput";
 
 const LoginPage = () => {
   const [userId, setUserId] = useState("");
