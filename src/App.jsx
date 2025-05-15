@@ -22,6 +22,8 @@ const App = () => {
           <Route path="/detail" element={<ContentDetailPage />} />
         </Routes>
       </Router>
+      <BodyButton width="150px">프로필 관리</BodyButton>
+      <BodyButton width="200px">OTT 추천받기</BodyButton>
     </ChakraProvider>
   );
 };
