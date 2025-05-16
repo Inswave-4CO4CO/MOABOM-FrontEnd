@@ -40,6 +40,7 @@ const SignupPage = () => {
   const { mutate: userIdCheck } = useMutation({
     mutationFn: checkId,
     onSuccess: (data) => {
+      console.log(data.available);
       if (data.available) {
         toast.success("사용 가능한 아이디입니다.");
         setIsIdChecked(true);

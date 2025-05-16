@@ -85,7 +85,7 @@ const LoginPage = () => {
             <HStack w="100%" align="center" color="#949494" spacing={4}>
               <Separator flex="1" borderColor="#e2e2e2" />
               <Text fontSize="sm" flexShrink={0}>
-                소셜로그인을 원한다면
+                소셜 로그인을 원한다면
               </Text>
               <Separator flex="1" borderColor="#e2e2e2" />
             </HStack>

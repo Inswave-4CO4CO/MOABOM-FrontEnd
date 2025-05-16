@@ -56,7 +56,8 @@ export const checkAuth = async () => {
  * @summary 아이디 중복확인
  * @returns
  */
-export const checkId = async ({ userId }) => {
+export const checkId = async (userId) => {
   const res = await baseInstance.post(DOMAIN.CHECK_ID, { userId });
+  console.log(userId, res);
   return res.data;
 };
