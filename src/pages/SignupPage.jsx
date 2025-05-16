@@ -12,15 +12,36 @@ import MoabomLogo from "../assets/svg/moabom.svg";
 import BodyButton from "../components/BodyButton";
 import { LoginContainer } from "../styles/pages/LoginPage";
 import { PasswordInput } from "../components/PasswordInput";
+import { signup } from "../services/auth";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 const SignupPage = () => {
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [nickname, setNickname] = useState("");
 
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+
+  const { mutate } = useMutation({
+    mutationFn: signup,
+    onSuccess: (data) => {
+      if (data) {
+        // todo: token 저장 로직
+        navigate("/login");
+      }
+      console.log(data);
+    },
+    onError: (e) => {
+      console.error(e);
+    },
+  });
+
+  const handleSignup = (e) => {
     e.preventDefault();
-    // 로그인 처리 로직
-    console.log("Logging in with", email, password);
+    mutate({ userId, password, nickname });
+    console.log("Signup in with", userId, password, passwordConfirm, nickname);
   };
 
   return (
@@ -31,7 +52,7 @@ const SignupPage = () => {
         </Center>
         <LoginContainer>
           <VStack spacing={8}>
-            <form style={{ width: "100%" }} onSubmit={handleLogin}>
+            <form style={{ width: "100%" }} onSubmit={handleSignup}>
               <VStack spacing={4} align="stretch">
                 <Text>아이디</Text>
                 <Group attached w="full" maxW="sm">
@@ -40,6 +61,7 @@ const SignupPage = () => {
                     style={{ backgroundColor: "white", borderRadius: "10px" }}
                     flex="1"
                     placeholder="아이디"
+                    onChange={(e) => setUserId(e.target.value)}
                   />
                   <BodyButton size="lg">아이디 확인</BodyButton>
                 </Group>
@@ -48,18 +70,21 @@ const SignupPage = () => {
                   size="lg"
                   style={{ backgroundColor: "white", borderRadius: "10px" }}
                   placeholder="비밀번호"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <Text>비밀번호 확인</Text>
                 <PasswordInput
                   size="lg"
                   style={{ backgroundColor: "white", borderRadius: "10px" }}
                   placeholder="비밀번호 확인"
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
                 />
                 <Text>닉네임</Text>
                 <Input
                   size="lg"
                   style={{ backgroundColor: "white", borderRadius: "10px" }}
                   placeholder="닉네임"
+                  onChange={(e) => setNickname(e.target.value)}
                 />
                 <BodyButton
                   style={{ width: "100%", margin: "10px 0" }}

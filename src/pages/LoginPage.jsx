@@ -15,18 +15,36 @@ import BodyButton from "../components/BodyButton";
 import { useNavigate } from "react-router-dom";
 import { LoginContainer, SocialButton } from "../styles/pages/LoginPage";
 import { PasswordInput } from "../components/PasswordInput";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../services/auth";
 
 const LoginPage = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const { mutate } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      if (data) {
+        // todo: token 저장 로직
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        navigate("/");
+      }
+      console.log(data);
+    },
+    onError: (e) => {
+      console.error(e);
+    },
+  });
 
   const handleLogin = (e) => {
     e.preventDefault();
     // 로그인 처리 로직
+    mutate({ userId, password });
     console.log("Logging in with", userId, password);
   };
-
-  const navigate = useNavigate();
 
   return (
     <Center>
@@ -43,12 +61,14 @@ const LoginPage = () => {
                   size="lg"
                   style={{ backgroundColor: "white", borderRadius: "10px" }}
                   placeholder="아이디"
+                  onChange={(e) => setUserId(e.target.value)}
                 />
                 <Text>비밀번호</Text>
                 <PasswordInput
                   size="lg"
                   style={{ backgroundColor: "white", borderRadius: "10px" }}
                   placeholder="비밀번호"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <BodyButton
                   style={{ width: "100%", margin: "10px 0" }}

@@ -9,25 +9,40 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import HeaderButton from "./components/HeaderButton";
 import SignupPage from "./pages/SignupPage";
 import BodyButton from "./components/BodyButton";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 0,
+    },
+    mutations: {
+      retry: 0,
+    },
+  },
+});
 
 const App = () => {
   return (
-    <ChakraProvider value={defaultSystem}>
-      <Router>
-        <GlobalStyle />
-        <Header />
-        <HeaderButton>안녕</HeaderButton>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/signup" element={<SignupPage />} />
-        </Routes>
-      </Router>
-      <BodyButton width="150px">프로필 관리</BodyButton>
-      <BodyButton width="200px">OTT 추천받기</BodyButton>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider value={defaultSystem}>
+        <Router>
+          <GlobalStyle />
+          <Header />
+          <HeaderButton>안녕</HeaderButton>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Routes>
+        </Router>
+        <BodyButton width="150px">프로필 관리</BodyButton>
+        <BodyButton width="200px">OTT 추천받기</BodyButton>
+      </ChakraProvider>
+    </QueryClientProvider>
   );
 };
 
