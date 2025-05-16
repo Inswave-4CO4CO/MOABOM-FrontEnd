@@ -9,7 +9,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import MoabomLogo from "../assets/svg/moabom.svg";
 import GoogleLogo from "../assets/images/Google.png";
 import BodyButton from "../components/BodyButton";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +17,7 @@ import { PasswordInput } from "../components/PasswordInput";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../services/auth";
 import { toast } from "react-toastify";
+import Logo from "../components/Logo";
 
 const LoginPage = () => {
   const [userId, setUserId] = useState("");
@@ -52,9 +52,7 @@ const LoginPage = () => {
   return (
     <Center>
       <Stack spacing={2}>
-        <Center>
-          <Image src={MoabomLogo} alt="모아봄" style={{ width: "40%" }} />
-        </Center>
+        <Logo />
         <LoginContainer>
           <VStack spacing={8}>
             <form style={{ width: "100%" }} onSubmit={handleLogin}>

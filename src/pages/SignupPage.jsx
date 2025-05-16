@@ -8,7 +8,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import MoabomLogo from "../assets/svg/moabom.svg";
 import BodyButton from "../components/BodyButton";
 import { LoginContainer } from "../styles/pages/LoginPage";
 import { PasswordInput } from "../components/PasswordInput";
@@ -16,6 +15,7 @@ import { checkId, signup } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import Logo from "../components/Logo";
 
 const SignupPage = () => {
   const [userId, setUserId] = useState("");
@@ -66,6 +66,11 @@ const SignupPage = () => {
       toast.warn("아이디 중복 확인을 해주세요.");
       return;
     }
+    if (nickName === "") {
+      toast.warn("닉네임을 입력해주세요.");
+      return;
+    }
+
     mutate({ userId, password, nickName });
     console.log("Signup in with", userId, password, passwordConfirm, nickName);
   };
@@ -73,9 +78,7 @@ const SignupPage = () => {
   return (
     <Center>
       <Stack spacing={2}>
-        <Center>
-          <Image src={MoabomLogo} alt="모아봄" style={{ width: "40%" }} />
-        </Center>
+        <Logo />
         <LoginContainer>
           <VStack spacing={8}>
             <form style={{ width: "100%" }} onSubmit={handleSignup}>
