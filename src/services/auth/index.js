@@ -7,17 +7,12 @@ import { DOMAIN } from "../domain";
  * @returns
  */
 export const signup = async ({ userId, password, nickName }) => {
-  try {
-    const res = await baseInstance.post(DOMAIN.SIGNUP_USER, {
-      userId,
-      password,
-      nickName,
-    });
-    return res.data;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
+  const res = await baseInstance.post(DOMAIN.SIGNUP_USER, {
+    userId,
+    password,
+    nickName,
+  });
+  return res.data;
 };
 
 /**
@@ -26,17 +21,12 @@ export const signup = async ({ userId, password, nickName }) => {
  * @returns
  */
 export const login = async ({ userId, password }) => {
-  try {
-    const res = await baseInstance.post(DOMAIN.LOGIN_USER, {
-      userId,
-      password,
-    });
-    console.log(DOMAIN.LOGIN_USER);
-    return res.data;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
+  const res = await baseInstance.post(DOMAIN.LOGIN_USER, {
+    userId,
+    password,
+  });
+  console.log(DOMAIN.LOGIN_USER);
+  return res.data;
 };
 
 /**
@@ -58,11 +48,15 @@ export const logout = async () => {
  * @returns
  */
 export const checkAuth = async () => {
-  try {
-    const res = await authInstance.post(DOMAIN.CHECK_AUTH);
-    return res.data;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
+  const res = await authInstance.get(DOMAIN.CHECK_AUTH);
+  return res.data;
+};
+
+/**
+ * @summary 아이디 중복확인
+ * @returns
+ */
+export const checkId = async ({ userId }) => {
+  const res = await baseInstance.post(DOMAIN.CHECK_ID, { userId });
+  return res.data;
 };

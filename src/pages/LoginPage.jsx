@@ -17,6 +17,7 @@ import { LoginContainer, SocialButton } from "../styles/pages/LoginPage";
 import { PasswordInput } from "../components/PasswordInput";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../services/auth";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [userId, setUserId] = useState("");
@@ -30,11 +31,13 @@ const LoginPage = () => {
         // todo: token 저장 로직
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
+        toast.success("로그인 성공!");
         navigate("/");
       }
       console.log(data);
     },
     onError: (e) => {
+      toast.error(e?.response?.data?.error || "문제가 발생했습니다.");
       console.error(e);
     },
   });

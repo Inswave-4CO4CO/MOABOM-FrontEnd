@@ -10,6 +10,7 @@ import HeaderButton from "./components/HeaderButton";
 import SignupPage from "./pages/SignupPage";
 import BodyButton from "./components/BodyButton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,7 @@ const App = () => {
         </Router>
         <BodyButton width="150px">프로필 관리</BodyButton>
         <BodyButton width="200px">OTT 추천받기</BodyButton>
+        <ToastContainer />
       </ChakraProvider>
     </QueryClientProvider>
   );
