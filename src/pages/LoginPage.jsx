@@ -91,7 +91,12 @@ const LoginPage = () => {
             </HStack>
 
             <HStack spacing={6}>
-              <SocialButton>
+              <SocialButton
+                onClick={() => {
+                  window.location.href =
+                    "http://localhost:8090/oauth2/authorization/google";
+                }}
+              >
                 <Image src={GoogleLogo} alt="구글" boxSize="28px" />
               </SocialButton>
             </HStack>
