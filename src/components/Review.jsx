@@ -15,15 +15,8 @@ import {
   Icon,
 } from "../styles/components/Review";
 
-export const Review = ({
-  imagePath,
-  nickname,
-  date,
-  text,
-  rating,
-  title,
-  isUser,
-}) => {
+//리뷰
+const Review = ({ imagePath, nickname, date, text, rating, title, isUser }) => {
   return (
     <ReviewContainer>
       <ReviewHeader>
@@ -40,7 +33,13 @@ export const Review = ({
         </LeftGroup>
         <Rating>
           <FaStar size={35} color="FF9266" />
-          {rating ? <span>{rating}</span> : "0.0"}
+          {rating ? (
+            <span>
+              {rating.toString().length === 1 ? rating + ".0" : rating}
+            </span>
+          ) : (
+            "0.0"
+          )}
         </Rating>
       </ReviewHeader>
       <Line />
@@ -64,3 +63,5 @@ export const Review = ({
     </ReviewContainer>
   );
 };
+
+export default Review;

@@ -1,6 +1,7 @@
 import { FooterContainer } from "../styles/components/Footer";
 
-export const Footer = () => {
+//푸터
+const Footer = () => {
   return (
     <FooterContainer>
       <p>
@@ -13,3 +14,5 @@ export const Footer = () => {
     </FooterContainer>
   );
 };
+
+export default Footer;
