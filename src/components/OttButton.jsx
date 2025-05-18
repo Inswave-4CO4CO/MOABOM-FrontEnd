@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { Button as ChakraButton } from '@chakra-ui/react';
 
-const OttButton = ({ imageSrc, imageAlt = '', ...props }) => {
-  const [isSelected, setIsSelected] = useState(false);
-
-  const handleClick = () => {
-    setIsSelected((prev) => !prev);
-  };
+const OttButton = ({ imageSrc, imageAlt = '', isSelected = false, onClick, ...props }) => {
 
   return (
     <ChakraButton
@@ -20,7 +15,7 @@ const OttButton = ({ imageSrc, imageAlt = '', ...props }) => {
       h="40px"
       minW="unset"
       opacity={isSelected ? 0.5 : 1}
-      onClick={handleClick}
+      onClick={onClick}
       {...props}
     >
       {imageSrc && (

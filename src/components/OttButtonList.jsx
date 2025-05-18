@@ -18,12 +18,12 @@ const ottList = [
   { src: watcha, alt: '왓챠' },
   { src: tving, alt: '티빙' },
   { src: laftel, alt: '라프텔' },
-  { src: disney, alt: '디즈니' },
-  { src: appletv, alt: '애플티비' },
-  { src: uplus, alt: '유플러스' }
+  { src: disney, alt: '디즈니+' },
+  { src: appletv, alt: 'Apple TV' },
+  { src: uplus, alt: 'U+모바일tv' }
 ];
 
-const OttButtonList = () => {
+const OttButtonList = ({ selectedOtts, onToggleOtt }) => {
   return (
     <Flex direction="row" gap="8px">
       {ottList.map((ott, i) => (
@@ -31,6 +31,8 @@ const OttButtonList = () => {
           key={i}
           imageSrc={ott.src}
           imageAlt={ott.alt}
+          onClick={() => onToggleOtt(ott.alt)}
+          isSelected={selectedOtts.includes(ott.alt)}
         />
       ))}
     </Flex>
