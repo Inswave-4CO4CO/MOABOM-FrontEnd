@@ -1,11 +1,11 @@
 import { Heading, Stack } from "@chakra-ui/react";
 import Poster from "./Poster";
 
-const PosterCard = ({ src, title }) => {
+const PosterCard = ({ src, title, ottname }) => {
   return (
     <Stack>
-      <Poster src={src} />
-      <Heading size="lg">{title}</Heading>
+      <Poster src={src} alt={ottname} />
+      <Heading size="md">{title}</Heading>
     </Stack>
   );
 };

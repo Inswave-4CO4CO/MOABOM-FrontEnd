@@ -5,4 +5,5 @@ export const DOMAIN = {
   REISSUE_TOKEN: "/auth/reissue",
   CHECK_ID: "/auth/checkId",
   CHECK_AUTH: "/auth/check",
+  MAIN_CONTENT: "/content",
 };
