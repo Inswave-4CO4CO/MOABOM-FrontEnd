@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Box, Flex } from '@chakra-ui/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
@@ -12,12 +11,12 @@ import BannerImage from '../components/BannerImage';
 import OttButtonList from '../components/OttButtonList';
 import PosterSwiperSection from '../components/PosterSwiperSection';
 import { Footer } from '../components/Footer';
+import { DOMAIN } from '../services/domain';
+import { baseInstance } from '../services/axiosInstance';
 
-const { VITE_API_URL } = import.meta.env;
-
-export const baseInstance = axios.create({
-  baseURL: VITE_API_URL,
-});
+const allOttNames = [
+  '넷플릭스', '웨이브', '쿠팡플레이', '왓챠', '티빙', '라프텔', '디즈니+', 'Apple TV', 'U+모바일tv'
+];
 
 const MainPage = () => {
   const [data, setData] = useState({
@@ -27,31 +26,45 @@ const MainPage = () => {
     end: [],
   });
 
-  const [selectedOtts, setSelectedOtts] = useState([]);
-  // 선택 토글 함수
+  const [selectedOtts, setSelectedOtts] = useState([...allOttNames]);
+  
+  // OTT 선택 토글 함수
   const toggleOtt = (ottName) => {
-    setSelectedOtts(prev => 
-      prev.includes(ottName) 
-        ? prev.filter(o => o !== ottName) 
-        : [...prev, ottName]
-    );
+    setSelectedOtts(prev => {
+      const isSelected = prev.includes(ottName);
+
+      if (prev.length === allOttNames.length) {
+        // 전체 선택 상태에서 클릭하면 해당 하나만 남김
+        return [ottName];
+      } else {
+        const updated = isSelected
+          ? prev.filter(o => o !== ottName)
+          : [...prev, ottName];
+
+        // 아무것도 선택되지 않으면 다시 전체 선택
+        return updated.length === 0 ? [...allOttNames] : updated;
+      }
+    });
   };
 
-  // PosterSwiperSection 필터링 (exclude selected OTTs)
-  const filterExcludeSelected = (list) => 
-    selectedOtts.length === 0 
-      ? list 
-      : list.filter(item => !selectedOtts.includes(item.ottName));
+  // 선택된 OTT만 필터링
+  const filterIncludeSelected = (list) =>
+    selectedOtts.length === 0
+      ? list
+      : list.filter(item => selectedOtts.includes(item.ottName));
 
   useEffect(() => {
-  axios.get('/content')
-    .then((res) => {
-      console.log(res.data);
-      setData(res.data);
-    })
-    .catch((err) => console.error(err));
-}, []);
+    const fetchMainContent = async () => {
+      try {
+        const res = await baseInstance.get(DOMAIN.MAIN_CONTENT);
+        setData(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
+    fetchMainContent();
+  }, []);
 
   return (
     <Box>
@@ -81,15 +94,15 @@ const MainPage = () => {
 
       <PosterSwiperSection
         title="지금 막 나온 따끈따끈 신작!"
-        data={filterExcludeSelected(data.new)}
+        data={filterIncludeSelected(data.new)}
       />
       <PosterSwiperSection
         title="요즘 가장 핫한 콘텐츠는?"
-        data={filterExcludeSelected(data.rating)}
+        data={filterIncludeSelected(data.rating)}
       />
       <PosterSwiperSection
         title="곧 사라져요! 놓치면 후회할 작품들"
-        data={filterExcludeSelected(data.end)}
+        data={filterIncludeSelected(data.end)}
       />
 
       <Footer />

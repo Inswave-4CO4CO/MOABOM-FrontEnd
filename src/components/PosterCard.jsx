@@ -5,7 +5,7 @@ const PosterCard = ({ src, title, ottname }) => {
   return (
     <Stack>
       <Poster src={src} alt={ottname} />
-      <Heading size="mg">{title}</Heading>
+      <Heading size="md">{title}</Heading>
     </Stack>
   );
 };

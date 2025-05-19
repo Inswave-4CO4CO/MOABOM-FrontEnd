@@ -8,13 +8,13 @@ const OttButton = ({ imageSrc, imageAlt = '', isSelected = false, onClick, ...pr
       p="0"
       border="none"
       bg="transparent"
-      _hover={{ opacity: 0.8 }}
+      _hover={{ opacity: 0.5 }}
       borderRadius="10px"
       overflow="hidden"
       w="40px"
       h="40px"
       minW="unset"
-      opacity={isSelected ? 0.5 : 1}
+      opacity={isSelected ? 1 : 0.2}
       onClick={onClick}
       {...props}
     >
