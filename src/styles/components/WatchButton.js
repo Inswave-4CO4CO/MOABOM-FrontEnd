@@ -8,8 +8,14 @@ export const Container = styled.div`
   cursor: pointer;
 
   .icon svg {
-    color: ${({ visited }) => (visited ? "#ff9266" : "black")};
-    transition: color 0.1s;
+    color: ${({ enable }) => (enable ? "#ff9266" : "black")};
+    transition: color 0.2s;
+  }
+
+  &:hover svg,
+  &:hover p {
+    color: #727272;
+    transition: color 0.2s;
   }
 `;
 

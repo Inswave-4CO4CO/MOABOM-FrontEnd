@@ -4,26 +4,27 @@ import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ContentDetailPage from "./pages/ContentDetailPage";
 import GlobalStyle from "./styles/GlobalStyle";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
-import { ContentDetailPage } from "./pages/ContentDetailPage";
+import BodyButton from "./components/BodyButton";
 
 const App = () => {
   return (
     <ChakraProvider value={defaultSystem}>
       <Router>
-        <GlobalStyle />
+        {/* <GlobalStyle />
         <Header />
-        <Navbar />
+        <Navbar /> */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/detail" element={<ContentDetailPage />} />
+          <Route path="/detail/:contentId" element={<ContentDetailPage />} />
         </Routes>
+        <Footer />
       </Router>
-      <BodyButton width="150px">프로필 관리</BodyButton>
-      <BodyButton width="200px">OTT 추천받기</BodyButton>
     </ChakraProvider>
   );
 };

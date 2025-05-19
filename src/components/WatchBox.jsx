@@ -1,45 +1,68 @@
 import React, { useEffect, useState } from "react";
 import WatchButton from "./WatchButton";
 import { Container } from "../styles/components/WatchBox";
+import { FaPlus, FaCheck, FaEye } from "react-icons/fa";
+import {
+  createWatch,
+  deleteWatch,
+  modifyWatch,
+} from "../services/watchService";
 
-//시청버튼 박스
-const WatchBox = ({ type }) => {
-  const [want, SetWant] = useState(false);
-  const [ing, SetIng] = useState(false);
-  const [ed, SetEd] = useState(false);
+const WatchBox = ({ type, userId, contentId }) => {
+  const [activeType, setActiveType] = useState(null);
+  const [isCreated, setIsCreated] = useState(false);
 
   useEffect(() => {
-    activateType(type);
-  }, []);
+    if (type) {
+      setActiveType(type);
+      setIsCreated(true);
+    }
+  }, [type]);
 
-  const activateType = (selectedType, currentState) => {
-    if (currentState) {
-      SetWant(false);
-      SetIng(false);
-      SetEd(false);
+  const handleClick = (selectedType) => {
+    if (activeType === selectedType) {
+      // 같은 버튼 누르면 삭제
+      deleteWatch(contentId, userId)
+        .then(() => {
+          setActiveType(null);
+          setIsCreated(false);
+        })
+        .catch((err) => console.error("삭제 실패", err));
+    } else if (!isCreated) {
+      // 아직 생성되지 않았으면 생성
+      createWatch(contentId, userId, selectedType)
+        .then(() => {
+          setActiveType(selectedType);
+          setIsCreated(true);
+        })
+        .catch((err) => console.error("생성 실패", err));
     } else {
-      SetWant(selectedType === "WANT");
-      SetIng(selectedType === "ING");
-      SetEd(selectedType === "ED");
+      // 이미 생성된 경우면 수정
+      modifyWatch(contentId, userId, selectedType)
+        .then(() => setActiveType(selectedType))
+        .catch((err) => console.error("수정 실패", err));
     }
   };
 
   return (
     <Container>
       <WatchButton
-        isEnable={want}
-        type="WANT"
-        onClick={() => activateType("WANT", want)}
+        icon={<FaPlus size={40} />}
+        text="보고싶다"
+        isEnable={activeType === "WANT"}
+        onClick={() => handleClick("WANT")}
       />
       <WatchButton
-        isEnable={ing}
-        type="ING"
-        onClick={() => activateType("ING", ing)}
+        icon={<FaEye size={40} />}
+        text="보는중"
+        isEnable={activeType === "ING"}
+        onClick={() => handleClick("ING")}
       />
       <WatchButton
-        isEnable={ed}
-        type="ED"
-        onClick={() => activateType("ED", ed)}
+        icon={<FaCheck size={40} />}
+        text="봤다"
+        isEnable={activeType === "ED"}
+        onClick={() => handleClick("ED")}
       />
     </Container>
   );
