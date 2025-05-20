@@ -6,4 +6,5 @@ export const DOMAIN = {
   CHECK_ID: "/auth/checkId",
   CHECK_AUTH: "/auth/check",
   REFRESH_ACCESSS_TOKEN: "/auth/refresh",
+  MAIN_CONTENT: "/content",
 };

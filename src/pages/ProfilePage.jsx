@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { checkAuth } from "../services/api/auth";
+import React from "react";
 
 const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState(null);

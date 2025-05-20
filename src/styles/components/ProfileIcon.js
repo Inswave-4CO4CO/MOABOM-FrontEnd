@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
 export const ProfileContainer = styled.div`
-  width: 100px;
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+  max-width: 100px;
+  gap: 10px;
   text-align: center;
+  justify-content: center;
 `;
 
 export const ProfileImage = styled.img`
@@ -10,6 +15,7 @@ export const ProfileImage = styled.img`
   height: 100px;
   object-fit: cover;
   border-radius: 50%;
+  background-color: yellow;
 `;
 
 export const ProfileName = styled.span`

@@ -16,15 +16,24 @@ const BannerImage = ({
   ageRating,
   releaseDate,
   imdbRating,
+  ottname,
+  isMain = false,
   isDetail = false,
 }) => {
   // rating 추후 추가 예정
   return (
     <BannerImageContainer>
       <Image src={src} />
-      <TextContainer $isDetail={isDetail} gap="1">
+      <TextContainer $isDetail={isDetail} $isMain={isMain} gap="1">
         {isDetail && <Heading size="4xl">{rating}</Heading>}
         <Heading size="6xl">{title}</Heading>
+        {isMain && (
+          <>
+            <Text textStyle="lg">
+              {releaseDate} {ottname} 공개
+            </Text>
+          </>
+        )}
         {isDetail && (
           <>
             <Text textStyle="lg">
