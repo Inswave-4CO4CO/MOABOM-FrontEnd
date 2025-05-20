@@ -4,9 +4,6 @@ import InputBtnGroup from "./InputBtnGroup";
 import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 import { Menu, Portal } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { logout } from "../services/api/auth";
-import { toast } from "react-toastify";
 import {
   ButtonWrapContainer,
   HeaderContainer,
@@ -14,25 +11,13 @@ import {
   FloatContainer,
 } from "../styles/components/Header";
 import useAuthStore from "../store/useAuthStore";
+import { useLogin } from "../hooks/useLogin";
+
 const Header = () => {
   const navigate = useNavigate();
 
-  const { isLogin, setLogout } = useAuthStore();
-
-  const queryClient = useQueryClient();
-
-  const { mutate: logoutUser } = useMutation({
-    mutationFn: logout,
-    onSuccess: () => {
-      toast.success("로그아웃 되었습니다.");
-    },
-    onMutate: () => {
-      // 실패해도 토큰/캐시 삭제 > 보안적으로 좋음
-      setLogout();
-      queryClient.removeQueries({ queryKey: ["userInfo"] });
-      navigate("/");
-    },
-  });
+  const { isLogin } = useAuthStore();
+  const { logoutUser } = useLogin();
 
   const handleLogout = (e) => {
     e.preventDefault();

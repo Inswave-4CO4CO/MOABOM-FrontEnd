@@ -20,12 +20,11 @@ const LoginPage = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
 
-  const { userLogin } = useLogin();
+  const { loginUser } = useLogin();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    userLogin({ userId, password });
-    console.log("Logging in with", userId, password);
+    loginUser({ userId, password });
   };
 
   return (
