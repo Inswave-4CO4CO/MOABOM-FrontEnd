@@ -28,8 +28,9 @@ authInstance.interceptors.response.use(
     const originalRequest = error.config;
     const authStore = useAuthStore.getState();
 
+    // 로그아웃 상태
     if (!authStore.isLogin) {
-      return Promise.reject(error);
+      return;
     }
 
     if (error.response.status === 401 && !originalRequest._retry) {
