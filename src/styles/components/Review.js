@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 export const ReviewContainer = styled.div`
-  width: 300px;
+  width: 100%;
   height: 300px;
-  border-radius: 25px;
+  border-radius: 15px;
   padding: 10px;
   background-color: #fff8f0;
   box-sizing: border-box;
@@ -34,6 +34,7 @@ export const Rating = styled.div`
   display: flex;
   align-items: center;
   margin-top: -5px;
+  gap: 5px;
 `;
 
 export const Image = styled.img`
@@ -70,7 +71,6 @@ export const ReviewText = styled.div`
   overflow: scroll;
   overflow-x: hidden;
 
-  /* 스크롤바 투명하게 */
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -107,6 +107,6 @@ export const Icon = styled.div`
   }
 
   &:hover svg {
-    color: #727272; /* 원하는 hover 색상 */
+    color: #727272;
   }
 `;
