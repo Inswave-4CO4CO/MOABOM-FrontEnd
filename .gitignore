@@ -34,3 +34,4 @@ dist-ssr/
 
 # Optional: coverage reports
 coverage/
+.env
