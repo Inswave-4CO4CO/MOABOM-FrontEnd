@@ -1,10 +1,11 @@
 import axios from "axios";
 import useAuthStore from "../store/useAuthStore";
+import { DOMAIN } from "./domain";
 
 const { VITE_API_URL } = import.meta.env;
 
 export const baseInstance = axios.create({ baseURL: VITE_API_URL });
-console.log(VITE_API_URL);
+
 export const authInstance = axios.create({
   baseURL: VITE_API_URL,
 });
@@ -12,9 +13,9 @@ export const authInstance = axios.create({
 // 요청 인터셉터: access token 자동 추가
 authInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -26,10 +27,10 @@ authInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const authStore = useAuthStore.getState();
+    const { isLogin, setLogin } = useAuthStore.getState();
 
     // 로그아웃 상태
-    if (!authStore.isLogin) {
+    if (!isLogin) {
       return;
     }
 
@@ -37,12 +38,16 @@ authInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       // refresh token으로 access token 재발급
-      const refreshToken = localStorage.getItem("refreshToken");
-      const res = await axios.post("/auth/refresh", { refreshToken });
+      const res = await baseInstance.post(
+        DOMAIN.REFRESH_ACCESSS_TOKEN,
+        {},
+        { withCredentials: true }
+      );
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         const newAccessToken = res.data.token;
-        localStorage.setItem("accessToken", newAccessToken);
+        setLogin(newAccessToken);
+        // console.log("newAccessToken", newAccessToken);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return authInstance(originalRequest); // 실패한 요청 재시도
       }
