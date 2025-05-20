@@ -6,24 +6,41 @@ import {
   labelTextStyle,
 } from '../styles/components/CheckBox';
 
-const CheckBox = ({ children, ...props }) => {
-  const [checked, setChecked] = useState(false);
+const CheckBox = ({ children, checked, onChange, onClick, ...props }) => {
+  // 외부에서 checked prop이 제공되지 않을 경우에만 내부 상태 사용
+  const [internalChecked, setInternalChecked] = useState(false);
+  
+  // 실제 사용할 checked 값 (외부 prop 우선)
+  const isChecked = checked !== undefined ? checked : internalChecked;
 
   const handleChange = (e) => {
-    setChecked(e.target.checked);
+    // 내부 상태 업데이트
+    setInternalChecked(e.target.checked);
+    
+    // 외부 onChange가 있으면 호출
+    if (onChange) {
+      onChange(e);
+    }
+  };
+
+  const handleClick = () => {
+    // 외부 onClick이 있으면 호출
+    if (onClick) {
+      onClick();
+    }
   };
 
   return (
-    <label style={labelStyle}>
+    <label style={labelStyle} onClick={handleClick}>
       <input
         type="checkbox"
-        checked={checked}
+        checked={isChecked}
         onChange={handleChange}
         style={hiddenCheckboxStyle}
         {...props}
       />
-      <div style={getBoxStyle(checked)}>
-        {checked && (
+      <div style={getBoxStyle(isChecked)}>
+        {isChecked && (
           <svg
             viewBox="0 0 24 24"
             width="14px"
