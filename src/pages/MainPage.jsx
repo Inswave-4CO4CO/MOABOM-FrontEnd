@@ -1,21 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Flex } from '@chakra-ui/react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import React, { useEffect, useState } from "react";
+import { Box, Flex } from "@chakra-ui/react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
 
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-import BannerImage from '../components/BannerImage';
-import OttButtonList from '../components/OttButtonList';
-import PosterSwiperSection from '../components/PosterSwiperSection';
-import { Footer } from '../components/Footer';
-import { DOMAIN } from '../services/domain';
-import { baseInstance } from '../services/axiosInstance';
+import BannerImage from "../components/BannerImage";
+import OttButtonList from "../components/OttButtonList";
+import PosterSwiperSection from "../components/PosterSwiperSection";
+import { Footer } from "../components/Footer";
+import { DOMAIN } from "../services/domain";
+import { baseInstance } from "../services/axiosInstance";
 
 const allOttNames = [
-  '넷플릭스', '웨이브', '쿠팡플레이', '왓챠', '티빙', '라프텔', '디즈니+', 'Apple TV', 'U+모바일tv'
+  "넷플릭스",
+  "웨이브",
+  "쿠팡플레이",
+  "왓챠",
+  "티빙",
+  "라프텔",
+  "디즈니+",
+  "Apple TV",
+  "U+모바일tv",
 ];
 
 const MainPage = () => {
@@ -27,10 +35,10 @@ const MainPage = () => {
   });
 
   const [selectedOtts, setSelectedOtts] = useState([...allOttNames]);
-  
+
   // OTT 선택 토글 함수
   const toggleOtt = (ottName) => {
-    setSelectedOtts(prev => {
+    setSelectedOtts((prev) => {
       const isSelected = prev.includes(ottName);
 
       if (prev.length === allOttNames.length) {
@@ -38,7 +46,7 @@ const MainPage = () => {
         return [ottName];
       } else {
         const updated = isSelected
-          ? prev.filter(o => o !== ottName)
+          ? prev.filter((o) => o !== ottName)
           : [...prev, ottName];
 
         // 아무것도 선택되지 않으면 다시 전체 선택
@@ -51,7 +59,7 @@ const MainPage = () => {
   const filterIncludeSelected = (list) =>
     selectedOtts.length === 0
       ? list
-      : list.filter(item => selectedOtts.includes(item.ottName));
+      : list.filter((item) => selectedOtts.includes(item.ottName));
 
   useEffect(() => {
     const fetchMainContent = async () => {

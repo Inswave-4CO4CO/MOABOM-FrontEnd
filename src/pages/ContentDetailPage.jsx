@@ -40,7 +40,7 @@ import {
   ReviewTextarea,
   ReviewRating,
   AddButton,
-} from "../styles/page/ContentDetailPage";
+} from "../styles/pages/ContentDetailPage";
 import ReactStars from "react-stars";
 
 const ContentDetailPage = () => {
