@@ -1,8 +1,15 @@
 import { Portal, Select } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const Dropdown = ({ list }) => {
-  const [value, setValue] = useState(list.items[0].value);
+const Dropdown = ({ list, onChange, defaultValue }) => {
+  const [value, setValue] = useState(defaultValue || list.items[0].value);
+
+  // 값이 변경될 때 외부 핸들러 호출
+  useEffect(() => {
+    if (onChange) {
+      onChange(value);
+    }
+  }, [value, onChange]);
 
   return (
     <Select.Root
