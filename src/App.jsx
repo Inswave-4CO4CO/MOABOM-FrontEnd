@@ -14,6 +14,7 @@ import BodyButton from "./components/BodyButton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
+import MyPage from "./pages/MyPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,14 +42,16 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/myPage" element={<MyPage />} />
             <Route
               path="/oauth2/redirect"
               element={<OAuth2RedirectHandler />}
             />
           </Routes>
         </Router>
-        <BodyButton width="150px">프로필 관리</BodyButton>
-        <BodyButton width="200px">OTT 추천받기</BodyButton>
+        {/* <BodyButton width="150px">프로필 관리</BodyButton>
+        <BodyButton width="200px">OTT 추천받기</BodyButton> */}
+        <Footer />
         <ToastContainer />
       </ChakraProvider>
     </QueryClientProvider>
