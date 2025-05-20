@@ -44,15 +44,6 @@ export const logout = async () => {
 };
 
 /**
- * @summary 사용자 인증여부 확인 (로그인한 사용자인지 확인)
- * @returns
- */
-export const checkAuth = async () => {
-  const res = await authInstance.get(DOMAIN.CHECK_AUTH);
-  return res.data;
-};
-
-/**
  * @summary 아이디 중복확인
  * @returns
  */
