@@ -1,6 +1,6 @@
-import api from "./api";
+import { authInstance } from "./axiosInstance";
 
-//한줄평 단건 조회
-export const getReviewByPage = (contentID, cursor) => {
-  return api.get(`/content/${contentID}/review?cursor=${cursor}`);
+//장르별 컨텐츠 조회
+export const getMyGenreContents = () => {
+  return authInstance.get(`/user/stats`);
 };

@@ -17,12 +17,12 @@ import LinkText from "../components/LinkText";
 import LabelInput from "../components/LabelInput";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = () => {
     // 로그인 처리 로직
-    console.log('Logging in with', email, password);
+    console.log("Logging in with", email, password);
   };
 
   return (

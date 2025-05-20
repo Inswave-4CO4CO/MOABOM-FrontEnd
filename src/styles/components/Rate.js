@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import { FaStar } from "react-icons/fa6";
 
 const RateContainer = styled.div`
@@ -22,7 +22,7 @@ const RateImage = styled.img`
 const StyledFaStar = styled(FaStar)`
   height: 100%;
   width: auto;
-  color: #FF9266;
+  color: #ff9266;
 `;
 
 export { RateContainer, IconContainer, RateImage, StyledFaStar };

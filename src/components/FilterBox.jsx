@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box } from "@chakra-ui/react";
 
 const FilterBox = ({ children, ...props }) => {
   return (
@@ -7,8 +7,8 @@ const FilterBox = ({ children, ...props }) => {
       border="1px solid #FF9266"
       color="#FFFFFF"
       borderRadius="38px"
-      px="10px" 
-      py="4px"   
+      px="10px"
+      py="4px"
       fontSize="12px"
       fontWeight="bold"
       display="inline-block"

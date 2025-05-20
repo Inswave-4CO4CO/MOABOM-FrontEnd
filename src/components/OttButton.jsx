@@ -1,8 +1,13 @@
-import { useState } from 'react';
-import { Button as ChakraButton } from '@chakra-ui/react';
+import { useState } from "react";
+import { Button as ChakraButton } from "@chakra-ui/react";
 
-const OttButton = ({ imageSrc, imageAlt = '', isSelected = false, onClick, ...props }) => {
-
+const OttButton = ({
+  imageSrc,
+  imageAlt = "",
+  isSelected = false,
+  onClick,
+  ...props
+}) => {
   return (
     <ChakraButton
       p="0"
@@ -23,11 +28,11 @@ const OttButton = ({ imageSrc, imageAlt = '', isSelected = false, onClick, ...pr
           src={imageSrc}
           alt={imageAlt}
           style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-            pointerEvents: 'none',
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            pointerEvents: "none",
           }}
         />
       )}

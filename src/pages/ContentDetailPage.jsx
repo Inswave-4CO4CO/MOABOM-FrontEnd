@@ -40,7 +40,7 @@ import {
   ReviewTextarea,
   ReviewRating,
   AddButton,
-} from "../styles/page/ContentDetailPage";
+} from "../styles/pages/ContentDetailPage";
 import ReactStars from "react-stars";
 
 const ContentDetailPage = () => {
@@ -89,7 +89,7 @@ const ContentDetailPage = () => {
 
   //한줄평 가져오기
   const findUserReview = async () => {
-    findByContentIdAndUserId(contentId, userId)
+    findByContentIdAndUserId(contentId)
       .then((res) => {
         setUserReview(res.data);
         setReviewText(res.data.reviewText);
@@ -100,7 +100,7 @@ const ContentDetailPage = () => {
 
   //컨텐츠 불러오기
   const getContent = async () => {
-    getContentById(contentId, userId)
+    getContentById(contentId)
       .then((res) => {
         setContent(res.data);
         setType(watchType[res.data.type]);
@@ -115,13 +115,7 @@ const ContentDetailPage = () => {
   // 한줄평 추가
   const handleCreate = async () => {
     try {
-      const response = await createReview(
-        reviewText,
-        null,
-        rating,
-        contentId,
-        userId
-      );
+      const response = await createReview(reviewText, null, rating, contentId);
       setUserReview(response.data);
 
       const updatedList = [
@@ -160,8 +154,7 @@ const ContentDetailPage = () => {
         reviewText,
         userReview.createdAt,
         rating,
-        contentId,
-        userId
+        contentId
       );
       setUserReview(response.data);
 

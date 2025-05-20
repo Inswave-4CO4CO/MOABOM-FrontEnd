@@ -1,4 +1,4 @@
-import { Button as ChakraButton } from '@chakra-ui/react';
+import { Button as ChakraButton } from "@chakra-ui/react";
 
 const HeaderButton = ({ children, ...props }) => {
   return (
@@ -7,8 +7,8 @@ const HeaderButton = ({ children, ...props }) => {
       borderColor="#727272"
       color="#727272"
       borderRadius="10px"
-      _hover={{ bg: '#FF9266', borderColor: '#FF9266', color: '#FFFFFF' }}
-      _active={{ bg: '#FF9266', borderColor: '#FF9266', color: '#FFFFFF' }}
+      _hover={{ bg: "#FF9266", borderColor: "#FF9266", color: "#FFFFFF" }}
+      _active={{ bg: "#FF9266", borderColor: "#FF9266", color: "#FFFFFF" }}
       {...props}
     >
       {children}

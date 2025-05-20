@@ -1,4 +1,5 @@
 import api from "./api";
+import { authInstance } from "./axiosInstance";
 
 //한줄평 단건 조회
 export const getReviewByPage = (contentID, cursor) => {
@@ -6,36 +7,18 @@ export const getReviewByPage = (contentID, cursor) => {
 };
 
 //한줄평 조회
-export const findByContentIdAndUserId = (contentId, userId) => {
-  return api.get(`/review?contentId=${contentId}`, {
-    headers: {
-      Authorization: `Bearer ${userId}`,
-    },
-  });
+export const findByContentIdAndUserId = (contentId) => {
+  return authInstance.get(`/review?contentId=${contentId}`);
 };
 
 //한줄평 추가
-export const createReview = (
-  reviewText,
-  createdAt,
-  rating,
-  contentId,
-  userId
-) => {
-  return api.post(
-    `/review`,
-    {
-      reviewText,
-      createdAt,
-      rating,
-      contentId,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${userId}`,
-      },
-    }
-  );
+export const createReview = (reviewText, createdAt, rating, contentId) => {
+  return authInstance.post(`/review`, {
+    reviewText,
+    createdAt,
+    rating,
+    contentId,
+  });
 };
 
 //한줄평 수정
@@ -44,24 +27,15 @@ export const modifyReview = (
   reviewText,
   createdAt,
   rating,
-  contentId,
-  userId
+  contentId
 ) => {
-  return api.put(
-    `/review`,
-    {
-      reviewId,
-      reviewText,
-      createdAt,
-      rating,
-      contentId,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${userId}`,
-      },
-    }
-  );
+  return authInstance.put(`/review`, {
+    reviewId,
+    reviewText,
+    createdAt,
+    rating,
+    contentId,
+  });
 };
 
 //한줄평 삭제

@@ -1,4 +1,4 @@
-import create from 'zustand';
+import create from "zustand";
 
 const useAuthStore = create((set) => ({
   isAuthenticated: false,
@@ -7,4 +7,3 @@ const useAuthStore = create((set) => ({
 }));
 
 export default useAuthStore;
-
