@@ -22,6 +22,6 @@ export const ButtonWrapContainer = styled.div`
   padding-right: 60px;
 `;
 
-export const LoginContainer = styled.div`
+export const FloatContainer = styled.div`
   float: right;
 `;

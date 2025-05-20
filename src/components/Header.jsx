@@ -4,27 +4,20 @@ import InputBtnGroup from "./InputBtnGroup";
 import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 import { Menu, Portal } from "@chakra-ui/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { checkAuth, logout } from "../services/api/auth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { logout } from "../services/api/auth";
 import { toast } from "react-toastify";
 import {
   ButtonWrapContainer,
   HeaderContainer,
   InputBtnGroupContainer,
+  FloatContainer,
 } from "../styles/components/Header";
-
+import useAuthStore from "../store/useAuthStore";
 const Header = () => {
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("accessToken");
-  const { data, isError } = useQuery({
-    queryKey: ["userInfo"],
-    queryFn: checkAuth,
-    enabled: !!token, // 토큰이 있을 때만 실행
-    retry: false,
-  });
-
-  const isLogin = !!data && !isError;
+  const { isLogin, setLogout } = useAuthStore();
 
   const queryClient = useQueryClient();
 
@@ -35,11 +28,16 @@ const Header = () => {
     },
     onMutate: () => {
       // 실패해도 토큰/캐시 삭제 > 보안적으로 좋음
-      localStorage.removeItem("accessToken");
+      setLogout();
       queryClient.removeQueries({ queryKey: ["userInfo"] });
       navigate("/");
     },
   });
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logoutUser();
+  };
 
   return (
     <HeaderContainer>
@@ -51,7 +49,7 @@ const Header = () => {
       </InputBtnGroupContainer>
       <ButtonWrapContainer>
         {isLogin ? (
-          <LoginContainer>
+          <FloatContainer>
             <HeaderButton
               style={{ marginRight: "20px" }}
               onClick={() => navigate("/")}
@@ -73,14 +71,14 @@ const Header = () => {
                     >
                       마이페이지
                     </Menu.Item>
-                    <Menu.Item value="new-file" onClick={() => logoutUser()}>
+                    <Menu.Item value="new-file" onClick={handleLogout}>
                       로그아웃
                     </Menu.Item>
                   </Menu.Content>
                 </Menu.Positioner>
               </Portal>
             </Menu.Root>
-          </LoginContainer>
+          </FloatContainer>
         ) : (
           <HeaderButton
             style={{ float: "right" }}
