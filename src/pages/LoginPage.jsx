@@ -17,7 +17,7 @@ import LinkText from "../components/LinkText";
 import LabelInput from "../components/LabelInput";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
 
   const { loginUser } = useLogin();
