@@ -243,7 +243,6 @@ const SearchPage = () => {
       fetchMoreResults();
     }
   }, [page]);
-
   const resetSearch = () => {
     setPage(0);
     setHasMore(true);
@@ -374,7 +373,6 @@ const SearchPage = () => {
       setIsLoading(false);
     }
   };
-
   useEffect(() => {
     if (genreItems.length > 0) {
       resetSearch();

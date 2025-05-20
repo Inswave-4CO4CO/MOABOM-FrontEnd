@@ -1,13 +1,14 @@
+import React from "react";
 import { Heading, Stack } from "@chakra-ui/react";
 import Poster from "./Poster";
 
-const PosterCard = ({ src, title, ottname }) => {
+const PosterCard = React.forwardRef(({ src, title, ...props }, ref) => {
   return (
-    <Stack>
-      <Poster src={src} alt={ottname} />
-      <Heading size="md">{title}</Heading>
+    <Stack ref={ref} {...props}>
+      <Poster src={src} />
+      <Heading size="lg">{title}</Heading>
     </Stack>
   );
-};
+});
 
 export default PosterCard;

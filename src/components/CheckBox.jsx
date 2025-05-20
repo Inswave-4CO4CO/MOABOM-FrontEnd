@@ -1,22 +1,22 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   labelStyle,
   hiddenCheckboxStyle,
   getBoxStyle,
   labelTextStyle,
-} from '../styles/components/CheckBox';
+} from "../styles/components/CheckBox";
 
 const CheckBox = ({ children, checked, onChange, onClick, ...props }) => {
   // 외부에서 checked prop이 제공되지 않을 경우에만 내부 상태 사용
   const [internalChecked, setInternalChecked] = useState(false);
-  
+
   // 실제 사용할 checked 값 (외부 prop 우선)
   const isChecked = checked !== undefined ? checked : internalChecked;
 
   const handleChange = (e) => {
     // 내부 상태 업데이트
     setInternalChecked(e.target.checked);
-    
+
     // 외부 onChange가 있으면 호출
     if (onChange) {
       onChange(e);
