@@ -20,9 +20,11 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // 로그인 처리 로직
-    console.log("Logging in with", email, password);
+  const { loginUser } = useLogin();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    loginUser({ userId, password });
   };
 
   return (

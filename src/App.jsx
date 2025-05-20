@@ -51,7 +51,7 @@ const App = () => {
         </Router>
         <BodyButton width="150px">프로필 관리</BodyButton>
         <BodyButton width="200px">OTT 추천받기</BodyButton>
-        <ToastContainer />
+        <ToastContainer autoClose={3000} pauseOnHover={false} closeOnClick />
       </ChakraProvider>
     </QueryClientProvider>
   );
