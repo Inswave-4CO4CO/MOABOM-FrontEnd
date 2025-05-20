@@ -14,6 +14,7 @@ import BodyButton from "./components/BodyButton";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
+import SearchPage from "./pages/SearchPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,6 +46,7 @@ const App = () => {
               path="/oauth2/redirect"
               element={<OAuth2RedirectHandler />}
             />
+            <Route path="/search" element={<SearchPage />} />
           </Routes>
         </Router>
         <BodyButton width="150px">프로필 관리</BodyButton>

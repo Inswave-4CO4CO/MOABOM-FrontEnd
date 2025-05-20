@@ -7,7 +7,7 @@ import { createListCollection, Text } from "@chakra-ui/react";
 import OttButtonList, { ottList } from "../components/OttButtonList";
 import axios from "axios";
 import TabComponent from "../components/Tab";
-import { ProfileIcon } from "../components/ProfileIcon";
+import ProfileIcon from "../components/ProfileIcon";
 import { useNavigate } from "react-router-dom";
 import {
   SearchContainer,
@@ -545,7 +545,7 @@ const SearchPage = () => {
                   onToggleOtt={handleOttSelect}
                   selectedOtts={selectedOtts}
                 />
-                <Dropdown list={frameworks} />
+                <Dropdown list={frameworks} onChange={handleSortChange} />
               </ControlsContainer>
             </FilterSection>
           </SearchContent>

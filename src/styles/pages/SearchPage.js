@@ -220,12 +220,16 @@ export const ProfileIconWrapper = styled.div`
   }
 
   img {
-    width: 120px !important;
-    height: 120px !important;
+    width: 150px !important;
+    height: 150px !important;
+    min-width: 150px;
+    min-height: 150px;
+    max-width: 150px;
+    max-height: 150px;
     object-fit: cover;
     border-radius: 50%;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 1/1;
+    box-sizing: border-box;
   }
 
   span {
