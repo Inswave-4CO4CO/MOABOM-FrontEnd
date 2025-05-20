@@ -4,6 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ContentDetailPage from "./pages/ContentDetailPage";
 import GlobalStyle from "./styles/GlobalStyle";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import HeaderButton from "./components/HeaderButton";

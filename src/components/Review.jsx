@@ -14,8 +14,13 @@ import {
   RightGroup,
   Icon,
 } from "../styles/components/Review";
+import { useState } from "react";
+import Modal from "./Modal";
+import ReactStars from "react-stars";
+import { Input } from "@chakra-ui/react";
 
-export const Review = ({
+//리뷰
+const Review = ({
   imagePath,
   nickname,
   date,
@@ -23,7 +28,12 @@ export const Review = ({
   rating,
   title,
   isUser,
+  handleModify,
+  handleDelete,
 }) => {
+  const [reviewText, setReviewText] = useState(text || "");
+  const [ratingNumber, setRatingNum] = useState(rating);
+
   return (
     <ReviewContainer>
       <ReviewHeader>
@@ -39,8 +49,14 @@ export const Review = ({
           </NameAndDate>
         </LeftGroup>
         <Rating>
-          <FaStar size={35} color="FF9266" />
-          {rating ? <span>{rating}</span> : "0.0"}
+          <FaStar size={35} color="#FF9266" />
+          {rating ? (
+            <span>
+              {rating.toString().length === 1 ? rating + ".0" : rating}
+            </span>
+          ) : (
+            "0.0"
+          )}
         </Rating>
       </ReviewHeader>
       <Line />
@@ -51,10 +67,37 @@ export const Review = ({
           {title ? <span>{title}</span> : <span />}
           <RightGroup>
             <Icon>
-              <FaPen size={25} />
+              <Modal
+                modalButton={<FaPen size={25} />}
+                title="나의 한줄평"
+                text={
+                  <>
+                    <Input
+                      placeholder="한줄평을 입력하세요"
+                      value={reviewText}
+                      onChange={(e) => setReviewText(e.target.value)}
+                      marginBottom="10px"
+                    />
+                    <ReactStars
+                      count={5}
+                      value={ratingNumber}
+                      onChange={setRatingNum}
+                      size={24}
+                      color2={"#ffd700"}
+                    />
+                  </>
+                }
+                actions={[
+                  {
+                    text: "수정",
+                    onClick: handleModify,
+                  },
+                  { text: "삭제", onClick: handleDelete },
+                ]}
+              />
             </Icon>
             <Icon>
-              <FaTrash size={25} />
+              <FaTrash size={25} onClick={handleDelete} />
             </Icon>
           </RightGroup>
         </ReviewFooter>
@@ -64,3 +107,5 @@ export const Review = ({
     </ReviewContainer>
   );
 };
+
+export default Review;
