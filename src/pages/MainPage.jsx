@@ -10,7 +10,6 @@ import "swiper/css/pagination";
 import BannerImage from "../components/BannerImage";
 import OttButtonList from "../components/OttButtonList";
 import PosterSwiperSection from "../components/PosterSwiperSection";
-import { Footer } from "../components/Footer";
 import { DOMAIN } from "../services/domain";
 import { baseInstance } from "../services/axiosInstance";
 
@@ -112,8 +111,6 @@ const MainPage = () => {
         title="곧 사라져요! 놓치면 후회할 작품들"
         data={filterIncludeSelected(data.end)}
       />
-
-      <Footer />
     </Box>
   );
 };
