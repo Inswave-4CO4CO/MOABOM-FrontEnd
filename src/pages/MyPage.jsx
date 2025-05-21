@@ -1,52 +1,96 @@
 import Chart from "../components/chart";
 import styled from "styled-components";
+import Profile from "../components/Profile";
+import Tving from "../assets/images/Tving.png";
+import { useEffect, useState } from "react";
+import { getMyReviewList, getMyWatchCount } from "../services/myPageService";
 
 const MyPage = () => {
+  const [watchCount, setWatchCount] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [reviewList, setReviewList] = useState("");
+  const [reviewPage, setReviewPage] = useState(0);
+
+  //나의 한줄평 가져오기
+  const getReviewList = () => {
+    getMyReviewList(reviewPage + 1).then((res) => {
+      setReviewPage(reviewPage + 1);
+      setReviewList(res.data.content);
+      setReviewCount(res.data.totalCount);
+    });
+  };
+
+  useEffect(() => {
+    //보관함 개수 (봤다 + 보는중)
+    getMyWatchCount().then((res) => setWatchCount(res.data.count));
+
+    //나의 한줄평 가져오기
+    getReviewList();
+  }, []);
+
   return (
-    <Container>
-      <div className="leftGroup">ss</div>
-      <div className="rightGroup">
-        <div className="chartBox">
-          <Chart />
+    <PageWrapper>
+      <Container>
+        <div className="leftGroup">
+          <Profile
+            image={Tving}
+            isMyPage={true}
+            firstCount={watchCount}
+            secondCount={reviewCount}
+          />
         </div>
-        <div className="reviewBox">ddd</div>
-      </div>
-    </Container>
+        <div className="rightGroup">
+          <div className="chartBox">
+            <Chart />
+          </div>
+          <div className="reviewBox">
+            <Chart />
+          </div>
+        </div>
+      </Container>
+    </PageWrapper>
   );
 };
 
 export default MyPage;
 
-const Container = styled.div`
-  width: 100%;
-  height: 200vh;
-  position: sticky;
+const PageWrapper = styled.div`
   display: flex;
-  background-color: orange;
-  overflow-y: hidden;
+  flex-direction: column;
+`;
+
+const Container = styled.div`
+  display: flex;
+  width: 100%;
 
   .leftGroup {
-    width: 30%;
-    height: 100px;
+    width: 25%;
+    height: 90vh;
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+  }
 
-    top: 100px;
-    position: -webkit-sticky;
-    background-color: yellow;
-  }
   .rightGroup {
-    width: 70%;
-    height: 100vh;
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
-  .rightGroup {
-    width: 70%;
-    height: 100vh;
-  }
+
   .chartBox {
-    height: 100%;
-    background-color: pink;
+    display: flex;
+    height: 90vh;
+    align-items: center;
+    justify-content: center;
   }
+
   .reviewBox {
-    height: 100%;
-    background-color: green;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
   }
 `;

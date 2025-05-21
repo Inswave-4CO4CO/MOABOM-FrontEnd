@@ -36,8 +36,8 @@ const App = () => {
         <Router>
           <GlobalStyle />
           <Header />
-          <HeaderButton>안녕</HeaderButton>
-          <Navbar />
+          {/* <HeaderButton>안녕</HeaderButton>
+          <Navbar /> */}
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
