@@ -12,9 +12,11 @@ import {
 } from "../styles/components/Header";
 import useAuthStore from "../store/useAuthStore";
 import { useLogin } from "../hooks/useLogin";
+import { useState } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { isLogin } = useAuthStore();
   const { logoutUser } = useLogin();
@@ -24,11 +26,26 @@ const Header = () => {
     logoutUser();
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?keyword=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate("/search");
+    }
+    setSearchQuery("");
+  };
+
   return (
     <HeaderContainer>
       <Logo />
       <InputBtnGroupContainer>
-        <InputBtnGroup placeholder="검색어를 입력하세요">
+        <InputBtnGroup
+          placeholder="검색어를 입력하세요"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          handleClick={handleSearch}
+        >
           <FaSearch />
         </InputBtnGroup>
       </InputBtnGroupContainer>

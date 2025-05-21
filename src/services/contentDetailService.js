@@ -1,11 +1,8 @@
 import api from "./api";
+import { authInstance } from "./axiosInstance";
 
-export const getContentById = (contentID, userId) => {
-  return api.get(`/content/${contentID}`, {
-    headers: {
-      Authorization: `Bearer ${userId}`,
-    },
-  });
+export const getContentById = (contentID) => {
+  return authInstance.get(`/content/${contentID}`);
 };
 
 export const getReviewByPage = (contentID, page) => {

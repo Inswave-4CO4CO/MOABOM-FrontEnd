@@ -8,13 +8,9 @@ import OttButtonList, { ottList } from "../components/OttButtonList";
 import axios from "axios";
 import TabComponent from "../components/Tab";
 import ProfileIcon from "../components/ProfileIcon";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   SearchContainer,
-  SearchHeader,
-  SearchForm,
-  SearchInput,
-  SearchButton,
   SelectedFiltersWrapper,
   FilterLabel,
   SelectedFiltersContainer,
@@ -59,6 +55,20 @@ const SearchPage = () => {
   const [searchText, setSearchText] = useState("");
   const [activeTab, setActiveTab] = useState("content");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // URL에서 검색어 파라미터 가져오기
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const keywordParam = params.get("keyword");
+
+    if (keywordParam) {
+      setSearchQuery(keywordParam);
+      setSearchText(keywordParam);
+      // URL에 검색어가 있으면 검색 실행
+      fetchMoreResults(0, keywordParam);
+    }
+  }, [location.search]);
 
   const handlePersonClick = (personId) => {
     navigate(`/person/${personId}`);
@@ -262,7 +272,7 @@ const SearchPage = () => {
     await fetchMoreResults(0);
   };
 
-  const fetchMoreResults = async (pageNum = page) => {
+  const fetchMoreResults = async (pageNum = page, query = searchQuery) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -282,7 +292,7 @@ const SearchPage = () => {
           : activeTab;
 
       const params = {
-        keyword: searchQuery.trim() || null,
+        keyword: query.trim() || null,
         genres: genres.length > 0 ? genres.join(",") : null,
         categories: categories.length > 0 ? categories.join(",") : null,
         otts:
@@ -384,12 +394,6 @@ const SearchPage = () => {
     }
   }, [selectedFilters, selectedOtts, sort, activeTab]);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setSearchText(searchQuery);
-    fetchSearchResults();
-  };
-
   const handleFilterChange = (filter) => {
     setSelectedFilters((prevFilters) => {
       if (prevFilters.some((f) => f.value === filter.value)) {
@@ -464,20 +468,6 @@ const SearchPage = () => {
 
   return (
     <SearchContainer>
-      <SearchHeader>
-        <SearchForm onSubmit={handleSearch}>
-          <SearchInput
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="검색어를 입력하세요"
-          />
-          <SearchButton type="submit" disabled={isLoading}>
-            {isLoading ? "검색 중..." : "검색"}
-          </SearchButton>
-        </SearchForm>
-      </SearchHeader>
-
       {searchText && (
         <Text
           textAlign="center"
