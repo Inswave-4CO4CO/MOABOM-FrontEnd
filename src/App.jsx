@@ -15,6 +15,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
 import SearchPage from "./pages/SearchPage";
+import MyPage from "./pages/MyPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,13 +36,14 @@ const App = () => {
         <Router>
           <GlobalStyle />
           <Header />
-          <HeaderButton>안녕</HeaderButton>
-          <Navbar />
+          {/* <HeaderButton>안녕</HeaderButton>
+          <Navbar /> */}
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/myPage" element={<MyPage />} />
             <Route
               path="/oauth2/redirect"
               element={<OAuth2RedirectHandler />}
@@ -49,8 +51,9 @@ const App = () => {
             <Route path="/search" element={<SearchPage />} />
           </Routes>
         </Router>
-        <BodyButton width="150px">프로필 관리</BodyButton>
-        <BodyButton width="200px">OTT 추천받기</BodyButton>
+        {/* <BodyButton width="150px">프로필 관리</BodyButton>
+        <BodyButton width="200px">OTT 추천받기</BodyButton> */}
+        <Footer />
         <ToastContainer autoClose={3000} pauseOnHover={false} closeOnClick />
       </ChakraProvider>
     </QueryClientProvider>
