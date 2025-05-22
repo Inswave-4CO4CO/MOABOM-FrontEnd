@@ -6,9 +6,9 @@ import {
   createWatch,
   deleteWatch,
   modifyWatch,
-} from "../services/watchService";
+} from "../services/api/watchService";
 
-const WatchBox = ({ type, userId, contentId }) => {
+const WatchBox = ({ type, contentId }) => {
   const [activeType, setActiveType] = useState(null);
   const [isCreated, setIsCreated] = useState(false);
 
@@ -22,7 +22,7 @@ const WatchBox = ({ type, userId, contentId }) => {
   const handleClick = (selectedType) => {
     if (activeType === selectedType) {
       // 같은 버튼 누르면 삭제
-      deleteWatch(contentId, userId)
+      deleteWatch(contentId)
         .then(() => {
           setActiveType(null);
           setIsCreated(false);
@@ -30,7 +30,7 @@ const WatchBox = ({ type, userId, contentId }) => {
         .catch((err) => console.error("삭제 실패", err));
     } else if (!isCreated) {
       // 아직 생성되지 않았으면 생성
-      createWatch(contentId, userId, selectedType)
+      createWatch(contentId, selectedType)
         .then(() => {
           setActiveType(selectedType);
           setIsCreated(true);
@@ -38,7 +38,7 @@ const WatchBox = ({ type, userId, contentId }) => {
         .catch((err) => console.error("생성 실패", err));
     } else {
       // 이미 생성된 경우면 수정
-      modifyWatch(contentId, userId, selectedType)
+      modifyWatch(contentId, selectedType)
         .then(() => setActiveType(selectedType))
         .catch((err) => console.error("수정 실패", err));
     }

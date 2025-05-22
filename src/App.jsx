@@ -44,6 +44,7 @@ const App = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/myPage" element={<MyPage />} />
+            <Route path="/detail/:contentId" element={<ContentDetailPage />} />
             <Route
               path="/oauth2/redirect"
               element={<OAuth2RedirectHandler />}
