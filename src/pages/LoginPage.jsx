@@ -28,7 +28,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Center>
+    <Center style={{ marginTop: "100px" }}>
       <Stack spacing={2}>
         <Logo />
         <LoginContainer>
