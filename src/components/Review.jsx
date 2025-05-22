@@ -18,6 +18,7 @@ import { useState } from "react";
 import Modal from "./Modal";
 import ReactStars from "react-stars";
 import { Input } from "@chakra-ui/react";
+import { ReviewTextarea } from "../styles/pages/ContentDetailPage";
 
 //리뷰
 const Review = ({
@@ -30,6 +31,7 @@ const Review = ({
   isUser,
   handleModify,
   handleDelete,
+  reviewId,
 }) => {
   const [reviewText, setReviewText] = useState(text || "");
   const [ratingNumber, setRatingNum] = useState(rating);
@@ -72,7 +74,7 @@ const Review = ({
                 title="나의 한줄평"
                 text={
                   <>
-                    <Input
+                    <ReviewTextarea
                       placeholder="한줄평을 입력하세요"
                       value={reviewText}
                       onChange={(e) => setReviewText(e.target.value)}
@@ -90,14 +92,24 @@ const Review = ({
                 actions={[
                   {
                     text: "수정",
-                    onClick: handleModify,
+                    onClick: () =>
+                      handleModify({
+                        reviewId,
+                        reviewText,
+                        ratingNumber,
+                      }),
                   },
-                  { text: "삭제", onClick: handleDelete },
+                  { text: "삭제", onClick: () => handleDelete(reviewId) },
                 ]}
               />
             </Icon>
             <Icon>
-              <FaTrash size={25} onClick={handleDelete} />
+              <FaTrash
+                size={25}
+                onClick={() => {
+                  handleDelete(reviewId);
+                }}
+              />
             </Icon>
           </RightGroup>
         </ReviewFooter>
