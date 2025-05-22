@@ -10,9 +10,9 @@ export const useLogin = () => {
 
   const { mutate: loginUser } = useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       if (data) {
-        setLogin(data.accessToken);
+        setLogin(data.accessToken, variables.userId);
         toast.success("로그인 성공!");
         navigate("/");
       }

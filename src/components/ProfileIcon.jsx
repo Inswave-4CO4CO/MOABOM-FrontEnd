@@ -3,6 +3,7 @@ import {
   ProfileImage,
   ProfileName,
 } from "../styles/components/ProfileIcon";
+import defaultImage from "../assets/images/defaultImage.png";
 import { FaCircleUser } from "react-icons/fa6";
 
 //프로필
@@ -12,7 +13,7 @@ const ProfileIcon = ({ imagePath, name, role, cast }) => {
       {imagePath ? (
         <ProfileImage src={imagePath} alt={name} />
       ) : (
-        <FaCircleUser size={100} />
+        <ProfileImage src={defaultImage} alt={name} />
       )}
       {role}
       <ProfileName>{name}</ProfileName>

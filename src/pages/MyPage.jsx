@@ -14,9 +14,6 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { deleteReview, modifyReview } from "../services/api/reviewService";
 import { PageWrapper, Container } from "../styles/pages/MyPage";
 
-import { Alert, AlertTitle, Snackbar } from "@mui/material";
-import AlertCustom from "../components/AlertCustom";
-
 const MyPage = () => {
   const [watchCount, setWatchCount] = useState(0); //보관함 개수
   const [reviewCount, setReviewCount] = useState(0); //한줄평 개수
@@ -201,8 +198,8 @@ const MyPage = () => {
             isMyPage={true}
             firstCount={watchCount}
             secondCount={reviewCount}
-            onFirstClick={handleFirstClick}
-            onSecondClick={handleSecondClick}
+            handleFirstAction={handleFirstClick}
+            handleSecondAction={handleSecondClick}
           />
         </div>
         <div className="rightGroup">

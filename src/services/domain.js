@@ -11,6 +11,9 @@ export const DOMAIN = {
 
   MAIN_CONTENT: "/content",
 
+  USER_INFO: "/user",
+  CHANGE_PASSWORD: "/user/password",
+
   //마이페이지
   MYPAGE_GENRE_CONTENTS: "/user/stats",
   MYPAGE_WATCH_COUNT: "/user/count",

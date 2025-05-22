@@ -25,7 +25,7 @@ const PosterSwiperSection = ({ title, data }) => {
               justify="center"
               align="center"
               h="100%"
-              onClick={() => navigate(`/content/${item.contentId}`)}
+              onClick={() => navigate(`/detail/${item.contentId}`)}
             >
               <PosterCard
                 title={item.title}
