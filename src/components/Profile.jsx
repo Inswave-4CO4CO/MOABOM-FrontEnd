@@ -3,7 +3,6 @@ import WatchButton from "./WatchButton";
 import styled from "styled-components";
 import BodyButton from "./BodyButton";
 import { useNavigate } from "react-router-dom";
-import defaultImage from "../assets/images/defaultImage.png";
 import PasswordModal from "./PasswordModal";
 
 const Profile = ({
@@ -21,7 +20,7 @@ const Profile = ({
   return (
     <Container>
       <div>
-        <ProfileIcon imagePath={image !== null ? image : defaultImage} />
+        <ProfileIcon imagePath={image} />
         <h1 className="name">{name}</h1>
       </div>
       <div className="buttonBox">
