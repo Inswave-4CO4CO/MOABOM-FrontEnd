@@ -27,7 +27,7 @@ authInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const { isLogin, setLogin } = useAuthStore.getState();
+    const { isLogin, userId, setLogin } = useAuthStore.getState();
 
     // 로그아웃 상태
     if (!isLogin) {
@@ -46,8 +46,8 @@ authInstance.interceptors.response.use(
 
       if (res.status === 200) {
         const newAccessToken = res.data.token;
-        setLogin(newAccessToken);
-        // console.log("newAccessToken", newAccessToken);
+        setLogin(newAccessToken, userId);
+
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return authInstance(originalRequest); // 실패한 요청 재시도
       }

@@ -14,13 +14,14 @@ import {
   RightGroup,
   Icon,
 } from "../styles/components/Review";
-import { useState } from "react";
-import Modal from "./Modal";
-import ReactStars from "react-stars";
-import { Input } from "@chakra-ui/react";
+import { Dialog } from "@chakra-ui/react";
+import ReviewModal from "./ReviewModal";
+import { useReview } from "../hooks/useReview";
 
 //리뷰
 const Review = ({
+  contentId,
+  reviewId,
   imagePath,
   nickname,
   date,
@@ -28,11 +29,8 @@ const Review = ({
   rating,
   title,
   isUser,
-  handleModify,
-  handleDelete,
 }) => {
-  const [reviewText, setReviewText] = useState(text || "");
-  const [ratingNumber, setRatingNum] = useState(rating);
+  const { deleteReviewMutate } = useReview(contentId);
 
   return (
     <ReviewContainer>
@@ -64,41 +62,18 @@ const Review = ({
       <Line />
       {isUser ? (
         <ReviewFooter>
-          {title ? <span>{title}</span> : <span />}
+          {title && <span>{title}</span>}
           <RightGroup>
             <Icon>
               <Dialog.Root key={"center"} placement={"center"}>
                 <Dialog.Trigger asChild>
                   <FaPen size={25} />
                 </Dialog.Trigger>
-                <Modal
-                  title="나의 한줄평"
-                  actions={[
-                    {
-                      text: "수정",
-                      onClick: handleModify,
-                    },
-                    { text: "삭제", onClick: handleDelete },
-                  ]}
-                >
-                  <Input
-                    placeholder="한줄평을 입력하세요"
-                    value={reviewText}
-                    onChange={(e) => setReviewText(e.target.value)}
-                    marginBottom="10px"
-                  />
-                  <ReactStars
-                    count={5}
-                    value={ratingNumber}
-                    onChange={setRatingNum}
-                    size={24}
-                    color2={"#ffd700"}
-                  />
-                </Modal>
+                <ReviewModal contentId={contentId} />
               </Dialog.Root>
             </Icon>
             <Icon>
-              <FaTrash size={25} onClick={handleDelete} />
+              <FaTrash size={25} onClick={() => deleteReviewMutate(reviewId)} />
             </Icon>
           </RightGroup>
         </ReviewFooter>
