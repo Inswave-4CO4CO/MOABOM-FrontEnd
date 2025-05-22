@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ReviewRating,
   ReviewTextarea,
@@ -6,21 +6,28 @@ import {
 import Modal from "./Modal";
 import ReactStars from "react-stars";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
 import { useReview } from "../hooks/useReview";
 
 const ReviewModal = () => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
 
-  const { contentId } = useParams();
-
   const {
     userReview,
     createReviewMutate,
     modifyReviewMutate,
     deleteReviewMutate,
-  } = useReview(contentId);
+  } = useReview();
+
+  useEffect(() => {
+    if (userReview) {
+      setReviewText(userReview.reviewText || "");
+      setRating(userReview.rating || 0);
+    } else {
+      setReviewText("");
+      setRating(0);
+    }
+  }, [userReview]);
 
   // 핸들러
   const handleCreate = () => {
@@ -65,14 +72,14 @@ const ReviewModal = () => {
     >
       <ReviewTextarea
         placeholder="한줄평을 입력하세요"
-        value={userReview?.reviewText || reviewText}
+        value={reviewText}
         onChange={(e) => setReviewText(e.target.value)}
       />
       <ReviewRating>
         <span>평점: &nbsp;</span>
         <ReactStars
           count={5}
-          value={userReview?.rating || rating}
+          value={rating}
           onChange={setRating}
           size={24}
           color2={"#ffa07a"}

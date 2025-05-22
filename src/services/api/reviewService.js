@@ -13,6 +13,7 @@ export const findByContentIdAndUserId = (contentId) => {
 
 //한줄평 추가
 export const createReview = (reviewText, rating, contentId) => {
+  console.log(reviewText, contentId, rating);
   return authInstance.post(DOMAIN.USER_REVIEW, {
     reviewText,
     rating,
