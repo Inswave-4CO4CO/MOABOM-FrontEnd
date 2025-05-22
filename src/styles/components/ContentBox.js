@@ -2,20 +2,28 @@ import styled from "styled-components";
 
 // 스타일드 컴포넌트로 분리
 export const ContentBoxContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border-radius: 20px;
   overflow: hidden;
-  width: 100%;
   max-width: 1000px;
   margin: 0 auto;
   background-color: white;
-  width: 90%;
-  height: 93%;
+  width: 100%;
+  height: 90%;
+  padding: 10px;
   border: 1px solid #dcdcdc;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 `;
 
 export const ContentBoxHeader = styled.div`
-  padding: 16px;
+  padding: 16px 28px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 export const ContentBoxTitle = styled.h2`
@@ -37,10 +45,12 @@ export const ContentGrid = styled.div`
   display: grid;
   grid-template-columns: ${({ isReview }) =>
     isReview ? "repeat(1, 1fr)" : "repeat(2, 1fr)"};
-  gap: 24px;
-  padding: 8px 24px;
+  gap: 10px;
+  padding: 8px 16px;
   overflow-y: auto;
   height: 700px;
+  width: 100%;
+  place-items: center;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -61,10 +71,10 @@ export const ContentGrid = styled.div`
 
   @media (min-width: 768px) {
     grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
+      isReview ? "repeat(3, 1fr)" : "repeat(3, 1fr)"};
   }
 
-  @media (min-width: 992px) {
+  @media (min-width: 1200px) {
     grid-template-columns: ${({ isReview }) =>
       isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
   }

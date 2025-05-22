@@ -48,7 +48,7 @@ const ContentBox = ({
   };
 
   const handleTabChange = (value) => {
-    setActiveTab(value);
+    // setActiveTab(value);
     onTabChange(value);
   };
 
@@ -66,7 +66,11 @@ const ContentBox = ({
         ) : (
           <></>
         )}
-        <TabComponent list={tabs} onTabChange={onTabChange} />
+        <TabComponent
+          list={tabs}
+          onTabChange={onTabChange}
+          value={defaultTab}
+        />
       </ContentBoxHeader>
 
       <ContentGrid

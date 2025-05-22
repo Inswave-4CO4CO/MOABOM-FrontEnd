@@ -2,7 +2,6 @@ import Chart from "../components/chart";
 import Profile from "../components/Profile";
 import ContentBox from "../components/ContentBox";
 import { ottList } from "../components/OttButtonList";
-import Tving from "../assets/images/Tving.png";
 import { useEffect, useRef, useState } from "react";
 import {
   getMyReviewList,
@@ -14,24 +13,27 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { deleteReview, modifyReview } from "../services/api/reviewService";
 import { PageWrapper, Container } from "../styles/pages/MyPage";
 
-import { Alert, AlertTitle, Snackbar } from "@mui/material";
-import AlertCustom from "../components/AlertCustom";
-
 const MyPage = () => {
   const [watchCount, setWatchCount] = useState(0); //보관함 개수
   const [reviewCount, setReviewCount] = useState(0); //한줄평 개수
   const [reviewList, setReviewList] = useState([]); //한줄평 리스트
   const [reviewPage, setReviewPage] = useState(0); //한줄평 페이지
 
-  const [activeTab, setActiveTab] = useState({ value: "watching" }); //활성화된 탭(보는중인지 봤다인지)
+  const [activeTab, setActiveTab] = useState("watching"); //활성화된 탭(보는중인지 봤다인지)
   const [selectedOtts, setSelectedOtts] = useState([
     ...ottList.map((ott) => ott.alt),
   ]); //선택된 OTT들
 
   const [isReviewView, setIsReviewView] = useState(false); // false: 보관함, true: 리뷰
 
-  const handleFirstClick = () => setIsReviewView(false); // 보관함 보기
-  const handleSecondClick = () => setIsReviewView(true); // 리뷰 보기
+  const handleFirstClick = () => {
+    setIsReviewView(false);
+    setActiveTab("watching");
+  }; // 보관함 보기
+  const handleSecondClick = () => {
+    setIsReviewView(true);
+    setActiveTab("myReview");
+  }; // 리뷰 보기
 
   const scrollContainerRef = useRef(null); //ContentBox를 참조
   const observerRef = useRef(); //ContentBox 내부에 있는 하단 영역 참조
@@ -39,7 +41,7 @@ const MyPage = () => {
   //보관함 데이터 불러오는 함수
   const fetchContents = async ({ pageParam = 1 }) => {
     const res =
-      activeTab.value === "watching"
+      activeTab === "watching"
         ? await getMyWatchingContents(pageParam, selectedOtts)
         : await getMyWatchedContents(pageParam, selectedOtts);
 
@@ -135,7 +137,12 @@ const MyPage = () => {
   ]);
 
   const handleTabChange = (tabValue) => {
-    setActiveTab(tabValue);
+    setActiveTab(tabValue.value);
+
+    //스크롤 위치 초기화
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
   };
 
   // 한줄평 삭제 핸들러
@@ -197,7 +204,6 @@ const MyPage = () => {
       <Container>
         <div className="leftGroup">
           <Profile
-            image={Tving}
             isMyPage={true}
             firstCount={watchCount}
             secondCount={reviewCount}
@@ -212,7 +218,7 @@ const MyPage = () => {
           <div className="reviewBox">
             <ContentBox
               contentList={isReviewView ? allReviews : allContents}
-              title={isReviewView ? "리뷰" : "보관함"}
+              title={isReviewView ? "한줄평" : "보관함"}
               tabs={
                 isReviewView
                   ? [{ label: "내가 작성한 리뷰", value: "myReview" }]
