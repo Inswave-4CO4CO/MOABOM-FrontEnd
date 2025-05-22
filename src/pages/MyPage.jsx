@@ -207,8 +207,8 @@ const MyPage = () => {
             isMyPage={true}
             firstCount={watchCount}
             secondCount={reviewCount}
-            onFirstClick={handleFirstClick}
-            onSecondClick={handleSecondClick}
+            handleFirstAction={handleFirstClick}
+            handleSecondAction={handleSecondClick}
           />
         </div>
         <div className="rightGroup">

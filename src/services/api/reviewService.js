@@ -15,7 +15,6 @@ export const findByContentIdAndUserId = (contentId) => {
 export const createReview = (reviewText, rating, contentId) => {
   return authInstance.post(DOMAIN.USER_REVIEW, {
     reviewText,
-
     rating,
     contentId,
   });

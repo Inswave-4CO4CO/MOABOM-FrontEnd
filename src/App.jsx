@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import ProfilePage from "./pages/ProfilePage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ContentDetailPage from "./pages/ContentDetailPage";
@@ -13,6 +12,7 @@ import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
 import SearchPage from "./pages/SearchPage";
 import MyPage from "./pages/MyPage";
 import MainPage from "./pages/MainPage";
+import ProfileEditPage from "./pages/ProfileEditPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,17 +36,18 @@ const App = () => {
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/myPage" element={<MyPage />} />
+            <Route path="/mypage" element={<MyPage />} />
             <Route path="/detail/:contentId" element={<ContentDetailPage />} />
             <Route
               path="/oauth2/redirect"
               element={<OAuth2RedirectHandler />}
             />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/mypage/edit" element={<ProfileEditPage />} />
           </Routes>
         </Router>
+        <div style={{ height: "150px" }} />
         <Footer />
         <ToastContainer autoClose={3000} pauseOnHover={false} closeOnClick />
       </ChakraProvider>

@@ -2,7 +2,7 @@ import { Input, Text } from "@chakra-ui/react";
 import { PasswordInput } from "./PasswordInput";
 const LabelInput = ({ label, isPassword = false, ...props }) => {
   return (
-    <>
+    <div>
       <Text>{label}</Text>
       {isPassword ? (
         <PasswordInput
@@ -19,7 +19,7 @@ const LabelInput = ({ label, isPassword = false, ...props }) => {
           {...props}
         />
       )}
-    </>
+    </div>
   );
 };
 
