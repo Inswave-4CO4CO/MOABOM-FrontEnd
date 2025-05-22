@@ -5,13 +5,16 @@ import BodyButton from "./BodyButton";
 import { useNavigate } from "react-router-dom";
 import defaultImage from "../assets/images/defaultImage.png";
 import Modal from "./Modal";
-import { Dialog } from "@chakra-ui/react";
+import { Dialog, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import LabelInput from "./LabelInput";
+import { useMutation } from "@tanstack/react-query";
+import { changePassword } from "../services/api/user";
+import { toast } from "react-toastify";
 
 const Profile = ({
   image = null,
-  name = "모아봄",
+  name = "로딩 중",
   isMyPage = false,
   isEdit = false,
   firstCount = 0,
@@ -23,15 +26,37 @@ const Profile = ({
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
-  const handleEditProfile = () => {
-    navigate("/");
+  const { mutate } = useMutation({
+    mutationFn: changePassword,
+    onSuccess: () => {
+      toast.success("비밀번호가 성공적으로 변경되었습니다!");
+      // 필요시 추가 동작(예: 모달 닫기, 상태 초기화 등)
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.message || "비밀번호 변경에 실패했습니다."
+      );
+    },
+  });
+
+  const handlePasswordChange = () => {
+    if (!password || !passwordConfirm) {
+      toast.error("비밀번호와 확인란을 모두 입력하세요.");
+      return;
+    }
+    if (password !== passwordConfirm) {
+      toast.error("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    mutate({ newPassword: password });
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const action = [
-    { text: "취소", onClick: null },
+    { text: "취소", onClick: () => setIsModalOpen(false) },
     {
       text: "수정",
-      onClick: null,
+      onClick: handlePasswordChange,
     },
   ];
 
@@ -43,25 +68,34 @@ const Profile = ({
       </div>
       <div className="buttonBox">
         {isMyPage ? (
-          <BodyButton onClick={handleEditProfile}>프로필 관리</BodyButton>
+          <BodyButton onClick={() => navigate("/edit")}>프로필 관리</BodyButton>
         ) : (
           isEdit && (
-            <Dialog.Root key={"center"} placement={"center"}>
+            <Dialog.Root
+              key={"center"}
+              placement={"center"}
+              open={isModalOpen}
+              onOpenChange={() => setIsModalOpen(!isModalOpen)}
+            >
               <Dialog.Trigger asChild>
                 <BodyButton>비밀번호 수정</BodyButton>
               </Dialog.Trigger>
               <Modal title="비밀번호 수정" actions={action}>
-                <LabelInput
-                  style={{ marginBottom: "15px" }}
-                  label="새 비밀번호"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <LabelInput
-                  label="비밀번호 확인"
-                  value={passwordConfirm}
-                  onChange={(e) => setPasswordConfirm(e.target.value)}
-                />
+                <VStack spacing={4} align="stretch">
+                  <LabelInput
+                    label="새 비밀번호"
+                    isPassword={true}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <div></div>
+                  <LabelInput
+                    label="비밀번호 확인"
+                    isPassword={true}
+                    value={passwordConfirm}
+                    onChange={(e) => setPasswordConfirm(e.target.value)}
+                  />
+                </VStack>
               </Modal>
             </Dialog.Root>
           )
