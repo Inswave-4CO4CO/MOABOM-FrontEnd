@@ -67,34 +67,35 @@ const Review = ({
           {title ? <span>{title}</span> : <span />}
           <RightGroup>
             <Icon>
-              <Modal
-                modalButton={<FaPen size={25} />}
-                title="나의 한줄평"
-                text={
-                  <>
-                    <Input
-                      placeholder="한줄평을 입력하세요"
-                      value={reviewText}
-                      onChange={(e) => setReviewText(e.target.value)}
-                      marginBottom="10px"
-                    />
-                    <ReactStars
-                      count={5}
-                      value={ratingNumber}
-                      onChange={setRatingNum}
-                      size={24}
-                      color2={"#ffd700"}
-                    />
-                  </>
-                }
-                actions={[
-                  {
-                    text: "수정",
-                    onClick: handleModify,
-                  },
-                  { text: "삭제", onClick: handleDelete },
-                ]}
-              />
+              <Dialog.Root key={"center"} placement={"center"}>
+                <Dialog.Trigger asChild>
+                  <FaPen size={25} />
+                </Dialog.Trigger>
+                <Modal
+                  title="나의 한줄평"
+                  actions={[
+                    {
+                      text: "수정",
+                      onClick: handleModify,
+                    },
+                    { text: "삭제", onClick: handleDelete },
+                  ]}
+                >
+                  <Input
+                    placeholder="한줄평을 입력하세요"
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                    marginBottom="10px"
+                  />
+                  <ReactStars
+                    count={5}
+                    value={ratingNumber}
+                    onChange={setRatingNum}
+                    size={24}
+                    color2={"#ffd700"}
+                  />
+                </Modal>
+              </Dialog.Root>
             </Icon>
             <Icon>
               <FaTrash size={25} onClick={handleDelete} />
