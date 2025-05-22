@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Tabs } from "@chakra-ui/react";
 
-const TabComponent = ({ list, onTabChange }) => {
+const TabComponent = ({ list, onTabChange, value }) => {
   useEffect(() => {
     const style = document.createElement("style");
     style.textContent = `
@@ -35,9 +35,9 @@ const TabComponent = ({ list, onTabChange }) => {
 
   return (
     <Tabs.Root
-      variant="plain" // 반드시 line variant
-      defaultValue={list[0]?.value}
-      mb="20px" // chakra 스타일 prop 으로 margin-bottom           // palette 는 그대로
+      variant="plain"
+      mb="20px"
+      value={value}
       onValueChange={handleValueChange}
     >
       <Tabs.List
