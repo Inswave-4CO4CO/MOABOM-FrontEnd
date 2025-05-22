@@ -162,7 +162,6 @@ const ContentDetailPage = () => {
             {reviewList.map((value) => (
               <Review
                 key={value.reviewId}
-                contentId={contentId}
                 reviewId={value.reviewId}
                 rating={value.rating}
                 date={value.createdAt}

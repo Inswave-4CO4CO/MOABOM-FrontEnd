@@ -6,9 +6,11 @@ import {
   modifyReview,
 } from "../services/api/reviewService";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
-export const useReview = ({ contentId }) => {
+export const useReview = () => {
   const queryClient = useQueryClient();
+  const { contentId } = useParams();
 
   const { data: userReview } = useQuery({
     queryKey: ["myReview", contentId],

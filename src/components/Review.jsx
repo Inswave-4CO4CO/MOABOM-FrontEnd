@@ -20,7 +20,6 @@ import { useReview } from "../hooks/useReview";
 
 //리뷰
 const Review = ({
-  contentId,
   reviewId,
   imagePath,
   nickname,
@@ -30,7 +29,7 @@ const Review = ({
   title,
   isUser,
 }) => {
-  const { deleteReviewMutate } = useReview(contentId);
+  const { deleteReviewMutate } = useReview();
 
   return (
     <ReviewContainer>
@@ -69,7 +68,7 @@ const Review = ({
                 <Dialog.Trigger asChild>
                   <FaPen size={25} />
                 </Dialog.Trigger>
-                <ReviewModal contentId={contentId} />
+                <ReviewModal />
               </Dialog.Root>
             </Icon>
             <Icon>
