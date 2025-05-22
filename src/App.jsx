@@ -13,6 +13,7 @@ import SearchPage from "./pages/SearchPage";
 import MyPage from "./pages/MyPage";
 import MainPage from "./pages/MainPage";
 import ProfileEditPage from "./pages/ProfileEditPage";
+import WishlistPage from "./pages/WishlistPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,6 +46,7 @@ const App = () => {
             />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/mypage/edit" element={<ProfileEditPage />} />
+            <Route path="/recommend" element={<WishlistPage />} />
           </Routes>
         </Router>
         <div style={{ height: "150px" }} />

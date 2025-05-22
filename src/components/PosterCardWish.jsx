@@ -1,6 +1,6 @@
 import { Center, Heading, HStack, Stack } from "@chakra-ui/react";
 import Poster from "./Poster";
-import { GrayText } from "../styles/components/PosterCardWhis";
+import { GrayText } from "../styles/components/PosterCardWish";
 
 const PosterCardWish = ({
   src,
@@ -8,8 +8,8 @@ const PosterCardWish = ({
   runningTime,
   releaseDate,
   madeIn,
-  cast,
   crew,
+  cast,
   ott,
 }) => {
   return (
@@ -23,8 +23,8 @@ const PosterCardWish = ({
           <GrayText>개봉일: {releaseDate}</GrayText>
           <GrayText>제작국가: {madeIn}</GrayText>
           <GrayText>러닝타임: {runningTime}</GrayText>
-          <GrayText>제작진: {cast}</GrayText>
-          <GrayText>출연진: {crew}</GrayText>
+          <GrayText>제작진: {crew}</GrayText>
+          <GrayText>출연진: {cast}</GrayText>
           <GrayText>OTT: {ott}</GrayText>
         </Stack>
       </Center>

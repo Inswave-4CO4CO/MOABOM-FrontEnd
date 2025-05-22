@@ -2,7 +2,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { useQuery } from "@tanstack/react-query";
-import { fetchMainContent } from "../services/api/mainPageService";
+import { getMainContents } from "../services/api/mainPageService";
 import { useOttFilter } from "../hooks/useOttFilter";
 import BannerImage from "../components/BannerImage";
 import OttButtonList from "../components/OttButtonList";
@@ -20,7 +20,7 @@ const MainPage = () => {
     error,
   } = useQuery({
     queryKey: ["mainContent"],
-    queryFn: fetchMainContent,
+    queryFn: getMainContents,
     staleTime: 1000 * 60 * 5,
   });
 

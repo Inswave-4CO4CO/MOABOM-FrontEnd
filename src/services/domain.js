@@ -9,6 +9,7 @@ export const DOMAIN = {
   REFRESH_ACCESSS_TOKEN: "/auth/refresh",
   SEARCH: "/search",
 
+  //메인페이지
   MAIN_CONTENT: "/content",
 
   USER_INFO: "/user",
@@ -46,4 +47,7 @@ export const DOMAIN = {
   DETAIL_CONTENTS: (contentID) => `/content/${contentID}`,
   DETAIL_REVIEW: (contentID, page) =>
     `/content/${contentID}/review?page=${page}`,
+
+  //보고싶은 작품
+  USER_WISH: "/user/wishlist",
 };
