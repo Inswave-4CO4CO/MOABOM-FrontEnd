@@ -9,4 +9,37 @@ export const DOMAIN = {
   REFRESH_ACCESSS_TOKEN: "/auth/refresh",
 
   MAIN_CONTENT: "/content",
+
+  //마이페이지
+  MYPAGE_GENRE_CONTENTS: "/user/stats",
+  MYPAGE_WATCH_COUNT: "/user/count",
+  MYPAGE_REVIEW_LIST: (page) => `/user/comments?page=${page}`,
+  MYPAGE_WATCHING_CONTENTS: (page, ottNames) => {
+    const params = new URLSearchParams();
+    params.append("page", page);
+    ottNames.forEach((name) => params.append("ottNames", name));
+    return `user/watching?${params.toString()}`;
+  },
+  MYPAGE_WATCHED_CONTENTS: (page, ottNames) => {
+    const params = new URLSearchParams();
+    params.append("page", page);
+    ottNames.forEach((name) => params.append("ottNames", name));
+    return `user/watched?${params.toString()}`;
+  },
+
+  //시청상태
+  USER_WATCH: "/content/watch",
+  USER_WATCH_DELETE: (contentId) => `/content/watch/${contentId}`,
+
+  //한줄평
+  REVIEW_BY_PAGE: (contentID, page) =>
+    `/content/${contentID}/review?page=${page}`,
+  USER_REVIEW_BY_ID: (contentId) => `/review?contentId=${contentId}`,
+  USER_REVIEW: "/review",
+  USER_REVIEW_DELETE: (reviewId) => `/review/${reviewId}`,
+
+  //상세정보
+  DETAIL_CONTENTS: (contentID) => `/content/${contentID}`,
+  DETAIL_REVIEW: (contentID, page) =>
+    `/content/${contentID}/review?page=${page}`,
 };

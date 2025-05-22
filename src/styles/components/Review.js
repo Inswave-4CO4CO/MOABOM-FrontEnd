@@ -110,3 +110,17 @@ export const Icon = styled.div`
     color: #727272;
   }
 `;
+
+export const ReviewTextarea = styled.textarea`
+  margin-bottom: 10px;
+  padding: 15px;
+  width: 100%;
+  height: 200px;
+  font-size: medium;
+  border: 1px solid #dcdcdc;
+  resize: none;
+
+  &:focus {
+    outline: none;
+  }
+`;
