@@ -10,7 +10,7 @@ export const HeaderContainer = styled.header`
   top: 0;
   left: 0;
   background-color: white;
-  z-index: 10;
+  z-index: 100;
 `;
 
 export const InputBtnGroupContainer = styled.div`
