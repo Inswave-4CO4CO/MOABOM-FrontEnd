@@ -1,16 +1,17 @@
-import { authInstance } from "./axiosInstance";
+import { authInstance } from "../axiosInstance";
+import { DOMAIN } from "../domain";
 
 //시청상태 추가(보고싶다, 보는중, 봤다)
 export const createWatch = (contentId, type) => {
-  return authInstance.post(`/content/watch`, { contentId, type });
+  return authInstance.post(DOMAIN.USER_WATCH, { contentId, type });
 };
 
 //시청상태 수정(보고싶다, 보는중, 봤다)
 export const modifyWatch = (contentId, type) => {
-  return authInstance.put(`/content/watch`, { contentId, type });
+  return authInstance.put(DOMAIN.USER_WATCH, { contentId, type });
 };
 
 //시청상태 삭제(보고싶다, 보는중, 봤어요)
 export const deleteWatch = (contentId) => {
-  return authInstance.delete(`/content/watch/${contentId}`);
+  return authInstance.delete(DOMAIN.USER_WATCH_DELETE(contentId));
 };

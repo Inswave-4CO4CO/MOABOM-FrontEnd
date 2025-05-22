@@ -18,7 +18,7 @@ import watchType from "../contents/watchType";
 import {
   getContentById,
   getReviewByPage,
-} from "../services/contentDetailService";
+} from "../services/api/contentDetailService";
 import { useParams } from "react-router-dom";
 import ott from "../contents/ottType";
 import {
@@ -26,7 +26,7 @@ import {
   deleteReview,
   findByContentIdAndUserId,
   modifyReview,
-} from "../services/reviewService";
+} from "../services/api/reviewService";
 import {
   Container,
   ContentGroup,
@@ -63,10 +63,7 @@ const ContentDetailPage = () => {
   //파라미터
   const { contentId } = useParams();
 
-  //유저 아이디
-  let userId =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrb3NhIiwiaWF0IjoxNzQ3NjM1NzY4LCJleHAiOjE3NDg4NDUzNjh9.rVhHFb5VbF3mBUGe59Ft3Y1dgYiWwNgqA_pMqmybA9w";
-
+  //리뷰 리스트 가져오기
   const getReviewList = async () => {
     try {
       const currentPage = page;
@@ -115,7 +112,7 @@ const ContentDetailPage = () => {
   // 한줄평 추가
   const handleCreate = async () => {
     try {
-      const response = await createReview(reviewText, null, rating, contentId);
+      const response = await createReview(reviewText, rating, contentId);
       setUserReview(response.data);
 
       const updatedList = [
@@ -127,20 +124,19 @@ const ContentDetailPage = () => {
 
       const requiredCount = (page + 1) * 8;
 
-      while (finalList.length < requiredCount) {
-        const res = await getReviewByPage(contentId, page + 1);
-        const newReviews = res.data.filter(
-          (r) => !finalList.some((item) => item.reviewId === r.reviewId)
-        );
+      // while (finalList.length < requiredCount) {
+      //   const res = await getReviewByPage(contentId, page + 1);
+      //   const newReviews = res.data.filter(
+      //     (r) => !finalList.some((item) => item.reviewId === r.reviewId)
+      //   );
 
-        if (newReviews.length === 0) break;
+      //   if (newReviews.length === 0) break;
 
-        finalList = [...finalList, ...newReviews];
-        setPage((prev) => prev + 1);
-      }
+      //   finalList = [...finalList, ...newReviews];
+      //   setPage((prev) => prev + 1);
+      // }
 
       setReviewList(finalList.slice(0, requiredCount));
-      alert("한줄평이 추가되었습니다.");
     } catch (err) {
       console.error("[한줄평 추가 실패] : ", err);
     }
@@ -152,9 +148,7 @@ const ContentDetailPage = () => {
       const response = await modifyReview(
         userReview.reviewId,
         reviewText,
-        userReview.createdAt,
-        rating,
-        contentId
+        rating
       );
       setUserReview(response.data);
 
@@ -167,8 +161,6 @@ const ContentDetailPage = () => {
           return prev;
         }
       });
-
-      alert("한줄평이 수정되었습니다.");
     } catch (err) {
       console.error("[한줄평 수정 실패] : ", err);
     }
@@ -176,34 +168,31 @@ const ContentDetailPage = () => {
 
   // 한줄평 삭제
   const handleDelete = async () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      try {
-        await deleteReview(userReview.reviewId);
+    try {
+      await deleteReview(userReview.reviewId);
 
-        let newList = reviewList.filter(
-          (item) => item.reviewId !== userReview.reviewId
-        );
-        setUserReview("");
-        setReviewText("");
-        setRating(0);
+      let newList = reviewList.filter(
+        (item) => item.reviewId !== userReview.reviewId
+      );
+      setUserReview("");
+      setReviewText("");
+      setRating(0);
 
-        const requiredCount = (page + 1) * 8;
-        while (newList.length < requiredCount) {
-          const res = await getReviewByPage(contentId, page + 1);
-          const additional = res.data.filter(
-            (r) => !newList.some((item) => item.reviewId === r.reviewId)
-          );
-          if (additional.length === 0) break;
+      // const requiredCount = (page + 1) * 8;
+      // while (newList.length < requiredCount) {
+      //   const res = await getReviewByPage(contentId, page + 1);
+      //   const additional = res.data.filter(
+      //     (r) => !newList.some((item) => item.reviewId === r.reviewId)
+      //   );
+      //   if (additional.length === 0) break;
 
-          newList = [...newList, ...additional];
-          setPage((prev) => prev + 1);
-        }
+      //   newList = [...newList, ...additional];
+      //   setPage((prev) => prev + 1);
+      // }
 
-        setReviewList(newList.slice(0, requiredCount));
-        alert("한줄평이 삭제되었습니다.");
-      } catch (err) {
-        console.error("[한줄평 삭제 실패] : ", err);
-      }
+      setReviewList([...newList]);
+    } catch (err) {
+      console.error("[한줄평 삭제 실패] : ", err);
     }
   };
 
@@ -257,7 +246,7 @@ const ContentDetailPage = () => {
               ))}
             </OttGroup>
             <WatchGroup>
-              <WatchBox type={type} userId={userId} contentId={contentId} />
+              <WatchBox type={type} contentId={contentId} />
               <Modal
                 modalButton={<WatchButton />}
                 title="나의 한줄평"
