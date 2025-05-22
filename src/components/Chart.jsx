@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { getMyGenreContents } from "../services/myPageService";
+import { getMyGenreContents } from "../services/api/myPageService";
 import {
   Chart as ChartJS,
   PieController,

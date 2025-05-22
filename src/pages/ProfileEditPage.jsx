@@ -45,7 +45,6 @@ const ProfileEditPage = () => {
       setNickName(myInfo.nickName || "");
       setImageUrl(myInfo.userImage || "");
       setImageFile(null);
-      console.log(myInfo.userImage);
     }
   }, [myInfo]);
 

@@ -6,7 +6,7 @@ import {
   createWatch,
   deleteWatch,
   modifyWatch,
-} from "../services/watchService";
+} from "../services/api/watchService";
 
 const WatchBox = ({ type, userId, contentId }) => {
   const [activeType, setActiveType] = useState(null);

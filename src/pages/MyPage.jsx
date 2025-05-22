@@ -3,7 +3,10 @@ import styled from "styled-components";
 import Profile from "../components/Profile";
 import Tving from "../assets/images/Tving.png";
 import { useEffect, useState } from "react";
-import { getMyReviewList, getMyWatchCount } from "../services/myPageService";
+import {
+  getMyReviewList,
+  getMyWatchCount,
+} from "../services/api/myPageService";
 
 const MyPage = () => {
   const [watchCount, setWatchCount] = useState(0);

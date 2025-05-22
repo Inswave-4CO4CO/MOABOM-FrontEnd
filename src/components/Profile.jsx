@@ -26,7 +26,9 @@ const Profile = ({
       </div>
       <div className="buttonBox">
         {isMyPage ? (
-          <BodyButton onClick={() => navigate("/edit")}>프로필 관리</BodyButton>
+          <BodyButton onClick={() => navigate("/mypage/edit")}>
+            프로필 관리
+          </BodyButton>
         ) : (
           isEdit && <PasswordModal />
         )}

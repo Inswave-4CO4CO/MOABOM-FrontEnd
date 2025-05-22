@@ -69,7 +69,7 @@ const Header = () => {
                   <Menu.Content>
                     <Menu.Item
                       value="new-txt"
-                      onClick={() => navigate("/profile")}
+                      onClick={() => navigate("/mypage")}
                     >
                       마이페이지
                     </Menu.Item>
