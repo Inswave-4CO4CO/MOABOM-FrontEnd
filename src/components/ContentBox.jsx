@@ -89,8 +89,6 @@ const ContentBox = ({
                 nickname={value.userId}
                 isUser={true}
                 title={value.title}
-                handleModify={onModifyReview}
-                handleDelete={onDeleteReview}
               />
             ))
           : contentList.map((content, index) => (
