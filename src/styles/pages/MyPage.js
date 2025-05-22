@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const PageWrapper = styled.div`
   display: flex;
@@ -44,4 +44,24 @@ export const Container = styled.div`
     height: 86vh;
     justify-content: center;
   }
+`;
+
+export const fadeIn = keyframes`
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+`;
+
+export const DynamicMessage = styled.p`
+  text-align: center;
+  margin-top: 100px;
+  animation: ${fadeIn} 1s ease-in-out;
+  font-size: 1.2rem;
+  margin-top: 200px;
+  color: #777;
 `;

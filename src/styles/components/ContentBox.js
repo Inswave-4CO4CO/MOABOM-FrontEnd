@@ -64,12 +64,17 @@ export const ContentGrid = styled.div`
     background-color: transparent;
   }
 
-  @media (min-width: 576px) {
+  @media (min-width: 400px) {
     grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(2, 1fr)" : "repeat(3, 1fr)"};
+      isReview ? "repeat(1, 1fr)" : "repeat(1, 1fr)"};
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 714px) {
+    grid-template-columns: ${({ isReview }) =>
+      isReview ? "repeat(2, 1fr)" : "repeat(2, 1fr)"};
+  }
+
+  @media (min-width: 1000px) {
     grid-template-columns: ${({ isReview }) =>
       isReview ? "repeat(3, 1fr)" : "repeat(3, 1fr)"};
   }

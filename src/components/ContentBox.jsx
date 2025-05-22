@@ -78,8 +78,9 @@ const ContentBox = ({
         ref={scrollContainerRef}
         isReview={isReview}
       >
-        {isReview
-          ? contentList.map((value) => (
+        {contentList.length !== 0 ? (
+          isReview ? (
+            contentList.map((value) => (
               <Review
                 reviewId={value.reviewId}
                 key={value.reviewId}
@@ -91,13 +92,18 @@ const ContentBox = ({
                 title={value.title}
               />
             ))
-          : contentList.map((content, index) => (
+          ) : (
+            contentList.map((content, index) => (
               <PosterItem key={content.contentId || index}>
                 <PosterContainer>
                   <PosterCard src={content.poster} title={content.title} />
                 </PosterContainer>
               </PosterItem>
-            ))}
+            ))
+          )
+        ) : (
+          <>보관함이 비어있어요</>
+        )}
         <div ref={observerRef} style={{ height: "1px" }} />
       </ContentGrid>
     </ContentBoxContainer>
