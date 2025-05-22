@@ -1,14 +1,20 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import FilterBox from "../components/FilterBox";
 import Dropdown from "../components/Dropdown";
 import CheckBox from "../components/CheckBox";
 import PosterCard from "../components/PosterCard";
 import { createListCollection, Text } from "@chakra-ui/react";
 import OttButtonList, { ottList } from "../components/OttButtonList";
-import axios from "axios";
+import { fetchSearchResults } from "../services/searchPageService";
 import TabComponent from "../components/Tab";
 import ProfileIcon from "../components/ProfileIcon";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import {
   SearchContainer,
   SelectedFiltersWrapper,
@@ -34,41 +40,153 @@ import {
   ControlsContainer,
   LoadingMoreMessage,
   ProfileIconWrapper,
-  PosterCardWrapper,
 } from "../styles/pages/SearchPage";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getInitialStateFromUrlParams } from "../utils/urlUtils";
 
 // OTT 이름 배열 추가
 const allOttNames = ottList.map((ott) => ott.alt);
 
 const SearchPage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const [selectedOtts, setSelectedOtts] = useState([...allOttNames]);
-  const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [genreItems, setGenreItems] = useState([]);
-  const [categoryItems, setCategoryItems] = useState([]);
-  const [sort, setSort] = useState("popularity");
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [searchText, setSearchText] = useState("");
-  const [activeTab, setActiveTab] = useState("content");
   const navigate = useNavigate();
   const location = useLocation();
+  const isSyncingUrl = useRef(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // URL에서 검색어 파라미터 가져오기
+  // getInitialStateFromUrlParams 함수를 사용하여 초기 상태 설정
+  const {
+    initialKeyword,
+    initialFilters,
+    initialOtts,
+    initialType,
+    initialSort,
+  } = getInitialStateFromUrlParams(location.search, allOttNames);
+
+  const [searchQuery, setSearchQuery] = useState(initialKeyword);
+  const [selectedFilters, setSelectedFilters] = useState(initialFilters);
+  const [selectedOtts, setSelectedOtts] = useState(initialOtts);
+  const [searchText, setSearchText] = useState(initialKeyword);
+  const [activeTab, setActiveTab] = useState(initialType);
+  const [sort, setSort] = useState(initialSort);
+  const [genreItems, setGenreItems] = useState([]);
+  const [categoryItems, setCategoryItems] = useState([]);
+
   useEffect(() => {
+    // URL → state 동기화 시작
+    isSyncingUrl.current = true;
     const params = new URLSearchParams(location.search);
-    const keywordParam = params.get("keyword");
 
-    if (keywordParam) {
-      setSearchQuery(keywordParam);
-      setSearchText(keywordParam);
-      // URL에 검색어가 있으면 검색 실행
-      fetchMoreResults(0, keywordParam);
-    }
+    // 1) 검색어
+    const keyword = params.get("keyword") || "";
+    setSearchQuery((prev) => (prev === keyword ? prev : keyword));
+    setSearchText((prev) => (prev === keyword ? prev : keyword));
+
+    // 2) 필터
+    const genres = (params.get("genres") || "")
+      .split(",")
+      .filter(Boolean)
+      .map((genre) => ({ label: genre, value: `genre_${genre}` }));
+    const categories = (params.get("categories") || "")
+      .split(",")
+      .filter(Boolean)
+      .map((category) => ({ label: category, value: `category_${category}` }));
+    const newFilters = [...genres, ...categories];
+    setSelectedFilters((prevFilters) => {
+      if (
+        prevFilters.length === newFilters.length &&
+        prevFilters.every(
+          (filterItem, index) => filterItem.value === newFilters[index].value
+        )
+      ) {
+        return prevFilters;
+      }
+      return newFilters;
+    });
+
+    // 3) OTT
+    const ottsParam = params.get("otts");
+    const newOtts = ottsParam ? ottsParam.split(",") : allOttNames;
+    setSelectedOtts((prevOtts) => {
+      if (
+        prevOtts.length === newOtts.length &&
+        prevOtts.every((ottItem, index) => ottItem === newOtts[index])
+      ) {
+        return prevOtts;
+      }
+      return newOtts;
+    });
+
+    // 4) 탭
+    const typeParam = params.get("type");
+    setActiveTab((prev) =>
+      typeParam && prev !== typeParam ? typeParam : prev
+    );
+
+    // 5) 정렬 (추가)
+    const sortParam = params.get("sort");
+    setSort((prev) => (sortParam && prev !== sortParam ? sortParam : prev));
+
+    // URL → state 동기화 완료
+    // setTimeout을 사용하여 React의 다음 렌더링 사이클로 동기화 완료 시점을 옮김
+    setTimeout(() => {
+      isSyncingUrl.current = false;
+    }, 0);
   }, [location.search]);
+
+  useEffect(() => {
+    // if (isSyncingUrl.current) return; // 임시 주석 처리
+    // state → URL 업데이트 (replace)
+    const params = new URLSearchParams();
+
+    // 2) 검색어
+    if (searchText.trim()) {
+      params.set("keyword", searchText.trim());
+    }
+
+    // 3) 장르 필터 (genre_ 제거)
+    const genreValues = selectedFilters
+      .filter((filterItem) => filterItem.value.startsWith("genre_"))
+      .map((filterItem) => filterItem.value.replace("genre_", ""));
+    if (genreValues.length > 0) {
+      // .length > 0 조건 추가
+      params.set("genres", genreValues.join(","));
+    }
+
+    // 4) 카테고리 필터
+    const categoryValues = selectedFilters
+      .filter((filterItem) => filterItem.value.startsWith("category_"))
+      .map((filterItem) => filterItem.value.replace("category_", ""));
+    if (categoryValues.length > 0) {
+      // .length > 0 조건 추가
+      params.set("categories", categoryValues.join(","));
+    }
+
+    // 5) OTT 필터 (전체가 아닐 때만)
+    if (selectedOtts.length > 0 && selectedOtts.length !== allOttNames.length) {
+      params.set("otts", selectedOtts.join(","));
+    }
+
+    // 6) 정렬 순서 (debouncedSort 대신 sort 사용)
+    if (sort) {
+      // debouncedSort -> sort
+      params.set("sort", sort); // debouncedSort -> sort
+    }
+
+    // 7) 탭 타입
+    if (activeTab && activeTab !== "content") {
+      params.set("type", activeTab);
+    }
+
+    // 8) URL 반영 (replace: true 로 히스토리 누적 방지)
+    setSearchParams(params, { replace: true });
+  }, [
+    searchText,
+    selectedFilters,
+    selectedOtts,
+    sort, // debouncedSort -> sort
+    activeTab,
+    setSearchParams,
+  ]);
 
   const handlePersonClick = (personId) => {
     navigate(`/person/${personId}`);
@@ -84,161 +202,107 @@ const SearchPage = () => {
     { label: "감독/작가", value: "crew" },
   ];
 
-  const handleTabChange = (tabValue) => {
-    setActiveTab(tabValue);
-    resetSearch();
-    if (
-      searchText.trim() ||
-      selectedFilters.length > 0 ||
-      selectedOtts.length > 0
-    ) {
-      setSearchQuery(searchText);
-      fetchMoreResults(0);
-    }
-  };
+  // React Query 무한 스크롤 훅 (콜백 정의 전에 선언)
+  const {
+    data,
+    error: queryError,
+    fetchNextPage,
+    hasNextPage,
+    isLoading: isQueryLoading,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: [
+      "search",
+      searchText,
+      selectedFilters
+        .map((filterItem) => filterItem.value)
+        .sort()
+        .join(","),
+      selectedOtts.sort().join(","),
+      sort,
+      activeTab,
+    ],
+    queryFn: ({ pageParam = 0 }) =>
+      fetchSearchResults({
+        searchText,
+        selectedFilters,
+        selectedOtts,
+        allOttNames,
+        sort,
+        activeTab,
+        pageParam,
+      }),
+    getNextPageParam: (lastPage) =>
+      lastPage.hasNext ? lastPage.page + 1 : undefined,
+    keepPreviousData: true,
+    staleTime: 5 * 60 * 1000,
+  });
 
   const observer = useRef();
   const lastResultElementRef = useCallback(
     (node) => {
-      if (isLoading) return;
+      if (isFetchingNextPage) return;
       if (observer.current) observer.current.disconnect();
-
       observer.current = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && hasMore) {
-            console.log("마지막 요소 감지, 다음 페이지 로드: ", page + 1);
-            setPage((prevPage) => prevPage + 1);
+          if (entries[0].isIntersecting && hasNextPage) {
+            fetchNextPage();
           }
         },
-        {
-          rootMargin: "100px",
-          threshold: 0.1,
-        }
+        { rootMargin: "100px", threshold: 0.1 }
       );
-
-      if (node) {
-        console.log("마지막 요소 관찰 설정:", node);
-        observer.current.observe(node);
-      }
+      if (node) observer.current.observe(node);
     },
-    [isLoading, hasMore, page]
+    [isFetchingNextPage, hasNextPage, fetchNextPage]
   );
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const frameworks = useMemo(
+    () =>
+      createListCollection({
+        items: [
+          { label: "인기순", value: "popularity" },
+          { label: "최신순", value: "latest" },
+          { label: "과거순", value: "oldest" },
+        ],
+      }),
+    []
+  );
 
-  const frameworks = createListCollection({
-    items: [
-      { label: "인기순", value: "popularity" },
-      { label: "최신순", value: "latest" },
-      { label: "과거순", value: "oldest" },
-    ],
-  });
-
+  // 검색 응답 첫 페이지에서 필터 데이터를 설정
   useEffect(() => {
-    const fetchInitialFilters = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/search/filters`);
-        console.log("필터 데이터 로드:", response.data);
-
-        if (response.data.allGenres && response.data.allGenres.length > 0) {
-          const genres = response.data.allGenres.map((genre) => ({
-            label: genre,
-            value: `genre_${genre}`,
-          }));
-          setGenreItems(genres);
-        }
-
-        if (
-          response.data.allCategories &&
-          response.data.allCategories.length > 0
-        ) {
-          const categories = response.data.allCategories.map((category) => ({
-            label: category,
-            value: `category_${category}`,
-          }));
-          setCategoryItems(categories);
-        }
-      } catch (err) {
-        console.error("필터 데이터 로드 오류:", err);
-
-        try {
-          const searchResponse = await axios.get(`${API_URL}/search`, {
-            params: { keyword: "아" },
-          });
-
-          if (searchResponse.data.allGenres) {
-            const genres = searchResponse.data.allGenres.map((genre) => ({
-              label: genre,
-              value: `genre_${genre}`,
-            }));
-            setGenreItems(genres);
-          }
-
-          if (searchResponse.data.allCategories) {
-            const categories = searchResponse.data.allCategories.map(
-              (category) => ({
-                label: category,
-                value: `category_${category}`,
-              })
-            );
-            setCategoryItems(categories);
-          }
-        } catch (searchErr) {
-          console.error("대체 요청도 실패:", searchErr);
-          setGenreItems([
-            { label: "SF", value: "genre_SF" },
-            { label: "공포(호러)", value: "genre_공포(호러)" },
-            { label: "다큐멘터리", value: "genre_다큐멘터리" },
-            { label: "드라마", value: "genre_드라마" },
-            { label: "로맨스", value: "genre_로맨스" },
-            { label: "리얼리티", value: "genre_리얼리티" },
-            { label: "무협", value: "genre_무협" },
-            { label: "뮤지컬", value: "genre_뮤지컬" },
-            { label: "미스터리", value: "genre_미스터리" },
-            { label: "버라이어티", value: "genre_버라이어티" },
-            { label: "범죄", value: "genre_범죄" },
-            { label: "서바이벌", value: "genre_서바이벌" },
-            { label: "성인", value: "genre_성인" },
-            { label: "스릴러", value: "genre_스릴러" },
-            { label: "시대물", value: "genre_시대물" },
-            { label: "애니메이션", value: "genre_애니메이션" },
-            { label: "액션", value: "genre_액션" },
-            { label: "어드벤처", value: "genre_어드벤처" },
-            { label: "코미디", value: "genre_코미디" },
-            { label: "키즈", value: "genre_키즈" },
-            { label: "토크쇼", value: "genre_토크쇼" },
-            { label: "판타지", value: "genre_판타지" },
-          ]);
-
-          setCategoryItems([
-            { label: "영화", value: "category_영화" },
-            { label: "드라마", value: "category_드라마" },
-            { label: "애니메이션", value: "category_애니메이션" },
-            { label: "영화, 애니메이션", value: "category_영화, 애니메이션" },
-            { label: "예능", value: "category_예능" },
-            { label: "예능, 공연", value: "category_예능, 공연" },
-          ]);
-        }
+    if (data?.pages?.length > 0) {
+      const firstPageData = data.pages[0];
+      if (firstPageData.allGenres) {
+        const genres = firstPageData.allGenres.map((genreName) => ({
+          label: genreName,
+          value: `genre_${genreName}`,
+        }));
+        setGenreItems(genres);
       }
-    };
-
-    fetchInitialFilters();
-  }, [API_URL]);
+      if (firstPageData.allCategories) {
+        const categories = firstPageData.allCategories.map((categoryName) => ({
+          label: categoryName,
+          value: `category_${categoryName}`,
+        }));
+        setCategoryItems(categories);
+      }
+    }
+  }, [data]);
 
   const handleOttSelect = (ottName) => {
-    setSelectedOtts((prev) => {
-      const isSelected = prev.includes(ottName);
+    setSelectedOtts((prevSelectedOtts) => {
+      const isSelected = prevSelectedOtts.includes(ottName);
 
-      if (prev.length === allOttNames.length) {
+      if (prevSelectedOtts.length === allOttNames.length) {
         // 전체 선택 상태에서 클릭하면 해당 하나만 남김
         return [ottName];
       } else {
-        const updated = isSelected
-          ? prev.filter((o) => o !== ottName)
-          : [...prev, ottName];
+        const updatedOtts = isSelected
+          ? prevSelectedOtts.filter((ott) => ott !== ottName)
+          : [...prevSelectedOtts, ottName];
 
         // 아무것도 선택되지 않으면 다시 전체 선택
-        return updated.length === 0 ? [...allOttNames] : updated;
+        return updatedOtts.length === 0 ? [...allOttNames] : updatedOtts;
       }
     });
   };
@@ -247,159 +311,16 @@ const SearchPage = () => {
     setSort(sortValue);
   };
 
-  useEffect(() => {
-    console.log("페이지 변경됨:", page);
-    if (page > 0) {
-      fetchMoreResults();
-    }
-  }, [page]);
-  const resetSearch = () => {
-    setPage(0);
-    setHasMore(true);
-    setSearchResults([]);
-  };
-
-  const fetchSearchResults = async () => {
-    if (
-      !searchQuery.trim() &&
-      selectedFilters.length === 0 &&
-      selectedOtts.length === 0
-    ) {
-      return;
-    }
-
-    resetSearch();
-    await fetchMoreResults(0);
-  };
-
-  const fetchMoreResults = async (pageNum = page, query = searchQuery) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const genres = selectedFilters
-        .filter((filter) => filter.value.startsWith("genre_"))
-        .map((filter) => filter.value.replace("genre_", ""));
-
-      const categories = selectedFilters
-        .filter((filter) => filter.value.startsWith("category_"))
-        .map((filter) => filter.value.replace("category_", ""));
-
-      // activeTab이 문자열인지 확인하고 처리
-      const tabType =
-        typeof activeTab === "object" && activeTab !== null
-          ? activeTab.value
-          : activeTab;
-
-      const params = {
-        keyword: query.trim() || null,
-        genres: genres.length > 0 ? genres.join(",") : null,
-        categories: categories.length > 0 ? categories.join(",") : null,
-        otts:
-          selectedOtts.length > 0
-            ? selectedOtts.join(",")
-            : ottList.map((ott) => ott.alt).join(","),
-        sort: sort.toString(),
-        page: pageNum,
-        type: tabType,
-      };
-
-      Object.keys(params).forEach((key) => {
-        if (params[key] === null || params[key] === undefined) {
-          delete params[key];
-        }
-      });
-
-      console.log("검색 요청 파라미터:", params);
-
-      // URL 생성하여 콘솔에 출력
-      const searchParams = new URLSearchParams();
-      Object.entries(params).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          value.forEach((val) => searchParams.append(key, val));
-        } else {
-          searchParams.append(key, value);
-        }
-      });
-      const fullUrl = `${API_URL}/search?${searchParams.toString()}`;
-      console.log("완성된 요청 URL:", fullUrl);
-
-      const response = await axios.get(`${API_URL}/search`, {
-        params,
-        paramsSerializer: (params) => {
-          const searchParams = new URLSearchParams();
-
-          Object.entries(params).forEach(([key, value]) => {
-            if (Array.isArray(value)) {
-              value.forEach((val) => searchParams.append(key, val));
-            } else {
-              searchParams.append(key, value);
-            }
-          });
-
-          return searchParams.toString();
-        },
-      });
-
-      console.log("검색 결과:", response.data);
-
-      // 탭에 따라 다른 응답 구조 처리
-      if (tabType === "content" && response.data.content) {
-        if (pageNum === 0) {
-          setSearchResults(response.data.content);
-        } else {
-          setSearchResults((prev) => [...prev, ...response.data.content]);
-        }
-        setHasMore(response.data.hasNext);
-      } else if (tabType === "cast" && response.data.cast) {
-        if (pageNum === 0) {
-          setSearchResults(response.data.cast);
-        } else {
-          setSearchResults((prev) => [...prev, ...response.data.cast]);
-        }
-        setHasMore(response.data.hasNext);
-      } else if (tabType === "crew" && response.data.crew) {
-        if (pageNum === 0) {
-          setSearchResults(response.data.crew);
-        } else {
-          setSearchResults((prev) => [...prev, ...response.data.crew]);
-        }
-        setHasMore(response.data.hasNext);
-      } else {
-        if (pageNum === 0) {
-          setSearchResults([]);
-        }
-        setHasMore(false);
-      }
-
-      console.log("다음 페이지 존재 여부:", response.data.hasNext);
-    } catch (err) {
-      console.error("검색 중 오류가 발생했습니다:", err);
-      setError("검색 중 오류가 발생했습니다. 다시 시도해주세요.");
-      if (pageNum === 0) {
-        setSearchResults([]);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  useEffect(() => {
-    if (genreItems.length > 0) {
-      resetSearch();
-      const timer = setTimeout(() => {
-        fetchMoreResults(0);
-      }, 500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [selectedFilters, selectedOtts, sort, activeTab]);
-
-  const handleFilterChange = (filter) => {
+  const handleFilterChange = (filterItem) => {
     setSelectedFilters((prevFilters) => {
-      if (prevFilters.some((f) => f.value === filter.value)) {
-        return prevFilters.filter((f) => f.value !== filter.value);
+      if (
+        prevFilters.some((prevFilter) => prevFilter.value === filterItem.value)
+      ) {
+        return prevFilters.filter(
+          (prevFilter) => prevFilter.value !== filterItem.value
+        );
       }
-      return [...prevFilters, filter];
+      return [...prevFilters, filterItem];
     });
   };
 
@@ -411,7 +332,7 @@ const SearchPage = () => {
 
   const FilterCheckBox = ({ item }) => {
     const isChecked = selectedFilters.some(
-      (filter) => filter.value === item.value
+      (filterItem) => filterItem.value === item.value
     );
 
     const handleItemClick = () => {
@@ -419,51 +340,18 @@ const SearchPage = () => {
     };
 
     return (
-      <CheckBox
-        checked={isChecked}
-        onChange={handleItemClick}
-        onClick={handleItemClick}
-      >
+      <CheckBox checked={isChecked} onChange={handleItemClick}>
         {item.label}
       </CheckBox>
     );
   };
 
-  const handleScroll = useCallback(() => {
-    const scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-
-    if (
-      !isLoading &&
-      hasMore &&
-      windowHeight + scrollTop >= documentHeight - 10
-    ) {
-      console.log("스크롤 하단 감지, 다음 페이지 로드:", page + 1);
-      setPage((prevPage) => prevPage + 1);
-    }
-  }, [isLoading, hasMore, page]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
   const handleTabClick = (value) => {
-    console.log("탭 클릭:", value, typeof value); // 값과 타입 확인
+    // 탭 값 설정 후 스크롤을 최상단으로 이동
     const tabValue =
       typeof value === "object" && value !== null ? value.value : value;
     setActiveTab(tabValue);
-    resetSearch();
-    if (
-      searchText.trim() ||
-      selectedFilters.length > 0 ||
-      selectedOtts.length > 0
-    ) {
-      setSearchQuery(searchText);
-      fetchMoreResults(0);
-    }
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -480,7 +368,11 @@ const SearchPage = () => {
         </Text>
       )}
 
-      <TabComponent list={tabList} onTabChange={handleTabClick} />
+      <TabComponent
+        list={tabList}
+        value={activeTab}
+        onTabChange={handleTabClick}
+      />
 
       {/* 작품 탭일 때만 필터 컴포넌트들 렌더링 */}
       {activeTab === "content" && (
@@ -489,10 +381,12 @@ const SearchPage = () => {
             <SelectedFiltersWrapper>
               <FilterLabel>선택한 필터</FilterLabel>
               <SelectedFiltersContainer>
-                {selectedFilters.map((filter) => (
-                  <FilterBoxWrapper key={filter.value}>
-                    <FilterBox onClick={() => handleRemoveFilter(filter.value)}>
-                      {filter.label} <CloseIcon>×</CloseIcon>
+                {selectedFilters.map((filterItem) => (
+                  <FilterBoxWrapper key={filterItem.value}>
+                    <FilterBox
+                      onClick={() => handleRemoveFilter(filterItem.value)}
+                    >
+                      {filterItem.label} <CloseIcon>×</CloseIcon>
                     </FilterBox>
                   </FilterBoxWrapper>
                 ))}
@@ -500,7 +394,11 @@ const SearchPage = () => {
             </SelectedFiltersWrapper>
           )}
 
-          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {queryError && (
+            <ErrorMessage>
+              검색 중 오류가 발생했습니다. 다시 시도해주세요.
+            </ErrorMessage>
+          )}
 
           <SearchContent>
             <FilterSection>
@@ -535,7 +433,11 @@ const SearchPage = () => {
                   onToggleOtt={handleOttSelect}
                   selectedOtts={selectedOtts}
                 />
-                <Dropdown list={frameworks} onChange={handleSortChange} />
+                <Dropdown
+                  list={frameworks}
+                  onChange={handleSortChange}
+                  defaultValue={sort}
+                />
               </ControlsContainer>
             </FilterSection>
           </SearchContent>
@@ -543,69 +445,94 @@ const SearchPage = () => {
       )}
 
       {/* 에러 메시지는 모든 탭에서 표시 */}
-      {activeTab !== "content" && error && <ErrorMessage>{error}</ErrorMessage>}
+      {activeTab !== "content" && queryError && (
+        <ErrorMessage>
+          검색 중 오류가 발생했습니다. 다시 시도해주세요.
+        </ErrorMessage>
+      )}
 
-      <ResultsSection isContentTab={activeTab === "content"}>
-        {isLoading && page === 0 ? (
+      <ResultsSection $isContentTab={activeTab === "content"}>
+        {isQueryLoading ? (
           <LoadingMessage>검색 결과를 불러오는 중...</LoadingMessage>
-        ) : searchResults.length > 0 ? (
+        ) : data?.pages?.flatMap(
+            (pageData) =>
+              pageData.content ?? pageData.cast ?? pageData.crew ?? []
+          ).length > 0 ? (
           <>
             {activeTab === "content" &&
               // 작품 탭일 때 PosterCard 렌더링
-              searchResults.map((result, index) => (
-                <PosterCardWrapper
-                  key={`${result.contentId}-${index}`}
-                  onClick={() => handleContentClick(result.contentId)}
-                >
-                  <PosterCard
-                    src={result.poster}
-                    title={result.title}
-                    ottname={result.ottname || ""}
-                  />
-                </PosterCardWrapper>
-              ))}
+              data.pages
+                .flatMap((pageData) => pageData.content ?? [])
+                .map((resultItem, index, array) => {
+                  console.log(
+                    "Rendering PosterCard with title:",
+                    resultItem.title
+                  );
+                  return (
+                    <PosterCard
+                      key={`${resultItem.contentId}-${index}`}
+                      ref={
+                        index === array.length - 1 ? lastResultElementRef : null
+                      }
+                      onClick={() => handleContentClick(resultItem.contentId)}
+                      src={resultItem.poster}
+                      title={resultItem.title}
+                      ottname={resultItem.ottname || ""}
+                    />
+                  );
+                })}
 
             {activeTab === "cast" && (
               // 배우 탭일 때 ProfileIcon 렌더링
               <ProfileGrid>
-                {searchResults.map((person, index) => (
-                  <ProfileIconWrapper
-                    key={`${person.personId}-${index}`}
-                    onClick={() => handlePersonClick(person.personId)}
-                  >
-                    <ProfileIcon
-                      imagePath={
-                        person.image ||
-                        "https://via.placeholder.com/100x100?text=No+Image"
+                {data.pages
+                  .flatMap((pageData) => pageData.cast ?? [])
+                  .map((personItem, index, array) => (
+                    <ProfileIconWrapper
+                      key={`${personItem.personId}-${index}`}
+                      onClick={() => handlePersonClick(personItem.personId)}
+                      ref={
+                        index === array.length - 1 ? lastResultElementRef : null
                       }
-                      name={person.personName}
-                    />
-                  </ProfileIconWrapper>
-                ))}
+                    >
+                      <ProfileIcon
+                        imagePath={
+                          personItem.image ||
+                          "https://via.placeholder.com/100x100?text=No+Image"
+                        }
+                        name={personItem.personName}
+                      />
+                    </ProfileIconWrapper>
+                  ))}
               </ProfileGrid>
             )}
 
             {activeTab === "crew" && (
               // 감독/작가 탭일 때 ProfileIcon 렌더링
               <ProfileGrid>
-                {searchResults.map((person, index) => (
-                  <ProfileIconWrapper
-                    key={`${person.personId}-${index}`}
-                    onClick={() => handlePersonClick(person.personId)}
-                  >
-                    <ProfileIcon
-                      imagePath={
-                        person.image ||
-                        "https://via.placeholder.com/100x100?text=No+Image"
+                {data.pages
+                  .flatMap((pageData) => pageData.crew ?? [])
+                  .map((personItem, index, array) => (
+                    <ProfileIconWrapper
+                      key={`${personItem.personId}-${index}`}
+                      onClick={() => handlePersonClick(personItem.personId)}
+                      ref={
+                        index === array.length - 1 ? lastResultElementRef : null
                       }
-                      name={person.personName}
-                    />
-                  </ProfileIconWrapper>
-                ))}
+                    >
+                      <ProfileIcon
+                        imagePath={
+                          personItem.image ||
+                          "https://via.placeholder.com/100x100?text=No+Image"
+                        }
+                        name={personItem.personName}
+                      />
+                    </ProfileIconWrapper>
+                  ))}
               </ProfileGrid>
             )}
 
-            {isLoading && page > 0 && (
+            {isFetchingNextPage && (
               <LoadingMoreMessage>
                 더 많은 결과를 불러오는 중...
               </LoadingMoreMessage>
@@ -613,7 +540,7 @@ const SearchPage = () => {
           </>
         ) : (
           <NoResults>
-            {searchQuery.trim() || selectedFilters.length > 0
+            {searchText.trim() || selectedFilters.length > 0
               ? "검색 결과가 없습니다."
               : "검색어 또는 필터를 선택해주세요."}
           </NoResults>

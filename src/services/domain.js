@@ -7,6 +7,7 @@ export const DOMAIN = {
   REISSUE_TOKEN: "/auth/reissue",
   CHECK_ID: "/auth/checkId",
   REFRESH_ACCESSS_TOKEN: "/auth/refresh",
+  SEARCH: "/search",
 
   MAIN_CONTENT: "/content",
 };

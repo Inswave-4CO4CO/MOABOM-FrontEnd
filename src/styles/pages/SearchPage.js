@@ -149,7 +149,7 @@ export const ResultsSection = styled.div`
 
   /* 작품 탭에서만 그리드 레이아웃 적용 */
   ${(props) =>
-    props.isContentTab &&
+    props.$isContentTab &&
     `
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
