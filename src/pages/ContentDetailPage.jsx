@@ -31,7 +31,7 @@ import {
   Reviews,
   AddButton,
 } from "../styles/pages/ContentDetailPage";
-import { Dialog } from "@chakra-ui/react";
+import { Dialog, Skeleton } from "@chakra-ui/react";
 import ReviewModal from "../components/ReviewModal";
 import useAuthStore from "../store/useAuthStore";
 
@@ -140,7 +140,7 @@ const ContentDetailPage = () => {
                 <Dialog.Trigger asChild>
                   <WatchButton />
                 </Dialog.Trigger>
-                <ReviewModal />
+                <ReviewModal contentId={contentId} />
               </Dialog.Root>
             </WatchGroup>
           </ContentDescription>
@@ -161,17 +161,19 @@ const ContentDetailPage = () => {
           <Reviews>
             {reviewList.map((value) => (
               <Review
-                key={value.reviewId}
-                reviewId={value.reviewId}
-                rating={value.rating}
-                date={value.createdAt}
-                text={value.reviewText}
-                nickname={value.userId}
-                isUser={value.userId === userId ? true : false}
+                key={value?.reviewId}
+                reviewId={value?.reviewId}
+                contentId={value?.contentId}
+                rating={value?.rating}
+                date={value?.createdAt}
+                text={value?.reviewText}
+                nickname={value?.userId}
+                isUser={value?.userId === userId ? true : false}
               />
             ))}
           </Reviews>
         </ReviewGroup>
+
         <AddButton>
           {totalPage > page ? (
             <HeaderButton onClick={getReviewList} size="lg">

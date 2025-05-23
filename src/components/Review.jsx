@@ -20,6 +20,7 @@ import { useReview } from "../hooks/useReview";
 
 //리뷰
 const Review = ({
+  contentId,
   reviewId,
   imagePath,
   nickname,
@@ -68,7 +69,7 @@ const Review = ({
                 <Dialog.Trigger asChild>
                   <FaPen size={25} />
                 </Dialog.Trigger>
-                <ReviewModal />
+                <ReviewModal contentId={contentId} />
               </Dialog.Root>
             </Icon>
             <Icon>

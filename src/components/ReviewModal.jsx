@@ -8,7 +8,7 @@ import ReactStars from "react-stars";
 import { toast } from "react-toastify";
 import { useReview } from "../hooks/useReview";
 
-const ReviewModal = () => {
+const ReviewModal = ({ contentId }) => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
 
@@ -17,7 +17,7 @@ const ReviewModal = () => {
     createReviewMutate,
     modifyReviewMutate,
     deleteReviewMutate,
-  } = useReview();
+  } = useReview(contentId);
 
   useEffect(() => {
     if (userReview) {
