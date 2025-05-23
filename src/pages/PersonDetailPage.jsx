@@ -37,7 +37,10 @@ const PersonDetailPage = () => {
   const observerRef = useRef(null);
   // 한 번만 연결 플래그
   const observerAttached = useRef(false);
-  const initialCountsRef = useRef({ actor: 0, director: 0 });
+  const [initialCounts, setInitialCounts] = useState({
+    actor: null,
+    director: null,
+  });
 
   // 데이터를 페이지 단위로 가져오는 함수
   const fetchPersonData = async ({ pageParam = 0 }) => {
@@ -95,7 +98,11 @@ const PersonDetailPage = () => {
     );
 
     observer.observe(observerRef.current);
-    return () => observer.disconnect();
+    observerAttached.current = true;
+    return () => {
+      observer.disconnect();
+      observerAttached.current = false;
+    };
   }, [isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   // 탭 변경 핸들러
@@ -125,10 +132,11 @@ const PersonDetailPage = () => {
 
   useEffect(() => {
     const firstPage = pages?.pages?.[0]?.response;
-    if (firstPage?.totalCounts && initialCountsRef.current.actor === 0) {
-      initialCountsRef.current = firstPage.totalCounts;
+    // actor가 null일 때(아직 한 번도 설정되지 않았을 때)만 set
+    if (firstPage?.totalCounts && initialCounts.actor === null) {
+      setInitialCounts(firstPage.totalCounts);
     }
-  }, [pages]);
+  }, [pages, initialCounts.actor]);
 
   // 1) 초기 로딩 중엔 스켈레톤 보여주기
   if (isLoading) {
@@ -197,8 +205,8 @@ const PersonDetailPage = () => {
           isMyPage={false}
           image={personDetails.image}
           name={personDetails.personName}
-          firstCount={initialCountsRef.current.actor}
-          secondCount={initialCountsRef.current.director}
+          firstCount={initialCounts.actor}
+          secondCount={initialCounts.director}
           onFirstClick={() => {
             setActiveTab("actor");
           }}
@@ -216,14 +224,15 @@ const PersonDetailPage = () => {
             { label: "출연작", value: "actor" },
             { label: "연출작", value: "director" },
           ]}
-          defaultTab="actor"
-          value={activeTab}
+          defaultTab={activeTab}
           onTabChange={handleTabClick}
           contentList={personDetails?.filmography?.[activeTab] ?? []}
           scrollContainerRef={scrollContainerRef}
           observerRef={observerRef}
         />
-        {!hasNextPage && personDetails.filmography[activeTab].length > 0}
+        {hasNextPage && (
+          <div ref={observerRef} style={{ width: "100%", height: "1px" }} />
+        )}
       </ContentWrapper>
     </Container>
   );
