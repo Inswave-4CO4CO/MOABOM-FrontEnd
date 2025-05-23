@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   createReview,
   deleteReview,
@@ -22,9 +27,10 @@ export const useReview = (contentId) => {
       createReview(reviewText, rating, contentId),
     onSuccess: () => {
       toast.success("리뷰가 등록되었습니다!");
-      // 리뷰 목록 쿼리 무효화 (다시 불러오기)
+
       queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
       queryClient.invalidateQueries(["reviewList"]);
+      queryClient.invalidateQueries(["myReviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -40,6 +46,7 @@ export const useReview = (contentId) => {
       toast.success("리뷰가 수정되었습니다!");
       queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
       queryClient.invalidateQueries(["reviewList"]);
+      queryClient.invalidateQueries(["myReviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -54,6 +61,7 @@ export const useReview = (contentId) => {
       toast.success("리뷰가 삭제되었습니다!");
       queryClient.removeQueries({ queryKey: ["myReview", contentId] });
       queryClient.invalidateQueries(["reviewList"]);
+      queryClient.invalidateQueries(["myReviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -70,10 +78,15 @@ export const useReview = (contentId) => {
   };
 };
 
-export const useReviewList = (contentId, page) => {
-  return useQuery({
-    queryKey: ["reviewList", contentId, page],
-    queryFn: () => getReviewByPage(contentId, page),
-    keepPreviousData: true,
+export const useInfiniteReviewList = (contentId) => {
+  return useInfiniteQuery({
+    queryKey: ["reviewList", contentId],
+    queryFn: ({ pageParam = 1 }) => getReviewByPage(contentId, pageParam),
+    getNextPageParam: (lastPage) => {
+      const data = lastPage.data;
+      return data.currentPage < data.totalPages
+        ? data.currentPage + 1
+        : undefined;
+    },
   });
 };

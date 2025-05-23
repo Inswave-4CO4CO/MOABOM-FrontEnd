@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
-// 기존 컴포넌트들
+// 컴포넌트들
 import CastSlider from "../components/CastSlider";
 import BannerImage from "../components/BannerImage";
 import PosterCard from "../components/PosterCard";
@@ -9,10 +11,12 @@ import WatchButton from "../components/WatchButton";
 import Review from "../components/Review";
 import Text from "../components/Text";
 import WatchBox from "../components/WatchBox";
+import ReviewModal from "../components/ReviewModal";
+
+// 컨텐츠 및 스타일 관련
 import watchType from "../contents/watchType";
-import { getContentById } from "../services/api/contentDetailService";
-import { useParams } from "react-router-dom";
 import ott from "../contents/ottType";
+import { getContentById } from "../services/api/contentDetailService";
 import {
   Container,
   ContentGroup,
@@ -25,104 +29,89 @@ import {
   Reviews,
   AddButton,
 } from "../styles/pages/ContentDetailPage";
-import ReviewModal from "../components/ReviewModal";
+
+// Auth 상태 관리
 import useAuthStore from "../store/useAuthStore";
-import { useReviewList } from "../hooks/useReview";
+
+import { useInfiniteReviewList } from "../hooks/useReview";
 
 const ContentDetailPage = () => {
-  // 데이터
+  // 콘텐츠 데이터 관리
   const [content, setContent] = useState(null);
-  const [reviewList, setReviewList] = useState([]);
   const [type, setType] = useState("");
 
-  // 에러 상태
+  // 로딩 및 에러 상태 (콘텐츠 관련)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 상태변화
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
-
-  // 파라미터
   const { contentId } = useParams();
   const { userId } = useAuthStore();
-  const { VITE_API_URL } = import.meta.env;
 
-  const {
-    data: reviewData,
-    isLoading: reviewLoading,
-    error: reviewError,
-  } = useReviewList(contentId, page);
-
-  const observerRef = useRef(null); // observer를 위한 ref
-
-  // 콘텐츠 불러오기
   const getContent = async () => {
-    getContentById(contentId)
-      .then((res) => {
-        setContent(res.data);
-        setType(watchType[res.data.type]);
-      })
-      .catch((err) => {
-        setError(err);
-        console.error("[컨텐츠 데이터 가져오기 실패] : ", err);
-      })
-      .finally(() => setLoading(false));
+    try {
+      const res = await getContentById(contentId);
+      setContent(res.data);
+      setType(watchType[res.data.type]);
+    } catch (err) {
+      setError(err);
+      console.error("[컨텐츠 데이터 가져오기 실패]:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // 리뷰 데이터를 업데이트
-  useEffect(() => {
-    if (reviewData) {
-      const newReviews = reviewData.data.content;
-
-      if (page === 1) {
-        console.log("dddd");
-
-        setReviewList(newReviews);
-      } else {
-        setReviewList((prev) => [...prev, ...newReviews]);
-      }
-
-      setTotalPage(reviewData.data.totalPages);
-    }
-  }, [reviewData]);
-
-  // 콘텐츠 데이터를 처음 불러오기
   useEffect(() => {
     setLoading(true);
     setError(null);
     getContent();
   }, [contentId]);
 
-  // 무한 스크롤 기능
+  // 무한 스크롤 Infinite Query
+  const {
+    data: reviewData,
+    isLoading: reviewLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    error: reviewError,
+  } = useInfiniteReviewList(contentId);
+
   useEffect(() => {
+    if (reviewError) {
+      console.error("리뷰 데이터 오류:", reviewError);
+    }
+  }, [reviewError]);
+
+  const reviewList = reviewData
+    ? reviewData.pages.flatMap((page) => page.data?.content || [])
+    : [];
+
+  const observerRef = useRef(null);
+
+  useLayoutEffect(() => {
     if (!observerRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && page < totalPage && !reviewLoading) {
-          setPage((prev) => prev + 1);
+        const [entry] = entries;
+        console.log("Observer entries:", entries);
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0, rootMargin: "100px" }
     );
 
     observer.observe(observerRef.current);
 
     return () => {
-      if (observerRef.current) {
-        observer.unobserve(observerRef.current);
-      }
+      observer.disconnect();
     };
-  }, [page, totalPage, reviewLoading, observerRef.current]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, observerRef.current]);
 
-  if (loading) {
-    return <div>콘텐츠 정보를 로딩 중입니다...</div>;
-  }
-
-  if (error) {
+  if (loading) return <div>콘텐츠 정보를 로딩 중입니다...</div>;
+  if (error)
     return <div>콘텐츠 정보를 가져오는데 실패했습니다: {error.message}</div>;
-  }
 
   return (
     <Container>
@@ -148,7 +137,12 @@ const ContentDetailPage = () => {
             <p>보러가기</p>
             <OttGroup>
               {content.ott.map((value, index) => (
-                <a key={index} href={value.url} target="_blank">
+                <a
+                  key={index}
+                  href={value.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <OttButton imageSrc={ott[value.ottName]} isSelected={true} />
                 </a>
               ))}
@@ -170,10 +164,7 @@ const ContentDetailPage = () => {
         </ContentCastAndCrew>
 
         <ReviewGroup>
-          <Text
-            text={"한줄평"}
-            count={reviewList.length > 0 ? reviewList.length : "0"}
-          />
+          <Text text={"한줄평"} count={reviewList.length} />
           <Reviews>
             {reviewList.map((value) => (
               <Review
@@ -184,14 +175,17 @@ const ContentDetailPage = () => {
                 date={value.createdAt}
                 text={value.reviewText}
                 nickname={value.nickName}
-                imagePath={VITE_API_URL + value.userImage}
+                imagePath={value.userImage}
                 isUser={value.userId === userId}
               />
             ))}
           </Reviews>
         </ReviewGroup>
       </ContentGroup>
-      <div ref={observerRef} style={{ height: "10px" }} />
+      <div
+        ref={observerRef}
+        style={{ height: "20px", background: "transparent" }}
+      />
     </Container>
   );
 };
