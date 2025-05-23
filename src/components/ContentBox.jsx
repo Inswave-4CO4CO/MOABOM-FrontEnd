@@ -24,6 +24,7 @@ const ContentBox = ({
   scrollContainerRef,
   isReview = false,
   handleReviewUpdated,
+  image,
 }) => {
   // const [activeTab, setActiveTab] = useState(defaultTab);
 
@@ -43,11 +44,6 @@ const ContentBox = ({
       }
     });
   };
-
-  // const handleTabChange = (value) => {
-  //   // setActiveTab(value);
-  //   onTabChange(value);
-  // };
 
   return (
     <ContentBoxContainer>
@@ -88,6 +84,7 @@ const ContentBox = ({
                 nickname={value.userId}
                 isUser={true}
                 title={value.title}
+                imagePath={image}
                 onUpdate={handleReviewUpdated}
               />
             ))

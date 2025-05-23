@@ -30,11 +30,9 @@ import {
   AddButton,
 } from "../styles/pages/ContentDetailPage";
 
-// Chakra UI 다이얼로그
-
 // Auth 상태 관리
 import useAuthStore from "../store/useAuthStore";
-// 무한 스크롤 리뷰 데이터를 가져오는 커스텀 훅
+
 import { useInfiniteReviewList } from "../hooks/useReview";
 
 const ContentDetailPage = () => {
@@ -48,7 +46,6 @@ const ContentDetailPage = () => {
 
   const { contentId } = useParams();
   const { userId } = useAuthStore();
-  const { VITE_API_URL } = import.meta.env;
 
   const getContent = async () => {
     try {
@@ -178,7 +175,7 @@ const ContentDetailPage = () => {
                 date={value.createdAt}
                 text={value.reviewText}
                 nickname={value.nickName}
-                imagePath={VITE_API_URL + value.userImage}
+                imagePath={value.userImage}
                 isUser={value.userId === userId}
               />
             ))}

@@ -4,6 +4,7 @@ import BodyButton from "./BodyButton";
 import { useNavigate } from "react-router-dom";
 import { Container, Icon } from "../styles/components/Profile";
 import PasswordModal from "./PasswordModal";
+import { useEffect } from "react";
 
 const Profile = ({
   image = null,
@@ -16,6 +17,10 @@ const Profile = ({
   handleSecondAction = null,
 }) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(image);
+  }, []);
 
   return (
     <Container>

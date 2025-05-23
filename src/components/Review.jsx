@@ -1,7 +1,6 @@
 import { FaStar, FaPen, FaTrash } from "react-icons/fa";
 import {
   DateSpan,
-  DefaultImage,
   Image,
   LeftGroup,
   Line,
@@ -16,6 +15,7 @@ import {
 } from "../styles/components/Review";
 import ReviewModal from "./ReviewModal";
 import { useReview } from "../hooks/useReview";
+import defaultImage from "../assets/images/defaultImage.png";
 
 //리뷰
 const Review = ({
@@ -30,16 +30,18 @@ const Review = ({
   isUser,
 }) => {
   const { deleteReviewMutate } = useReview();
+  const { VITE_API_URL } = import.meta.env;
 
   return (
     <ReviewContainer>
       <ReviewHeader>
         <LeftGroup>
-          {imagePath ? (
-            <Image src={imagePath} alt="nickname" />
+          {imagePath !== null ? (
+            <Image src={VITE_API_URL + imagePath} alt={nickname} />
           ) : (
-            <DefaultImage />
+            <Image src={defaultImage} alt={nickname} />
           )}
+
           <NameAndDate>
             <span>{nickname}</span>
             <DateSpan>{date}</DateSpan>
