@@ -7,13 +7,19 @@ import {
   StyledFaStar,
 } from "../styles/components/Rate";
 
-const Rate = ({ rating, isIMDB }) => {
+const Rate = ({ rating, isIMDB = false, ...props }) => {
   return (
-    <RateContainer>
+    <RateContainer {...props}>
       <IconContainer>
         {isIMDB ? <RateImage src={imdbLogo} alt="imdb" /> : <StyledFaStar />}
       </IconContainer>
-      <span>{rating}</span>
+      <span>
+        {rating ? (
+          <span>{rating.toString().length === 1 ? rating + ".0" : rating}</span>
+        ) : (
+          "0.0"
+        )}
+      </span>
     </RateContainer>
   );
 };
