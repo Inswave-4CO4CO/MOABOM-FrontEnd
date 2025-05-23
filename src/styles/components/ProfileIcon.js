@@ -15,7 +15,6 @@ export const ProfileImage = styled.img`
   height: 100px;
   object-fit: cover;
   border-radius: 50%;
-  background-color: yellow;
 `;
 
 export const ProfileName = styled.span`

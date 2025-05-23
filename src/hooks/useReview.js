@@ -4,6 +4,7 @@ import {
   deleteReview,
   findByContentIdAndUserId,
   modifyReview,
+  getReviewByPage,
 } from "../services/api/reviewService";
 import { toast } from "react-toastify";
 
@@ -22,7 +23,8 @@ export const useReview = ({ contentId }) => {
     onSuccess: () => {
       toast.success("리뷰가 등록되었습니다!");
       // 리뷰 목록 쿼리 무효화 (다시 불러오기)
-      queryClient.invalidateQueries({ queryKey: ["review", contentId] });
+      queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
+      queryClient.invalidateQueries(["reviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -36,7 +38,8 @@ export const useReview = ({ contentId }) => {
       modifyReview(reviewId, reviewText, rating),
     onSuccess: () => {
       toast.success("리뷰가 수정되었습니다!");
-      queryClient.invalidateQueries({ queryKey: ["review", contentId] });
+      queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
+      queryClient.invalidateQueries(["reviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -49,7 +52,8 @@ export const useReview = ({ contentId }) => {
     mutationFn: (reviewId) => deleteReview(reviewId),
     onSuccess: () => {
       toast.success("리뷰가 삭제되었습니다!");
-      queryClient.invalidateQueries({ queryKey: ["review", contentId] });
+      queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
+      queryClient.invalidateQueries(["reviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -64,4 +68,12 @@ export const useReview = ({ contentId }) => {
     modifyReviewMutate,
     deleteReviewMutate,
   };
+};
+
+export const useReviewList = (contentId, page) => {
+  return useQuery({
+    queryKey: ["reviewList", contentId, page],
+    queryFn: () => getReviewByPage(contentId, page),
+    keepPreviousData: true,
+  });
 };
