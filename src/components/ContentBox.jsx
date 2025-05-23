@@ -12,12 +12,14 @@ import {
   PosterItem,
   PosterContainer,
 } from "../styles/components/ContentBox";
+import { useNavigate } from "react-router-dom";
 
 const ContentBox = ({
   contentList = [],
   title,
   tabs,
   defaultTab,
+  value,
   onTabChange,
   selectedOtts,
   setSelectedOtts,
@@ -73,7 +75,7 @@ const ContentBox = ({
       <ContentGrid
         className="content-scroll-area"
         ref={scrollContainerRef}
-        isReview={isReview}
+        $isReview={isReview}
       >
         {contentList.length !== 0 ? (
           isReview ? (

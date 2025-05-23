@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 // 스타일드 컴포넌트로 분리
 export const ContentBoxContainer = styled.div`
@@ -87,7 +87,7 @@ export const ContentGrid = styled.div`
 
 export const PosterItem = styled.div`
   width: 100%;
-  max-width: 170px;
+  max-width: 200px;
   margin-bottom: 24px;
   cursor: pointer;
 `;
