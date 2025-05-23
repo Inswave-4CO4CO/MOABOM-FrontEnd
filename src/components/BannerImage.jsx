@@ -4,6 +4,7 @@ import {
   Image,
   TextContainer,
 } from "../styles/components/BannerImage";
+import Rate from "./Rate";
 
 const BannerImage = ({
   rating,
@@ -25,7 +26,7 @@ const BannerImage = ({
     <BannerImageContainer>
       <Image src={src} />
       <TextContainer $isDetail={isDetail} $isMain={isMain} gap="1">
-        {isDetail && <Heading size="4xl">{rating}</Heading>}
+        {isDetail && <Rate style={{ fontSize: "35px" }} rating={rating} />}
         <Heading size="6xl">{title}</Heading>
         {isMain && (
           <>
@@ -42,8 +43,9 @@ const BannerImage = ({
             <Text textStyle="lg">
               {runningTime} · {ageRating}
             </Text>
-            <Text textStyle="lg">
-              {releaseDate} · {imdbRating}
+            <Text textStyle="lg" style={{ display: "flex" }}>
+              {releaseDate}&nbsp; · &nbsp;
+              <Rate rating={imdbRating} isIMDB={true} />
             </Text>
           </>
         )}
