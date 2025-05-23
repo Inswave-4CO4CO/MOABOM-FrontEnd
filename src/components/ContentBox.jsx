@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+// import React, { useState } from "react";
 import OttButtonList, { ottList } from "./OttButtonList";
 import TabComponent from "./Tab";
 import PosterCard from "./PosterCard";
@@ -24,15 +24,11 @@ const ContentBox = ({
   selectedOtts,
   setSelectedOtts,
   scrollContainerRef,
-  observerRef,
   isReview = false,
-  userReview,
-  onDeleteReview,
-  onModifyReview,
-  ...props
+  handleReviewUpdated,
 }) => {
-  const [activeTab, setActiveTab] = useState(defaultTab);
-  const navigate = useNavigate();
+  // const [activeTab, setActiveTab] = useState(defaultTab);
+
   const handleOttSelect = (ottName) => {
     setSelectedOtts((prev) => {
       const isSelected = prev.includes(ottName);
@@ -50,10 +46,10 @@ const ContentBox = ({
     });
   };
 
-  const handleTabChange = (value) => {
-    setActiveTab(value);
-    onTabChange(value);
-  };
+  // const handleTabChange = (value) => {
+  //   // setActiveTab(value);
+  //   onTabChange(value);
+  // };
 
   return (
     <ContentBoxContainer>
@@ -69,7 +65,11 @@ const ContentBox = ({
         ) : (
           <></>
         )}
-        <TabComponent list={tabs} value={value} onTabChange={onTabChange} />
+        <TabComponent
+          list={tabs}
+          onTabChange={onTabChange}
+          value={defaultTab}
+        />
       </ContentBoxHeader>
 
       <ContentGrid
@@ -77,10 +77,12 @@ const ContentBox = ({
         ref={scrollContainerRef}
         $isReview={isReview}
       >
-        {isReview
-          ? contentList.map((value) => (
+        {contentList.length !== 0 ? (
+          isReview ? (
+            contentList.map((value) => (
               <Review
                 reviewId={value.reviewId}
+                contentId={value.contentId}
                 key={value.reviewId}
                 rating={value.rating}
                 date={value.createdAt}
@@ -88,28 +90,21 @@ const ContentBox = ({
                 nickname={value.userId}
                 isUser={true}
                 title={value.title}
-                handleModify={onModifyReview}
-                handleDelete={onDeleteReview}
+                onUpdate={handleReviewUpdated}
               />
             ))
-          : contentList.map((content, index) => {
-              const itemKey = content.contentId || `item-${index}`;
-              return (
-                <PosterItem key={itemKey}>
-                  <PosterContainer>
-                    <PosterCard
-                      src={content.poster}
-                      title={content.title}
-                      onClick={() => {
-                        console.log(1);
-                        navigate(`/detail/${content.contentId}`);
-                      }}
-                    />
-                  </PosterContainer>
-                </PosterItem>
-              );
-            })}
-        <div ref={observerRef} style={{ height: "1px" }} />
+          ) : (
+            contentList.map((content, index) => (
+              <PosterItem key={content.contentId || index}>
+                <PosterContainer>
+                  <PosterCard src={content.poster} title={content.title} />
+                </PosterContainer>
+              </PosterItem>
+            ))
+          )
+        ) : (
+          <>보관함이 비어있어요</>
+        )}
       </ContentGrid>
     </ContentBoxContainer>
   );

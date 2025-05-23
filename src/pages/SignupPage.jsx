@@ -32,11 +32,10 @@ const SignupPage = () => {
     }
 
     userSignup({ userId, password, nickName });
-    console.log("Signup in with", userId, password, passwordConfirm, nickName);
   };
 
   return (
-    <Center>
+    <Center style={{ marginTop: "100px" }}>
       <Stack spacing={2}>
         <Logo />
         <LoginContainer>

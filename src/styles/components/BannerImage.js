@@ -15,7 +15,7 @@ export const BannerImageContainer = styled.div`
 
 export const TextContainer = styled(Stack)`
   position: absolute;
-  top: ${(props) => (props.$isDetail ? "65%" : "75%")};
+  top: ${(props) => (props.$isDetail ? "60%" : "75%")};
   left: 8%;
   color: white;
 `;

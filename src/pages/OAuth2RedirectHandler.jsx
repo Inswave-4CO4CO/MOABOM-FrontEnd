@@ -11,9 +11,10 @@ const OAuth2RedirectHandler = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const accessToken = params.get("accessToken");
+    const userId = params.get("email");
 
-    if (accessToken) {
-      setLogin(accessToken);
+    if (accessToken && userId) {
+      setLogin(accessToken, userId);
       toast.success("구글 로그인 성공!");
       alreadyNavigatedRef.current = true;
       setTimeout(() => navigate("/"), 1000);

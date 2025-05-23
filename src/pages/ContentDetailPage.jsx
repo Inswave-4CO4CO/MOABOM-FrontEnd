@@ -1,32 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+// 기존 컴포넌트들
 import CastSlider from "../components/CastSlider";
-// 컴포넌트
 import BannerImage from "../components/BannerImage";
 import PosterCard from "../components/PosterCard";
 import OttButton from "../components/OttButton";
 import WatchButton from "../components/WatchButton";
 import Review from "../components/Review";
 import Text from "../components/Text";
-import HeaderButton from "../components/HeaderButton";
-
-// OTT 이미지
-
 import WatchBox from "../components/WatchBox";
-import Modal from "../components/Modal";
 import watchType from "../contents/watchType";
-import {
-  getContentById,
-  getReviewByPage,
-} from "../services/api/contentDetailService";
+import { getContentById } from "../services/api/contentDetailService";
 import { useParams } from "react-router-dom";
 import ott from "../contents/ottType";
-import {
-  createReview,
-  deleteReview,
-  findByContentIdAndUserId,
-  modifyReview,
-} from "../services/api/reviewService";
 import {
   Container,
   ContentGroup,
@@ -37,65 +23,40 @@ import {
   ContentCastAndCrew,
   ReviewGroup,
   Reviews,
-  ReviewTextarea,
-  ReviewRating,
   AddButton,
 } from "../styles/pages/ContentDetailPage";
-import ReactStars from "react-stars";
+import ReviewModal from "../components/ReviewModal";
+import useAuthStore from "../store/useAuthStore";
+import { useReviewList } from "../hooks/useReview";
 
 const ContentDetailPage = () => {
-  //데이터
+  // 데이터
   const [content, setContent] = useState(null);
   const [reviewList, setReviewList] = useState([]);
-  const [userReview, setUserReview] = useState("");
   const [type, setType] = useState("");
 
-  //에러
+  // 에러 상태
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  //상태변화
-  const [reviewText, setReviewText] = useState("");
-  const [rating, setRating] = useState(0);
-  const [page, setPage] = useState(0);
+  // 상태변화
+  const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
 
-  //파라미터
+  // 파라미터
   const { contentId } = useParams();
+  const { userId } = useAuthStore();
+  const { VITE_API_URL } = import.meta.env;
 
-  //리뷰 리스트 가져오기
-  const getReviewList = async () => {
-    try {
-      const currentPage = page;
-      const res = await getReviewByPage(contentId, currentPage);
+  const {
+    data: reviewData,
+    isLoading: reviewLoading,
+    error: reviewError,
+  } = useReviewList(contentId, page);
 
-      setReviewList((prev) => {
-        const newReviews = res.data.reviews.filter(
-          (newItem) =>
-            !prev.some((existing) => existing.reviewId === newItem.reviewId)
-        );
-        return [...prev, ...newReviews];
-      });
+  const observerRef = useRef(null); // observer를 위한 ref
 
-      setPage(currentPage + 1);
-      setTotalPage(res.data.totalPages);
-    } catch (err) {
-      console.error("[한줄평 가져오기 실패] : ", err);
-    }
-  };
-
-  //한줄평 가져오기
-  const findUserReview = async () => {
-    findByContentIdAndUserId(contentId)
-      .then((res) => {
-        setUserReview(res.data);
-        setReviewText(res.data.reviewText);
-        setRating(res.data.rating);
-      })
-      .catch((err) => console.error("[나의 한줄평 가져오기 실패] : ", err));
-  };
-
-  //컨텐츠 불러오기
+  // 콘텐츠 불러오기
   const getContent = async () => {
     getContentById(contentId)
       .then((res) => {
@@ -109,104 +70,51 @@ const ContentDetailPage = () => {
       .finally(() => setLoading(false));
   };
 
-  // 한줄평 추가
-  const handleCreate = async () => {
-    try {
-      const response = await createReview(reviewText, rating, contentId);
-      setUserReview(response.data);
+  // 리뷰 데이터를 업데이트
+  useEffect(() => {
+    if (reviewData) {
+      const newReviews = reviewData.data.content;
 
-      const updatedList = [
-        response.data,
-        ...reviewList.filter((r) => r.reviewId !== response.data.reviewId),
-      ];
+      if (page === 1) {
+        console.log("dddd");
 
-      let finalList = [...updatedList];
+        setReviewList(newReviews);
+      } else {
+        setReviewList((prev) => [...prev, ...newReviews]);
+      }
 
-      const requiredCount = (page + 1) * 8;
-
-      // while (finalList.length < requiredCount) {
-      //   const res = await getReviewByPage(contentId, page + 1);
-      //   const newReviews = res.data.filter(
-      //     (r) => !finalList.some((item) => item.reviewId === r.reviewId)
-      //   );
-
-      //   if (newReviews.length === 0) break;
-
-      //   finalList = [...finalList, ...newReviews];
-      //   setPage((prev) => prev + 1);
-      // }
-
-      setReviewList(finalList.slice(0, requiredCount));
-    } catch (err) {
-      console.error("[한줄평 추가 실패] : ", err);
+      setTotalPage(reviewData.data.totalPages);
     }
-  };
+  }, [reviewData]);
 
-  // 한줄평 수정
-  const handleModify = async () => {
-    try {
-      const response = await modifyReview(
-        userReview.reviewId,
-        reviewText,
-        rating
-      );
-      setUserReview(response.data);
-
-      setReviewList((prev) => {
-        if (prev.some((item) => item.reviewId === response.data.reviewId)) {
-          return prev.map((item) =>
-            item.reviewId === response.data.reviewId ? response.data : item
-          );
-        } else {
-          return prev;
-        }
-      });
-    } catch (err) {
-      console.error("[한줄평 수정 실패] : ", err);
-    }
-  };
-
-  // 한줄평 삭제
-  const handleDelete = async () => {
-    try {
-      await deleteReview(userReview.reviewId);
-
-      let newList = reviewList.filter(
-        (item) => item.reviewId !== userReview.reviewId
-      );
-      setUserReview("");
-      setReviewText("");
-      setRating(0);
-
-      // const requiredCount = (page + 1) * 8;
-      // while (newList.length < requiredCount) {
-      //   const res = await getReviewByPage(contentId, page + 1);
-      //   const additional = res.data.filter(
-      //     (r) => !newList.some((item) => item.reviewId === r.reviewId)
-      //   );
-      //   if (additional.length === 0) break;
-
-      //   newList = [...newList, ...additional];
-      //   setPage((prev) => prev + 1);
-      // }
-
-      setReviewList([...newList]);
-    } catch (err) {
-      console.error("[한줄평 삭제 실패] : ", err);
-    }
-  };
-
+  // 콘텐츠 데이터를 처음 불러오기
   useEffect(() => {
     setLoading(true);
     setError(null);
     getContent();
-    getReviewList();
-    findUserReview();
-  }, []);
+  }, [contentId]);
 
+  // 무한 스크롤 기능
   useEffect(() => {
-    console.log(userReview);
-  }, [userReview]);
+    if (!observerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && page < totalPage && !reviewLoading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(observerRef.current);
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
+      }
+    };
+  }, [page, totalPage, reviewLoading, observerRef.current]);
 
   if (loading) {
     return <div>콘텐츠 정보를 로딩 중입니다...</div>;
@@ -241,43 +149,15 @@ const ContentDetailPage = () => {
             <OttGroup>
               {content.ott.map((value, index) => (
                 <a key={index} href={value.url} target="_blank">
-                  <OttButton imageSrc={ott[value.ottName]} />
+                  <OttButton imageSrc={ott[value.ottName]} isSelected={true} />
                 </a>
               ))}
             </OttGroup>
             <WatchGroup>
               <WatchBox type={type} contentId={contentId} />
-              <Modal
-                modalButton={<WatchButton />}
-                title="나의 한줄평"
-                text={
-                  <>
-                    <ReviewTextarea
-                      placeholder="한줄평을 입력하세요"
-                      value={reviewText}
-                      onChange={(e) => setReviewText(e.target.value)}
-                    />
-                    <ReviewRating>
-                      <span>평점: &nbsp;</span>
-                      <ReactStars
-                        count={5}
-                        value={rating}
-                        onChange={setRating}
-                        size={24}
-                        color2={"#ffa07a"}
-                      />
-                    </ReviewRating>
-                  </>
-                }
-                actions={
-                  userReview && userReview.reviewText
-                    ? [
-                        { text: "수정", onClick: handleModify },
-                        { text: "삭제", onClick: handleDelete },
-                      ]
-                    : [{ text: "추가", onClick: handleCreate }]
-                }
-              />
+              <ReviewModal contentId={contentId}>
+                <WatchButton />
+              </ReviewModal>
             </WatchGroup>
           </ContentDescription>
         </ContentDetail>
@@ -298,27 +178,20 @@ const ContentDetailPage = () => {
             {reviewList.map((value) => (
               <Review
                 key={value.reviewId}
+                reviewId={value.reviewId}
                 rating={value.rating}
+                contentId={value.contentId}
                 date={value.createdAt}
                 text={value.reviewText}
-                nickname={value.userId}
-                isUser={value.reviewId === userReview.reviewId ? true : false}
-                handleModify={handleModify}
-                handleDelete={handleDelete}
+                nickname={value.nickName}
+                imagePath={VITE_API_URL + value.userImage}
+                isUser={value.userId === userId}
               />
             ))}
           </Reviews>
         </ReviewGroup>
-        <AddButton>
-          {totalPage > page ? (
-            <HeaderButton onClick={getReviewList} size="lg">
-              더보기
-            </HeaderButton>
-          ) : (
-            <></>
-          )}
-        </AddButton>
       </ContentGroup>
+      <div ref={observerRef} style={{ height: "10px" }} />
     </Container>
   );
 };

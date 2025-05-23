@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 import { getMyGenreContents } from "../services/api/myPageService";
 import {
   Chart as ChartJS,
@@ -13,6 +12,13 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import {
+  ChartWrapper,
+  Container,
+  Header,
+  Select,
+  DynamicMessage,
+} from "../styles/components/Chart";
 
 ChartJS.register(
   PieController,
@@ -34,6 +40,7 @@ const Chart = () => {
 
   useEffect(() => {
     getMyGenreContents().then((response) => {
+      console.log(response.data);
       setStats(response.data);
     });
   }, []);
@@ -137,57 +144,14 @@ const Chart = () => {
         </Select>
       </Header>
       <ChartWrapper>
-        <canvas ref={chartRef} />
+        {stats.length === 0 ? (
+          <DynamicMessage>아직 시청 통계가 없어요.</DynamicMessage>
+        ) : (
+          <canvas ref={chartRef} />
+        )}
       </ChartWrapper>
     </Container>
   );
 };
 
 export default Chart;
-
-const Container = styled.div`
-  width: 90%;
-  height: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 30px;
-  border: 1px solid #dcdcdc;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
-  border-radius: 20px;
-`;
-
-const Header = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-
-  .title {
-    align-self: flex-start;
-    font-size: 22px;
-    font-weight: bold;
-  }
-
-  .select {
-    align-self: flex-end;
-  }
-`;
-
-const Select = styled.select`
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-`;
-
-const ChartWrapper = styled.div`
-  width: 100%;
-  max-width: 1000px;
-  height: 500px;
-  margin: 0 auto;
-`;

@@ -1,77 +1,33 @@
-import React, { useEffect, useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMainContent } from "../services/api/mainPageService";
+import { useOttFilter } from "../hooks/useOttFilter";
+import BannerImage from "../components/BannerImage";
+import OttButtonList from "../components/OttButtonList";
+import PosterSwiperSection from "../components/PosterSwiperSection";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import BannerImage from "../components/BannerImage";
-import OttButtonList from "../components/OttButtonList";
-import PosterSwiperSection from "../components/PosterSwiperSection";
-import { DOMAIN } from "../services/domain";
-import { baseInstance } from "../services/axiosInstance";
-
-const allOttNames = [
-  "넷플릭스",
-  "웨이브",
-  "쿠팡플레이",
-  "왓챠",
-  "티빙",
-  "라프텔",
-  "디즈니+",
-  "Apple TV",
-  "U+모바일tv",
-];
-
 const MainPage = () => {
-  const [data, setData] = useState({
-    upcoming: [],
-    new: [],
-    rating: [],
-    end: [],
+  const {
+    data = { upcoming: [], new: [], rating: [], end: [] },
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["mainContent"],
+    queryFn: fetchMainContent,
+    staleTime: 1000 * 60 * 5,
   });
 
-  const [selectedOtts, setSelectedOtts] = useState([...allOttNames]);
+  const { selectedOtts, toggleOtt, filterIncludeSelected } = useOttFilter();
 
-  // OTT 선택 토글 함수
-  const toggleOtt = (ottName) => {
-    setSelectedOtts((prev) => {
-      const isSelected = prev.includes(ottName);
-
-      if (prev.length === allOttNames.length) {
-        // 전체 선택 상태에서 클릭하면 해당 하나만 남김
-        return [ottName];
-      } else {
-        const updated = isSelected
-          ? prev.filter((o) => o !== ottName)
-          : [...prev, ottName];
-
-        // 아무것도 선택되지 않으면 다시 전체 선택
-        return updated.length === 0 ? [...allOttNames] : updated;
-      }
-    });
-  };
-
-  // 선택된 OTT만 필터링
-  const filterIncludeSelected = (list) =>
-    selectedOtts.length === 0
-      ? list
-      : list.filter((item) => selectedOtts.includes(item.ottName));
-
-  useEffect(() => {
-    const fetchMainContent = async () => {
-      try {
-        const res = await baseInstance.get(DOMAIN.MAIN_CONTENT);
-        setData(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchMainContent();
-  }, []);
+  if (isLoading) return <p>로딩 중...</p>;
+  if (isError) return <p>에러 발생: {error.message}</p>;
 
   return (
     <Box>
@@ -95,7 +51,7 @@ const MainPage = () => {
         ))}
       </Swiper>
 
-      <Flex justify="center" align="center" mt={8}>
+      <Flex justify="center" align="center" mt={8} py={4}>
         <OttButtonList selectedOtts={selectedOtts} onToggleOtt={toggleOtt} />
       </Flex>
 
