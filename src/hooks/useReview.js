@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   createReview,
   deleteReview,
@@ -72,10 +77,15 @@ export const useReview = () => {
   };
 };
 
-export const useReviewList = (contentId, page) => {
-  return useQuery({
-    queryKey: ["reviewList", contentId, page],
-    queryFn: () => getReviewByPage(contentId, page),
-    keepPreviousData: true,
+export const useInfiniteReviewList = (contentId) => {
+  return useInfiniteQuery({
+    queryKey: ["reviewList", contentId],
+    queryFn: ({ pageParam = 1 }) => getReviewByPage(contentId, pageParam),
+    getNextPageParam: (lastPage) => {
+      const data = lastPage.data;
+      return data.currentPage < data.totalPages
+        ? data.currentPage + 1
+        : undefined;
+    },
   });
 };
