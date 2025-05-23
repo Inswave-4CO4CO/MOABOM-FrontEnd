@@ -77,7 +77,6 @@ const App = () => {
             </Routes>
           </Layout>
         </Router>
-        <ToastContainer autoClose={3000} pauseOnHover={false} closeOnClick />
       </ChakraProvider>
     </QueryClientProvider>
   );

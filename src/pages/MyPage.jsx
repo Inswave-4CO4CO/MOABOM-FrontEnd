@@ -14,6 +14,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { PageWrapper, Container } from "../styles/pages/MyPage";
 
 import { useUserInfo } from "../hooks/useUserInfo";
+import { Stack } from "@chakra-ui/react";
 
 const MyPage = () => {
   const [watchCount, setWatchCount] = useState(0); //보관함 개수
@@ -196,10 +197,8 @@ const MyPage = () => {
           />
         </div>
         <div className="rightGroup">
-          <div className="chartBox">
+          <Stack gap="10">
             <Chart />
-          </div>
-          <div className="reviewBox">
             <ContentBox
               contentList={isReviewView ? allReviews : allContents}
               title={isReviewView ? "한줄평" : "보관함"}
@@ -223,7 +222,7 @@ const MyPage = () => {
               image={myInfo?.userImage}
               name={myInfo?.nickName}
             />
-          </div>
+          </Stack>
         </div>
       </Container>
       <div ref={observerRef} style={{ height: "1px" }} />
