@@ -16,22 +16,22 @@ export const Container = styled.div`
   width: 100%;
   padding: 20px 0;
   gap: 30px;
+`;
 
-  .leftGroup {
-    width: 30%;
-    height: 80vh;
-    position: sticky;
-    display: flex;
-    justify-content: center;
-    top: 130px;
-  }
+export const LeftGroupContainer = styled.div`
+  width: 30%;
+  height: 80vh;
+  position: sticky;
+  display: flex;
+  justify-content: center;
+  top: 130px;
+`;
 
-  .rightGroup {
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+export const RigthGroupContainer = styled.div`
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 export const fadeIn = keyframes`

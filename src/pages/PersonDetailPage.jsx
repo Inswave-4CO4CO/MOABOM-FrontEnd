@@ -26,6 +26,12 @@ import {
   ContentWrapper,
   Container,
 } from "../styles/pages/PersonDetailPage";
+import { SearchContainer } from "../styles/pages/SearchPage";
+import {
+  LeftGroupContainer,
+  PageContainer,
+  RigthGroupContainer,
+} from "../styles/pages/ProfileEditPage";
 
 const allOttNames = ottList.map((ott) => ott.alt);
 
@@ -141,7 +147,7 @@ const PersonDetailPage = () => {
   // 1) 초기 로딩 중엔 스켈레톤 보여주기
   if (isLoading) {
     return (
-      <Container>
+      <SearchContainer>
         {/* 프로필 영역 */}
         <ProfileWrapper>
           <ProfileContainer>
@@ -193,48 +199,49 @@ const PersonDetailPage = () => {
             </ContentGrid>
           </ContentBoxContainer>
         </ContentWrapper>
-      </Container>
+      </SearchContainer>
     );
   }
   if (isError) return <p>Error: {error.message}</p>;
 
   return (
-    <Container>
-      <ProfileWrapper>
-        <Profile
-          isMyPage={false}
-          image={personDetails.image}
-          name={personDetails.personName}
-          firstCount={initialCounts.actor}
-          secondCount={initialCounts.director}
-          onFirstClick={() => {
-            setActiveTab("actor");
-          }}
-          onSecondClick={() => {
-            setActiveTab("director");
-          }}
-        />
-      </ProfileWrapper>
-
-      <ContentWrapper ref={scrollContainerRef}>
-        <ContentBox
-          selectedOtts={selectedOtts}
-          setSelectedOtts={setSelectedOtts}
-          tabs={[
-            { label: "출연작", value: "actor" },
-            { label: "연출작", value: "director" },
-          ]}
-          defaultTab={activeTab}
-          onTabChange={handleTabClick}
-          contentList={personDetails?.filmography?.[activeTab] ?? []}
-          scrollContainerRef={scrollContainerRef}
-          observerRef={observerRef}
-        />
-        {hasNextPage && (
-          <div ref={observerRef} style={{ width: "100%", height: "1px" }} />
-        )}
-      </ContentWrapper>
-    </Container>
+    <SearchContainer>
+      <PageContainer>
+        <LeftGroupContainer>
+          <Profile
+            isMyPage={false}
+            image={personDetails.image}
+            name={personDetails.personName}
+            firstCount={initialCounts.actor}
+            secondCount={initialCounts.director}
+            onFirstClick={() => {
+              setActiveTab("actor");
+            }}
+            onSecondClick={() => {
+              setActiveTab("director");
+            }}
+          />
+        </LeftGroupContainer>
+        <RigthGroupContainer>
+          <ContentBox
+            selectedOtts={selectedOtts}
+            setSelectedOtts={setSelectedOtts}
+            tabs={[
+              { label: "출연작", value: "actor" },
+              { label: "연출작", value: "director" },
+            ]}
+            defaultTab={activeTab}
+            onTabChange={handleTabClick}
+            contentList={personDetails?.filmography?.[activeTab] ?? []}
+            scrollContainerRef={scrollContainerRef}
+            observerRef={observerRef}
+          />
+          {hasNextPage && (
+            <div ref={observerRef} style={{ width: "100%", height: "1px" }} />
+          )}
+        </RigthGroupContainer>
+      </PageContainer>
+    </SearchContainer>
   );
 };
 

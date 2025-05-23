@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const PageContainer = styled.div`
   display: flex;
   margin-top: 40px;
-  gap: 7%;
+  gap: 35px;
 `;
 
 export const LeftGroupContainer = styled.div`
@@ -17,7 +17,7 @@ export const LeftGroupContainer = styled.div`
 `;
 
 export const RigthGroupContainer = styled.div`
-  width: 63%;
+  width: 70%;
 `;
 
 export const ButtonContainer = styled.div`

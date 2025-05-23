@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 // 스타일드 컴포넌트로 분리
 export const ContentBoxContainer = styled.div`
@@ -11,7 +11,6 @@ export const ContentBoxContainer = styled.div`
   margin: 0 auto;
   background-color: white;
   width: 100%;
-  height: 100%;
   padding: 10px;
   border: 1px solid #dcdcdc;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);

@@ -11,10 +11,14 @@ import {
 } from "../services/api/myPageService";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { PageWrapper, Container } from "../styles/pages/MyPage";
-
 import { useUserInfo } from "../hooks/useUserInfo";
 import { Stack } from "@chakra-ui/react";
+import { SearchContainer } from "../styles/pages/SearchPage";
+import {
+  LeftGroupContainer,
+  PageContainer,
+  RigthGroupContainer,
+} from "../styles/pages/ProfileEditPage";
 
 const MyPage = () => {
   const [watchCount, setWatchCount] = useState(0); //보관함 개수
@@ -183,9 +187,9 @@ const MyPage = () => {
   }, []);
 
   return (
-    <PageWrapper>
-      <Container>
-        <div className="leftGroup">
+    <SearchContainer>
+      <PageContainer>
+        <LeftGroupContainer>
           <Profile
             isMyPage={true}
             firstCount={watchCount}
@@ -195,8 +199,8 @@ const MyPage = () => {
             image={myInfo ? VITE_API_URL + myInfo?.userImage : ""}
             name={myInfo?.nickName}
           />
-        </div>
-        <div className="rightGroup">
+        </LeftGroupContainer>
+        <RigthGroupContainer>
           <Stack gap="10">
             <Chart />
             <ContentBox
@@ -222,10 +226,10 @@ const MyPage = () => {
               image={myInfo?.userImage}
             />
           </Stack>
-        </div>
-      </Container>
+        </RigthGroupContainer>
+      </PageContainer>
       <div ref={observerRef} style={{ height: "1px" }} />
-    </PageWrapper>
+    </SearchContainer>
   );
 };
 
