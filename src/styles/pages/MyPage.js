@@ -18,7 +18,7 @@ export const Container = styled.div`
   gap: 30px;
 
   .leftGroup {
-    width: 20%;
+    width: 30%;
     height: 80vh;
     position: sticky;
     display: flex;
@@ -31,18 +31,6 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     overflow: hidden;
-  }
-
-  .chartBox {
-    display: flex;
-    height: 86vh;
-    justify-content: center;
-  }
-
-  .reviewBox {
-    display: flex;
-    height: auto;
-    justify-content: center;
   }
 `;
 
