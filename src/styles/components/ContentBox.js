@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 // 스타일드 컴포넌트로 분리
 export const ContentBoxContainer = styled.div`
@@ -35,12 +35,30 @@ export const OttButtonContainer = styled.div`
 
 export const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: ${({ isReview }) =>
-    isReview ? "repeat(1, 1fr)" : "repeat(2, 1fr)"};
   gap: 24px;
   padding: 8px 24px;
-  overflow-y: auto;
-  height: 700px;
+  justify-items: center;
+
+  ${({ $isReview }) => {
+    if ($isReview) {
+      return css`
+        grid-template-columns: repeat(1, 1fr);
+        @media (min-width: 576px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        @media (min-width: 768px) {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @media (min-width: 992px) {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      `;
+    } else {
+      return css`
+        grid-template-columns: repeat(4, 1fr);
+      `;
+    }
+  }}
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -53,26 +71,11 @@ export const ContentGrid = styled.div`
   &::-webkit-scrollbar-thumb {
     background-color: transparent;
   }
-
-  @media (min-width: 576px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(2, 1fr)" : "repeat(3, 1fr)"};
-  }
-
-  @media (min-width: 768px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
-  }
-
-  @media (min-width: 992px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
-  }
 `;
 
 export const PosterItem = styled.div`
   width: 100%;
-  max-width: 170px;
+  max-width: 200px;
   margin-bottom: 24px;
   cursor: pointer;
 `;

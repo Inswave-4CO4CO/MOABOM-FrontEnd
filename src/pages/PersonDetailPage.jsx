@@ -1,113 +1,231 @@
-// src/pages/PersonDetailPage.jsx
-
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Profile from "../components/Profile";
 import ContentBox from "../components/ContentBox";
 import { ottList } from "../components/OttButtonList";
+import api from "../services/api";
+import { DOMAIN } from "../services/domain";
+import {
+  Stack,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+} from "@chakra-ui/react";
+import { Container as ProfileContainer } from "../styles/components/Profile";
+import {
+  ContentBoxContainer,
+  ContentBoxHeader,
+  ContentBoxTitle,
+  OttButtonContainer,
+  ContentGrid,
+  PosterItem,
+} from "../styles/components/ContentBox";
+import {
+  ProfileWrapper,
+  ContentWrapper,
+  Container,
+} from "../styles/pages/PersonDetailPage";
 
 const allOttNames = ottList.map((ott) => ott.alt);
 
 const PersonDetailPage = () => {
   const { personId } = useParams();
-
-  // 원본 데이터
-  const [personData, setPersonData] = useState(null);
-  // 필터 적용된 데이터
-  const [filteredData, setFilteredData] = useState(null);
-
-  // 탭, OTT 필터
   const [activeTab, setActiveTab] = useState("actor");
   const [selectedOtts, setSelectedOtts] = useState(allOttNames);
-
-  // 무한 스크롤 refs
   const scrollContainerRef = useRef(null);
   const observerRef = useRef(null);
+  // 한 번만 연결 플래그
+  const observerAttached = useRef(false);
+  const initialCountsRef = useRef({ actor: 0, director: 0 });
 
-  // ─────────────────────────────────────────────────────────
-  // 최초 응답에서만 counts 를 저장할 ref
-  const initialActorCount = useRef(0);
-  const initialDirectorCount = useRef(0);
+  // 데이터를 페이지 단위로 가져오는 함수
+  const fetchPersonData = async ({ pageParam = 0 }) => {
+    const { data } = await api.get(DOMAIN.PERSON_DETAIL(personId), {
+      params: { otts: selectedOtts.join(","), page: pageParam },
+      withCredentials: true,
+    });
 
-  // 1) 최초 personData fetch
-  useEffect(() => {
-    if (!personId) return;
-    axios
-      .get(`http://localhost:8090/person/${personId}`, {
-        params: { otts: allOttNames.join(","), page: 0 },
-        withCredentials: true,
-      })
-      .then(({ data }) => {
-        setPersonData(data);
-        setFilteredData(data);
-
-        // ref 가 아직 0 이면 (아직 초기화 안 된 상태)
-        if (
-          initialActorCount.current === 0 &&
-          data.filmography.actor.length > 0
-        ) {
-          initialActorCount.current = data.filmography.actor.length;
-        }
-        if (
-          initialDirectorCount.current === 0 &&
-          data.filmography.director.length > 0
-        ) {
-          initialDirectorCount.current = data.filmography.director.length;
-        }
-      })
-      .catch(console.error);
-  }, [personId]);
-
-  // 2) OTT 필터 변경 시에는 filteredData 만 다시 fetch
-  useEffect(() => {
-    if (!personData) return;
-    axios
-      .get(`http://localhost:8090/person/${personId}`, {
-        params: { otts: selectedOtts.join(","), page: 0 },
-        withCredentials: true,
-      })
-      .then(({ data }) => {
-        setFilteredData(data);
-      })
-      .catch(console.error);
-  }, [personId, selectedOtts, personData]);
-
-  // 3) 탭 클릭 핸들러
-  const handleTabClick = (value) => {
-    const tabValue = typeof value === "object" ? value.value : value;
-    setActiveTab(tabValue);
-    window.scrollTo(0, 0);
+    const currentTabData = data.filmography?.[activeTab] || [];
+    return {
+      response: data,
+      nextPage: currentTabData.length > 0 ? pageParam + 1 : undefined,
+      currentPage: pageParam,
+    };
   };
 
-  return (
-    <div style={{ display: "flex", alignItems: "flex-start", gap: 20 }}>
-      <Profile
-        isMyPage={false}
-        image={personData?.image}
-        name={personData?.personName}
-        // ref.current 에 저장된 최초 값만 넘겨줌
-        firstCount={initialActorCount.current}
-        secondCount={initialDirectorCount.current}
-      />
+  // React Query 무한 스크롤 설정
+  const {
+    data: pages,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    isError,
+    error,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["personDetail", personId, activeTab, selectedOtts],
+    queryFn: fetchPersonData,
+    getNextPageParam: (last) => last.nextPage,
+    initialPageParam: 0,
+  });
 
-      <ContentBox
-        selectedOtts={selectedOtts}
-        setSelectedOtts={setSelectedOtts}
-        tabs={[
-          { label: "출연작", value: "actor" },
-          { label: "연출작", value: "director" },
-        ]}
-        defaultTab="actor"
-        value={activeTab}
-        onTabChange={handleTabClick}
-        // 이후 필터링에도 바뀌는 건 filteredData 뿐
-        contentList={filteredData?.filmography?.[activeTab] ?? []}
-        scrollContainerRef={scrollContainerRef}
-        observerRef={observerRef}
-      />
-    </div>
+  // IntersectionObserver 로 다음 페이지 요청
+  useEffect(() => {
+    if (
+      isLoading ||
+      !observerRef.current ||
+      !hasNextPage ||
+      isFetchingNextPage ||
+      observerAttached.current
+    )
+      return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      {
+        root: null, // 스크롤 컨테이너
+        threshold: 0, // sentinel이 50% 보일 때만
+        rootMargin: "0px 0px -30px 0px", // 바닥선 30px 위에 와야 트리거
+      }
+    );
+
+    observer.observe(observerRef.current);
+    return () => observer.disconnect();
+  }, [isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // 탭 변경 핸들러
+  const handleTabClick = (value) => {
+    const tabValue =
+      typeof value === "object" && value !== null ? value.value : value;
+    setActiveTab(tabValue);
+  };
+
+  // API에서 받아온 여러 페이지를 합쳐서 렌더용 데이터로 변환
+  const personDetails = pages?.pages.reduce(
+    (acc, page) => {
+      if (!acc.personName) {
+        acc.personName = page.response.personName;
+        acc.image = page.response.image;
+        acc.totalCounts = page.response.totalCounts;
+      }
+      acc.filmography = acc.filmography || {};
+      const arr = page.response.filmography?.[activeTab] || [];
+      acc.filmography[activeTab] = (acc.filmography[activeTab] || []).concat(
+        arr
+      );
+      return acc;
+    },
+    { filmography: { [activeTab]: [] } }
+  );
+
+  useEffect(() => {
+    const firstPage = pages?.pages?.[0]?.response;
+    if (firstPage?.totalCounts && initialCountsRef.current.actor === 0) {
+      initialCountsRef.current = firstPage.totalCounts;
+    }
+  }, [pages]);
+
+  // 1) 초기 로딩 중엔 스켈레톤 보여주기
+  if (isLoading) {
+    return (
+      <Container>
+        {/* 프로필 영역 */}
+        <ProfileWrapper>
+          <ProfileContainer>
+            {/* 아바타 */}
+            <SkeletonCircle size="24" />
+
+            {/* 이름 */}
+            <div className="name">
+              <Skeleton height="6" width="60%" mx="auto" />
+            </div>
+
+            {/* 주요 버튼들 */}
+            <div className="buttonBox">
+              <Skeleton height="40px" width="40%" borderRadius="md" />
+              <Skeleton height="40px" width="40%" borderRadius="md" />
+            </div>
+          </ProfileContainer>
+        </ProfileWrapper>
+
+        {/* 콘텐츠 박스 영역 */}
+        <ContentWrapper>
+          <ContentBoxContainer>
+            <ContentBoxHeader>
+              {/* 타이틀 */}
+              <ContentBoxTitle>
+                <Skeleton height="24px" width="40%" />
+              </ContentBoxTitle>
+
+              <OttButtonContainer>
+                {Array.from({ length: 2 }).map((_, idx) => (
+                  <Skeleton
+                    key={idx}
+                    height="32px"
+                    width="49%"
+                    borderRadius="full"
+                  />
+                ))}
+              </OttButtonContainer>
+            </ContentBoxHeader>
+
+            {/* 포스터 그리드 */}
+            <ContentGrid>
+              {Array.from({ length: 6 }).map((_, idx) => (
+                <PosterItem key={idx}>
+                  <Skeleton height="300px" borderRadius="md" />
+                  <SkeletonText noOfLines={2} spacing="2" mt="2" />
+                </PosterItem>
+              ))}
+            </ContentGrid>
+          </ContentBoxContainer>
+        </ContentWrapper>
+      </Container>
+    );
+  }
+  if (isError) return <p>Error: {error.message}</p>;
+
+  return (
+    <Container>
+      <ProfileWrapper>
+        <Profile
+          isMyPage={false}
+          image={personDetails.image}
+          name={personDetails.personName}
+          firstCount={initialCountsRef.current.actor}
+          secondCount={initialCountsRef.current.director}
+          onFirstClick={() => {
+            setActiveTab("actor");
+          }}
+          onSecondClick={() => {
+            setActiveTab("director");
+          }}
+        />
+      </ProfileWrapper>
+
+      <ContentWrapper ref={scrollContainerRef}>
+        <ContentBox
+          selectedOtts={selectedOtts}
+          setSelectedOtts={setSelectedOtts}
+          tabs={[
+            { label: "출연작", value: "actor" },
+            { label: "연출작", value: "director" },
+          ]}
+          defaultTab="actor"
+          value={activeTab}
+          onTabChange={handleTabClick}
+          contentList={personDetails?.filmography?.[activeTab] ?? []}
+          scrollContainerRef={scrollContainerRef}
+          observerRef={observerRef}
+        />
+        {!hasNextPage && personDetails.filmography[activeTab].length > 0}
+      </ContentWrapper>
+    </Container>
   );
 };
 

@@ -12,12 +12,14 @@ import {
   PosterItem,
   PosterContainer,
 } from "../styles/components/ContentBox";
+import { useNavigate } from "react-router-dom";
 
 const ContentBox = ({
   contentList = [],
   title,
   tabs,
   defaultTab,
+  value,
   onTabChange,
   selectedOtts,
   setSelectedOtts,
@@ -27,9 +29,10 @@ const ContentBox = ({
   userReview,
   onDeleteReview,
   onModifyReview,
+  ...props
 }) => {
   const [activeTab, setActiveTab] = useState(defaultTab);
-
+  const navigate = useNavigate();
   const handleOttSelect = (ottName) => {
     setSelectedOtts((prev) => {
       const isSelected = prev.includes(ottName);
@@ -66,13 +69,13 @@ const ContentBox = ({
         ) : (
           <></>
         )}
-        <TabComponent list={tabs} onTabChange={onTabChange} />
+        <TabComponent list={tabs} value={value} onTabChange={onTabChange} />
       </ContentBoxHeader>
 
       <ContentGrid
         className="content-scroll-area"
         ref={scrollContainerRef}
-        isReview={isReview}
+        $isReview={isReview}
       >
         {isReview
           ? contentList.map((value) => (
@@ -89,13 +92,23 @@ const ContentBox = ({
                 handleDelete={onDeleteReview}
               />
             ))
-          : contentList.map((content, index) => (
-              <PosterItem key={content.contentId || index}>
-                <PosterContainer>
-                  <PosterCard src={content.poster} title={content.title} />
-                </PosterContainer>
-              </PosterItem>
-            ))}
+          : contentList.map((content, index) => {
+              const itemKey = content.contentId || `item-${index}`;
+              return (
+                <PosterItem key={itemKey}>
+                  <PosterContainer>
+                    <PosterCard
+                      src={content.poster}
+                      title={content.title}
+                      onClick={() => {
+                        console.log(1);
+                        navigate(`/detail/${content.contentId}`);
+                      }}
+                    />
+                  </PosterContainer>
+                </PosterItem>
+              );
+            })}
         <div ref={observerRef} style={{ height: "1px" }} />
       </ContentGrid>
     </ContentBoxContainer>
