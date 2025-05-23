@@ -27,6 +27,7 @@ const ContentBox = ({
   isReview = false,
   handleReviewUpdated,
   image,
+  name,
 }) => {
   // const [activeTab, setActiveTab] = useState(defaultTab);
 
@@ -83,7 +84,7 @@ const ContentBox = ({
                 rating={value.rating}
                 date={value.createdAt}
                 text={value.reviewText}
-                nickname={value.userId}
+                nickname={name}
                 isUser={true}
                 title={value.title}
                 imagePath={image}

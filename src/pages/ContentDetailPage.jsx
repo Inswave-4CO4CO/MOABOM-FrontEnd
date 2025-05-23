@@ -164,7 +164,7 @@ const ContentDetailPage = () => {
         </ContentCastAndCrew>
 
         <ReviewGroup>
-          <Text text={"한줄평"} count={reviewList.length} />
+          <Text text={"한줄평"} count={reviewList.length + ""} />
           <Reviews>
             {reviewList.map((value) => (
               <Review

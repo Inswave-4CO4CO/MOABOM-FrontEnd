@@ -221,6 +221,7 @@ const MyPage = () => {
               userReview={allReviews}
               onUpdate={handleReviewUpdated}
               image={myInfo?.userImage}
+              name={myInfo?.nickName}
             />
           </div>
         </div>
