@@ -7,8 +7,9 @@ import Modal from "./Modal";
 import ReactStars from "react-stars";
 import { toast } from "react-toastify";
 import { useReview } from "../hooks/useReview";
+import { Dialog } from "@chakra-ui/react";
 
-const ReviewModal = () => {
+const ReviewModal = ({ contentId, children }) => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
 
@@ -17,17 +18,21 @@ const ReviewModal = () => {
     createReviewMutate,
     modifyReviewMutate,
     deleteReviewMutate,
-  } = useReview();
+  } = useReview(contentId);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (userReview) {
-      setReviewText(userReview.reviewText || "");
-      setRating(userReview.rating || 0);
-    } else {
-      setReviewText("");
-      setRating(0);
+    if (isModalOpen) {
+      if (userReview) {
+        setReviewText(userReview.reviewText || "");
+        setRating(userReview.rating || 0);
+      } else {
+        setReviewText("");
+        setRating(0);
+      }
     }
-  }, [userReview]);
+  }, [userReview, isModalOpen]);
 
   // 핸들러
   const handleCreate = () => {
@@ -59,33 +64,41 @@ const ReviewModal = () => {
   };
 
   return (
-    <Modal
-      title="나의 한줄평"
-      actions={
-        userReview && userReview.reviewText
-          ? [
-              { text: "수정", onClick: handleModify },
-              { text: "삭제", onClick: handleDelete },
-            ]
-          : [{ text: "추가", onClick: handleCreate }]
-      }
+    <Dialog.Root
+      open={isModalOpen}
+      onOpenChange={() => setIsModalOpen(!isModalOpen)}
+      key={"center"}
+      placement={"center"}
     >
-      <ReviewTextarea
-        placeholder="한줄평을 입력하세요"
-        value={reviewText}
-        onChange={(e) => setReviewText(e.target.value)}
-      />
-      <ReviewRating>
-        <span>평점: &nbsp;</span>
-        <ReactStars
-          count={5}
-          value={rating}
-          onChange={setRating}
-          size={24}
-          color2={"#ffa07a"}
+      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+      <Modal
+        title="나의 한줄평"
+        actions={
+          userReview && userReview.reviewText
+            ? [
+                { text: "수정", onClick: handleModify },
+                { text: "삭제", onClick: handleDelete },
+              ]
+            : [{ text: "추가", onClick: handleCreate }]
+        }
+      >
+        <ReviewTextarea
+          placeholder="한줄평을 입력하세요"
+          value={reviewText}
+          onChange={(e) => setReviewText(e.target.value)}
         />
-      </ReviewRating>
-    </Modal>
+        <ReviewRating>
+          <span>평점: &nbsp;</span>
+          <ReactStars
+            count={5}
+            value={rating}
+            onChange={setRating}
+            size={24}
+            color2={"#ffa07a"}
+          />
+        </ReviewRating>
+      </Modal>
+    </Dialog.Root>
   );
 };
 

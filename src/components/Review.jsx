@@ -14,12 +14,12 @@ import {
   RightGroup,
   Icon,
 } from "../styles/components/Review";
-import { Dialog } from "@chakra-ui/react";
 import ReviewModal from "./ReviewModal";
 import { useReview } from "../hooks/useReview";
 
 //리뷰
 const Review = ({
+  contentId,
   reviewId,
   imagePath,
   nickname,
@@ -64,12 +64,9 @@ const Review = ({
           {title && <span>{title}</span>}
           <RightGroup>
             <Icon>
-              <Dialog.Root key={"center"} placement={"center"}>
-                <Dialog.Trigger asChild>
-                  <FaPen size={25} />
-                </Dialog.Trigger>
-                <ReviewModal />
-              </Dialog.Root>
+              <ReviewModal contentId={contentId}>
+                <FaPen size={25} />
+              </ReviewModal>
             </Icon>
             <Icon>
               <FaTrash size={25} onClick={() => deleteReviewMutate(reviewId)} />

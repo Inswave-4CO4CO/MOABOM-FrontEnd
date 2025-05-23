@@ -10,7 +10,6 @@ import OttButton from "../components/OttButton";
 import WatchButton from "../components/WatchButton";
 import Review from "../components/Review";
 import Text from "../components/Text";
-import HeaderButton from "../components/HeaderButton";
 import WatchBox from "../components/WatchBox";
 import ReviewModal from "../components/ReviewModal";
 
@@ -32,11 +31,9 @@ import {
 } from "../styles/pages/ContentDetailPage";
 
 // Chakra UI 다이얼로그
-import { Dialog } from "@chakra-ui/react";
 
 // Auth 상태 관리
 import useAuthStore from "../store/useAuthStore";
-
 // 무한 스크롤 리뷰 데이터를 가져오는 커스텀 훅
 import { useInfiniteReviewList } from "../hooks/useReview";
 
@@ -155,12 +152,9 @@ const ContentDetailPage = () => {
             </OttGroup>
             <WatchGroup>
               <WatchBox type={type} contentId={contentId} />
-              <Dialog.Root key={"center"} placement={"center"}>
-                <Dialog.Trigger asChild>
-                  <WatchButton />
-                </Dialog.Trigger>
-                <ReviewModal />
-              </Dialog.Root>
+              <ReviewModal contentId={contentId}>
+                <WatchButton />
+              </ReviewModal>
             </WatchGroup>
           </ContentDescription>
         </ContentDetail>
@@ -180,6 +174,7 @@ const ContentDetailPage = () => {
                 key={value.reviewId}
                 reviewId={value.reviewId}
                 rating={value.rating}
+                contentId={value.contentId}
                 date={value.createdAt}
                 text={value.reviewText}
                 nickname={value.nickName}
