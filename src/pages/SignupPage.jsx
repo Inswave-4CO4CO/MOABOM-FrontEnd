@@ -35,7 +35,7 @@ const SignupPage = () => {
   };
 
   return (
-    <Center style={{ marginTop: "100px" }}>
+    <Center minH="100vh">
       <Stack spacing={2}>
         <Logo />
         <LoginContainer>

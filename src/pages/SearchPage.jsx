@@ -193,7 +193,7 @@ const SearchPage = () => {
   };
 
   const handleContentClick = (contentId) => {
-    navigate(`/content/${contentId}`);
+    navigate(`/detail/${contentId}`);
   };
 
   const tabList = [
