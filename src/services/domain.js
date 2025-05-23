@@ -8,8 +8,7 @@ export const DOMAIN = {
   CHECK_ID: "/auth/checkId",
   REFRESH_ACCESSS_TOKEN: "/auth/refresh",
   SEARCH: "/search",
-
-  //메인페이지
+  PERSON_DETAIL: (personId) => `/person/${personId}`,
   MAIN_CONTENT: "/content",
 
   USER_INFO: "/user",

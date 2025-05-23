@@ -1,7 +1,12 @@
 import { Group, Input } from "@chakra-ui/react";
 import BodyButton from "./BodyButton";
 
-const InputBtnGroup = ({ children, handleClick, ...props }) => {
+const InputBtnGroup = ({
+  children,
+  handleClick,
+  isHeader = false,
+  ...props
+}) => {
   return (
     <Group attached w="full" maxW="sm">
       <Input
@@ -10,9 +15,15 @@ const InputBtnGroup = ({ children, handleClick, ...props }) => {
         flex="1"
         {...props}
       />
-      <BodyButton size="lg" onClick={handleClick}>
-        {children}
-      </BodyButton>
+      {isHeader ? (
+        <BodyButton type="submit" size="lg" onClick={handleClick}>
+          {children}
+        </BodyButton>
+      ) : (
+        <BodyButton size="lg" onClick={handleClick}>
+          {children}
+        </BodyButton>
+      )}
     </Group>
   );
 };

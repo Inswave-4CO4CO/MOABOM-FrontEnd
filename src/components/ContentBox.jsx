@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+// import React, { useState } from "react";
 import OttButtonList, { ottList } from "./OttButtonList";
 import TabComponent from "./Tab";
 import PosterCard from "./PosterCard";
@@ -12,23 +12,24 @@ import {
   PosterItem,
   PosterContainer,
 } from "../styles/components/ContentBox";
+import { useNavigate } from "react-router-dom";
 
 const ContentBox = ({
   contentList = [],
   title,
   tabs,
   defaultTab,
+  value,
   onTabChange,
   selectedOtts,
   setSelectedOtts,
   scrollContainerRef,
-  observerRef,
   isReview = false,
-  userReview,
-  onDeleteReview,
-  onModifyReview,
+  handleReviewUpdated,
+  image,
+  ...props
 }) => {
-  const [activeTab, setActiveTab] = useState(defaultTab);
+  const navigate = useNavigate();
 
   const handleOttSelect = (ottName) => {
     setSelectedOtts((prev) => {
@@ -47,11 +48,6 @@ const ContentBox = ({
     });
   };
 
-  const handleTabChange = (value) => {
-    setActiveTab(value);
-    onTabChange(value);
-  };
-
   return (
     <ContentBoxContainer>
       <ContentBoxHeader>
@@ -66,18 +62,24 @@ const ContentBox = ({
         ) : (
           <></>
         )}
-        <TabComponent list={tabs} onTabChange={onTabChange} />
+        <TabComponent
+          list={tabs}
+          onTabChange={onTabChange}
+          value={defaultTab}
+        />
       </ContentBoxHeader>
 
       <ContentGrid
         className="content-scroll-area"
         ref={scrollContainerRef}
-        isReview={isReview}
+        $isReview={isReview}
       >
-        {isReview
-          ? contentList.map((value) => (
+        {contentList.length !== 0 ? (
+          isReview ? (
+            contentList.map((value) => (
               <Review
                 reviewId={value.reviewId}
+                contentId={value.contentId}
                 key={value.reviewId}
                 rating={value.rating}
                 date={value.createdAt}
@@ -85,18 +87,28 @@ const ContentBox = ({
                 nickname={value.userId}
                 isUser={true}
                 title={value.title}
-                handleModify={onModifyReview}
-                handleDelete={onDeleteReview}
+                imagePath={image}
+                onUpdate={handleReviewUpdated}
               />
             ))
-          : contentList.map((content, index) => (
+          ) : (
+            contentList.map((content, index) => (
               <PosterItem key={content.contentId || index}>
                 <PosterContainer>
-                  <PosterCard src={content.poster} title={content.title} />
+                  <PosterCard
+                    src={content.poster}
+                    title={content.title}
+                    onClick={() => {
+                      navigate(`/detail/${content.contentId}`);
+                    }}
+                  />
                 </PosterContainer>
               </PosterItem>
-            ))}
-        <div ref={observerRef} style={{ height: "1px" }} />
+            ))
+          )
+        ) : (
+          <>보관함이 비어있어요</>
+        )}
       </ContentGrid>
     </ContentBoxContainer>
   );

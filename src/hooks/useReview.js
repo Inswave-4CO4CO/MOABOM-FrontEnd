@@ -1,16 +1,20 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   createReview,
   deleteReview,
   findByContentIdAndUserId,
   modifyReview,
+  getReviewByPage,
 } from "../services/api/reviewService";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
 
-export const useReview = () => {
+export const useReview = (contentId) => {
   const queryClient = useQueryClient();
-  const { contentId } = useParams();
 
   const { data: userReview } = useQuery({
     queryKey: ["myReview", contentId],
@@ -23,8 +27,10 @@ export const useReview = () => {
       createReview(reviewText, rating, contentId),
     onSuccess: () => {
       toast.success("리뷰가 등록되었습니다!");
-      // 리뷰 목록 쿼리 무효화 (다시 불러오기)
-      queryClient.invalidateQueries({ queryKey: ["review", contentId] });
+
+      queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
+      queryClient.invalidateQueries(["reviewList"]);
+      queryClient.invalidateQueries(["myReviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -38,7 +44,9 @@ export const useReview = () => {
       modifyReview(reviewId, reviewText, rating),
     onSuccess: () => {
       toast.success("리뷰가 수정되었습니다!");
-      queryClient.invalidateQueries({ queryKey: ["review", contentId] });
+      queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
+      queryClient.invalidateQueries(["reviewList"]);
+      queryClient.invalidateQueries(["myReviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -51,7 +59,9 @@ export const useReview = () => {
     mutationFn: (reviewId) => deleteReview(reviewId),
     onSuccess: () => {
       toast.success("리뷰가 삭제되었습니다!");
-      queryClient.invalidateQueries({ queryKey: ["review", contentId] });
+      queryClient.removeQueries({ queryKey: ["myReview", contentId] });
+      queryClient.invalidateQueries(["reviewList"]);
+      queryClient.invalidateQueries(["myReviewList"]);
     },
     onError: (error) => {
       toast.error(
@@ -66,4 +76,17 @@ export const useReview = () => {
     modifyReviewMutate,
     deleteReviewMutate,
   };
+};
+
+export const useInfiniteReviewList = (contentId) => {
+  return useInfiniteQuery({
+    queryKey: ["reviewList", contentId],
+    queryFn: ({ pageParam = 1 }) => getReviewByPage(contentId, pageParam),
+    getNextPageParam: (lastPage) => {
+      const data = lastPage.data;
+      return data.currentPage < data.totalPages
+        ? data.currentPage + 1
+        : undefined;
+    },
+  });
 };

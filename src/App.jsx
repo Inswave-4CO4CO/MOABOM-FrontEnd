@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -15,6 +20,7 @@ import MainPage from "./pages/MainPage";
 import ProfileEditPage from "./pages/ProfileEditPage";
 import WishlistPage from "./pages/WishlistPage";
 import RecommendPage from "./pages/RecommendPage";
+import PersonDetailPage from "./pages/PersonDetailPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,32 +34,53 @@ const queryClient = new QueryClient({
   },
 });
 
+function Layout({ children }) {
+  const location = useLocation();
+  const hideHeaderFooter = ["/login", "/signup"].includes(location.pathname);
+
+  return (
+    <>
+      <GlobalStyle />
+      {!hideHeaderFooter && <Header />}
+      {children}
+      {!hideHeaderFooter && (
+        <>
+          <div style={{ height: "150px" }} />
+          <Footer />
+        </>
+      )}
+      <ToastContainer autoClose={3000} pauseOnHover={false} closeOnClick />
+    </>
+  );
+}
+
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider value={defaultSystem}>
         <Router>
-          <GlobalStyle />
-          <Header />
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/detail/:contentId" element={<ContentDetailPage />} />
-            <Route
-              path="/oauth2/redirect"
-              element={<OAuth2RedirectHandler />}
-            />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="/mypage/edit" element={<ProfileEditPage />} />
-            <Route path="/recommend" element={<WishlistPage />} />
-            <Route path="/recommend/ott" element={<RecommendPage />} />
-          </Routes>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<MainPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/mypage" element={<MyPage />} />
+              <Route
+                path="/detail/:contentId"
+                element={<ContentDetailPage />}
+              />
+              <Route
+                path="/oauth2/redirect"
+                element={<OAuth2RedirectHandler />}
+              />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="/mypage/edit" element={<ProfileEditPage />} />
+              <Route path="/person/:personId" element={<PersonDetailPage />} />
+              <Route path="/recommend" element={<WishlistPage />} />
+              <Route path="/recommend/ott" element={<RecommendPage />} />
+            </Routes>
+          </Layout>
         </Router>
-        <div style={{ height: "150px" }} />
-        <Footer />
-        <ToastContainer autoClose={3000} pauseOnHover={false} closeOnClick />
       </ChakraProvider>
     </QueryClientProvider>
   );
