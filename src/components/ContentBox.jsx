@@ -27,8 +27,9 @@ const ContentBox = ({
   isReview = false,
   handleReviewUpdated,
   image,
+  ...props
 }) => {
-  // const [activeTab, setActiveTab] = useState(defaultTab);
+  const navigate = useNavigate();
 
   const handleOttSelect = (ottName) => {
     setSelectedOtts((prev) => {
@@ -94,7 +95,13 @@ const ContentBox = ({
             contentList.map((content, index) => (
               <PosterItem key={content.contentId || index}>
                 <PosterContainer>
-                  <PosterCard src={content.poster} title={content.title} />
+                  <PosterCard
+                    src={content.poster}
+                    title={content.title}
+                    onClick={() => {
+                      navigate(`/detail/${content.contentId}`);
+                    }}
+                  />
                 </PosterContainer>
               </PosterItem>
             ))
