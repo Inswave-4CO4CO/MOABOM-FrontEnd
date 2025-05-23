@@ -10,8 +10,10 @@ import {
   getMyWatchingContents,
 } from "../services/api/myPageService";
 import { useInfiniteQuery } from "@tanstack/react-query";
-// import { deleteReview, modifyReview } from "../services/api/reviewService";
+
 import { PageWrapper, Container } from "../styles/pages/MyPage";
+
+import { useUserInfo } from "../hooks/useUserInfo";
 
 const MyPage = () => {
   const [watchCount, setWatchCount] = useState(0); //보관함 개수
@@ -35,6 +37,9 @@ const MyPage = () => {
     setActiveTab("myReview");
   }; // 리뷰 보기
 
+  const { myInfo } = useUserInfo();
+  const { VITE_API_URL } = import.meta.env;
+
   const scrollContainerRef = useRef(null); //ContentBox를 참조
   const observerRef = useRef(); //ContentBox 내부에 있는 하단 영역 참조
 
@@ -44,8 +49,6 @@ const MyPage = () => {
       activeTab === "watching"
         ? await getMyWatchingContents(pageParam, selectedOtts)
         : await getMyWatchedContents(pageParam, selectedOtts);
-
-    console.log("API 응답", res.data);
 
     const { totalPages, currentPage } = res.data;
 
@@ -72,12 +75,13 @@ const MyPage = () => {
   //한줄평 데이터 불러오는 함수
   const fetchReviews = async ({ pageParam = 1 }) => {
     const res = await getMyReviewList(pageParam);
-    const { content, currentPage, totalPages } = res.data;
+    const { content, currentPage, totalPages, totalCount } = res.data;
 
     return {
       content,
       currentPage,
       totalPages,
+      totalCount,
       nextPage: currentPage < totalPages ? currentPage + 1 : null,
     };
   };
@@ -151,30 +155,6 @@ const MyPage = () => {
     refetchReviewList();
   };
 
-  // 한줄평 삭제 핸들러
-  // const handleDeleteReview = async (reviewId) => {
-  //   console.log("삭제 시도 reviewId:", reviewId, typeof reviewId);
-  //   try {
-  //     await deleteReview(reviewId);
-  //     setReviewCount(reviewCount - 1);
-  //     await refetchReviewList();
-  //   } catch (error) {
-  //     console.error("리뷰 삭제 실패", error);
-  //     alert("리뷰 삭제에 실패했습니다.");
-  //   }
-  // };
-
-  // 한줄평 수정 핸들러
-  // const handleModifyReview = async (data) => {
-  //   try {
-  //     await modifyReview(data.reviewId, data.reviewText, data.ratingNumber);
-  //     await refetchReviewList();
-  //   } catch (error) {
-  //     console.error("리뷰 수정 실패", error);
-  //     alert("리뷰 수정에 실패했습니다.");
-  //   }
-  // };
-
   //나의 한줄평 가져오기
   const getReviewList = () => {
     getMyReviewList(reviewPage + 1).then((res) => {
@@ -185,7 +165,9 @@ const MyPage = () => {
   useEffect(() => {
     if (isReviewView && reviewData) {
       const totalCount = reviewData.pages?.[0]?.totalCount;
+
       if (typeof totalCount === "number") {
+        console.log(totalCount);
         setReviewCount(totalCount);
       }
     }
@@ -209,6 +191,8 @@ const MyPage = () => {
             secondCount={reviewCount}
             handleFirstAction={handleFirstClick}
             handleSecondAction={handleSecondClick}
+            image={myInfo ? VITE_API_URL + myInfo?.userImage : ""}
+            name={myInfo?.nickName}
           />
         </div>
         <div className="rightGroup">
@@ -236,6 +220,7 @@ const MyPage = () => {
               isReview={isReviewView}
               userReview={allReviews}
               onUpdate={handleReviewUpdated}
+              image={myInfo?.userImage}
             />
           </div>
         </div>
