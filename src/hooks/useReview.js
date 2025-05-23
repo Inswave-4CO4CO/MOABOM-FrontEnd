@@ -8,7 +8,7 @@ import {
 } from "../services/api/reviewService";
 import { toast } from "react-toastify";
 
-export const useReview = ({ contentId }) => {
+export const useReview = (contentId) => {
   const queryClient = useQueryClient();
 
   const { data: userReview } = useQuery({
@@ -52,7 +52,7 @@ export const useReview = ({ contentId }) => {
     mutationFn: (reviewId) => deleteReview(reviewId),
     onSuccess: () => {
       toast.success("리뷰가 삭제되었습니다!");
-      queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
+      queryClient.removeQueries({ queryKey: ["myReview", contentId] });
       queryClient.invalidateQueries(["reviewList"]);
     },
     onError: (error) => {

@@ -8,7 +8,6 @@ import OttButton from "../components/OttButton";
 import WatchButton from "../components/WatchButton";
 import Review from "../components/Review";
 import Text from "../components/Text";
-import HeaderButton from "../components/HeaderButton";
 import WatchBox from "../components/WatchBox";
 import watchType from "../contents/watchType";
 import { getContentById } from "../services/api/contentDetailService";
@@ -26,10 +25,9 @@ import {
   Reviews,
   AddButton,
 } from "../styles/pages/ContentDetailPage";
-import { Dialog, Skeleton } from "@chakra-ui/react";
 import ReviewModal from "../components/ReviewModal";
 import useAuthStore from "../store/useAuthStore";
-import { useReview, useReviewList } from "../hooks/useReview";
+import { useReviewList } from "../hooks/useReview";
 
 const ContentDetailPage = () => {
   // 데이터
@@ -44,7 +42,6 @@ const ContentDetailPage = () => {
   // 상태변화
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
-  const [isRefetch, setIsRefetch] = useState(false);
 
   // 파라미터
   const { contentId } = useParams();
@@ -89,8 +86,6 @@ const ContentDetailPage = () => {
       setTotalPage(reviewData.data.totalPages);
     }
   }, [reviewData]);
-
-  console.log(reviewList);
 
   // 콘텐츠 데이터를 처음 불러오기
   useEffect(() => {
@@ -160,12 +155,9 @@ const ContentDetailPage = () => {
             </OttGroup>
             <WatchGroup>
               <WatchBox type={type} contentId={contentId} />
-              <Dialog.Root key={"center"} placement={"center"}>
-                <Dialog.Trigger asChild>
-                  <WatchButton />
-                </Dialog.Trigger>
-                <ReviewModal contentId={contentId} />
-              </Dialog.Root>
+              <ReviewModal contentId={contentId}>
+                <WatchButton />
+              </ReviewModal>
             </WatchGroup>
           </ContentDescription>
         </ContentDetail>
@@ -188,6 +180,7 @@ const ContentDetailPage = () => {
                 key={value.reviewId}
                 reviewId={value.reviewId}
                 rating={value.rating}
+                contentId={value.contentId}
                 date={value.createdAt}
                 text={value.reviewText}
                 nickname={value.nickName}
