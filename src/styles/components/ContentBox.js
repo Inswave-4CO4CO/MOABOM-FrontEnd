@@ -12,7 +12,7 @@ export const ContentBoxContainer = styled.div`
   margin: 0 auto;
   background-color: white;
   width: 100%;
-  height: 90%;
+  height: 100%;
   padding: 10px;
   border: 1px solid #dcdcdc;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -48,7 +48,7 @@ export const ContentGrid = styled.div`
   gap: 10px;
   padding: 8px 16px;
   overflow-y: auto;
-  height: 700px;
+  height: auto;
   width: 100%;
   place-items: center;
 

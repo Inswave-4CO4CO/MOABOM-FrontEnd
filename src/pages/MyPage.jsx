@@ -10,14 +10,14 @@ import {
   getMyWatchingContents,
 } from "../services/api/myPageService";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { deleteReview, modifyReview } from "../services/api/reviewService";
+// import { deleteReview, modifyReview } from "../services/api/reviewService";
 import { PageWrapper, Container } from "../styles/pages/MyPage";
 
 const MyPage = () => {
   const [watchCount, setWatchCount] = useState(0); //보관함 개수
   const [reviewCount, setReviewCount] = useState(0); //한줄평 개수
-  const [reviewList, setReviewList] = useState([]); //한줄평 리스트
   const [reviewPage, setReviewPage] = useState(0); //한줄평 페이지
+  const [isRefetch, setIsRefetch] = useState(false);
 
   const [activeTab, setActiveTab] = useState("watching"); //활성화된 탭(보는중인지 봤다인지)
   const [selectedOtts, setSelectedOtts] = useState([
@@ -117,7 +117,7 @@ const MyPage = () => {
         }
       },
       {
-        root: scrollContainerRef.current,
+        root: null,
         threshold: 0,
       }
     );
@@ -145,44 +145,35 @@ const MyPage = () => {
     }
   };
 
-  // 한줄평 삭제 핸들러
-  const handleDeleteReview = async (reviewId) => {
-    console.log("삭제 시도 reviewId:", reviewId, typeof reviewId);
-    try {
-      await deleteReview(reviewId);
-      setReviewList((prev) =>
-        prev.filter((review) => review.reviewId !== reviewId)
-      );
-      setReviewCount(reviewCount - 1);
-      refetchReviewList();
-    } catch (error) {
-      console.error("리뷰 삭제 실패", error);
-      alert("리뷰 삭제에 실패했습니다.");
-    }
+  const handleReviewUpdated = () => {
+    setReviewPage(0);
+    setIsRefetch(true);
+    refetchReviewList();
   };
+
+  // 한줄평 삭제 핸들러
+  // const handleDeleteReview = async (reviewId) => {
+  //   console.log("삭제 시도 reviewId:", reviewId, typeof reviewId);
+  //   try {
+  //     await deleteReview(reviewId);
+  //     setReviewCount(reviewCount - 1);
+  //     await refetchReviewList();
+  //   } catch (error) {
+  //     console.error("리뷰 삭제 실패", error);
+  //     alert("리뷰 삭제에 실패했습니다.");
+  //   }
+  // };
 
   // 한줄평 수정 핸들러
-  const handleModifyReview = async (data) => {
-    try {
-      const modifiedReview = await modifyReview(
-        data.reviewId,
-        data.reviewText,
-        data.ratingNumber
-      );
-
-      setReviewList((prev) =>
-        prev.map((review) =>
-          review.reviewId === modifiedReview.reviewId
-            ? { ...review, ...modifiedReview }
-            : review
-        )
-      );
-      refetchReviewList();
-    } catch (error) {
-      console.error("리뷰 수정 실패", error);
-      alert("리뷰 수정에 실패했습니다.");
-    }
-  };
+  // const handleModifyReview = async (data) => {
+  //   try {
+  //     await modifyReview(data.reviewId, data.reviewText, data.ratingNumber);
+  //     await refetchReviewList();
+  //   } catch (error) {
+  //     console.error("리뷰 수정 실패", error);
+  //     alert("리뷰 수정에 실패했습니다.");
+  //   }
+  // };
 
   //나의 한줄평 가져오기
   const getReviewList = () => {
@@ -190,6 +181,15 @@ const MyPage = () => {
       setReviewCount(res.data.totalCount);
     });
   };
+
+  useEffect(() => {
+    if (isReviewView && reviewData) {
+      const totalCount = reviewData.pages?.[0]?.totalCount;
+      if (typeof totalCount === "number") {
+        setReviewCount(totalCount);
+      }
+    }
+  }, [reviewData, isReviewView]);
 
   useEffect(() => {
     //보관함 개수 (봤다 + 보는중)
@@ -234,13 +234,13 @@ const MyPage = () => {
               scrollContainerRef={scrollContainerRef}
               observerRef={observerRef}
               isReview={isReviewView}
-              userReview={reviewList}
-              onDeleteReview={handleDeleteReview}
-              onModifyReview={handleModifyReview}
+              userReview={allReviews}
+              onUpdate={handleReviewUpdated}
             />
           </div>
         </div>
       </Container>
+      <div ref={observerRef} style={{ height: "1px" }} />
     </PageWrapper>
   );
 };

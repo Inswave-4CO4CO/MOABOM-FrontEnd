@@ -41,7 +41,7 @@ export const Container = styled.div`
 
   .reviewBox {
     display: flex;
-    height: 86vh;
+    height: auto;
     justify-content: center;
   }
 `;
