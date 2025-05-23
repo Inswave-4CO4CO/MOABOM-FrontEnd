@@ -24,7 +24,14 @@ const PosterCardWish = ({
           <GrayText>제작국가: {madeIn}</GrayText>
           <GrayText>러닝타임: {runningTime}</GrayText>
           <GrayText>제작진: {crew}</GrayText>
-          <GrayText isTruncated maxW="300px" title={crew}>
+          <GrayText
+            maxW="300px"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            display="block"
+            title={crew}
+          >
             출연진: {cast}
           </GrayText>
           <GrayText>OTT: {ott}</GrayText>

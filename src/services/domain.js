@@ -50,4 +50,7 @@ export const DOMAIN = {
 
   //보고싶은 작품
   USER_WISH: "/user/wishlist",
+
+  //추천결과
+  USER_RECOMMEND: "/recommend/ott",
 };

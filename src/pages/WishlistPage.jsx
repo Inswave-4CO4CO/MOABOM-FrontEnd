@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PosterCardWish from "../components/PosterCardWish";
 import { getWishContents } from "../services/api/wishlistService";
+import { postRecommendOtts } from "../services/api/recommendService";
 import CheckBox from "../components/CheckBox";
 import BodyButton from "../components/BodyButton";
 
 const PageWrapper = styled.div`
   padding: 60px 20px;
-  background-color: #fef3e8;
+  background-color: #fff8f0;
   min-height: 100vh;
 `;
 
@@ -21,30 +23,32 @@ const Title = styled.h2`
 
 const Layout = styled.div`
   display: flex;
-  max-width: 1200px;
+  width: 700px;
   margin: 0 auto;
   background: white;
   border-radius: 16px;
+  border: 1px solid #dcdcdc;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   padding: 40px;
 `;
 
 const LeftPanel = styled.div`
-  flex: 1;
   display: flex;
+  width: 400px;
   flex-direction: column;
   gap: 24px;
 `;
 
 const RightPanel = styled.div`
   width: 260px;
-  margin-left: 40px;
-  position: sticky;
-  top: 60px;
+  margin-left: 900px;
+  position: fixed;
+  top: 100px;
   height: fit-content;
   background-color: white;
   padding: 24px;
   border-radius: 16px;
+  border: 1px solid #dcdcdc;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
 `;
 
@@ -62,6 +66,17 @@ const SelectedList = styled.div`
 `;
 
 const WishlistPage = () => {
+  const navigate = useNavigate();
+  const handleRecommend = async () => {
+    const selectedContents = wishlist.filter(
+      (item) => checkedItems[item.contentId]
+    );
+
+    const response = await postRecommendOtts(selectedContents);
+
+    // 결과를 navigate로 넘기거나 상태 관리에 저장
+    navigate("/recommend/ott", { state: { result: response } });
+  };
   const {
     data: wishlist,
     isLoading,
@@ -113,15 +128,13 @@ const WishlistPage = () => {
         </LeftPanel>
 
         <RightPanel>
-          <h3>선택한 작품</h3>
+          선택한 작품
           <SelectedList>
-            총 {selectedTitles.length}개
+            선택한 작품 수 {selectedTitles.length}개
             <br />
             {selectedTitles.map((item) => item.title).join(", ")}
           </SelectedList>
-          <BodyButton width="100%" onClick={() => navigate("/recommand/ott")}>
-            OTT 추천받기
-          </BodyButton>
+          <BodyButton onClick={handleRecommend}>OTT 추천받기</BodyButton>
         </RightPanel>
       </Layout>
     </PageWrapper>
