@@ -8,7 +8,6 @@ export const ContentBoxContainer = styled.div`
   justify-content: center;
   border-radius: 20px;
   overflow: hidden;
-  max-width: 1000px;
   margin: 0 auto;
   background-color: white;
   width: 100%;
