@@ -18,6 +18,7 @@ import SearchPage from "./pages/SearchPage";
 import MyPage from "./pages/MyPage";
 import MainPage from "./pages/MainPage";
 import ProfileEditPage from "./pages/ProfileEditPage";
+import PersonDetailPage from "./pages/PersonDetailPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -72,6 +73,7 @@ const App = () => {
               />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/mypage/edit" element={<ProfileEditPage />} />
+              <Route path="/person/:personId" element={<PersonDetailPage />} />
             </Routes>
           </Layout>
         </Router>
