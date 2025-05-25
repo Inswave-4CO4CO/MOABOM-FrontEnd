@@ -1,72 +1,26 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import PosterCardWish from "../components/PosterCardWish";
 import { getWishContents } from "../services/api/wishlistService";
 import { postRecommendOtts } from "../services/api/recommendService";
 import CheckBox from "../components/CheckBox";
 import BodyButton from "../components/BodyButton";
-
-const PageWrapper = styled.div`
-  padding: 60px 20px;
-  background-color: #fff8f0;
-  min-height: 100vh;
-`;
-
-const Title = styled.h2`
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 36px;
-  text-align: center;
-`;
-
-const Layout = styled.div`
-  display: flex;
-  width: 700px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  border: 1px solid #dcdcdc;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 40px;
-`;
-
-const LeftPanel = styled.div`
-  display: flex;
-  width: 400px;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const RightPanel = styled.div`
-  width: 260px;
-  margin-left: 900px;
-  position: fixed;
-  top: 100px;
-  height: fit-content;
-  background-color: white;
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid #dcdcdc;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-`;
-
-const ContentItem = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-`;
-
-const SelectedList = styled.div`
-  font-size: 14px;
-  margin: 16px 0;
-  color: #333;
-  line-height: 1.5;
-`;
+import { Skeleton, SkeletonText } from "@chakra-ui/react";
+import {
+  PageWrapper,
+  Layout,
+  LeftWrapper,
+  Title,
+  LeftPanel,
+  ContentItem,
+  RightPanel,
+  SelectedList,
+} from "../styles/pages/WishlistPage";
 
 const WishlistPage = () => {
   const navigate = useNavigate();
+
   const handleRecommend = async () => {
     const selectedContents = wishlist.filter(
       (item) => checkedItems[item.contentId]
@@ -74,9 +28,9 @@ const WishlistPage = () => {
 
     const response = await postRecommendOtts(selectedContents);
 
-    // 결과를 navigate로 넘기거나 상태 관리에 저장
     navigate("/recommend/ott", { state: { result: response } });
   };
+
   const {
     data: wishlist,
     isLoading,
@@ -99,44 +53,68 @@ const WishlistPage = () => {
   const selectedTitles =
     wishlist?.filter((item) => checkedItems[item.contentId]) ?? [];
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading)
+    return (
+      <PageWrapper>
+        <Layout>
+          <LeftWrapper>
+            <Title>보고싶다한 작품</Title>
+            <LeftPanel>
+              {[...Array(5)].map((_, idx) => (
+                <ContentItem key={idx}>
+                  <Skeleton boxSize="40px" borderRadius="4px" />
+                  <SkeletonText flex="1" noOfLines={3} spacing="4" />
+                </ContentItem>
+              ))}
+            </LeftPanel>
+          </LeftWrapper>
+        </Layout>
+      </PageWrapper>
+    );
+
   if (isError) return <div>오류 발생: {error.message}</div>;
 
   return (
     <PageWrapper>
-      <Title>보고싶다한 작품</Title>
       <Layout>
-        <LeftPanel>
-          {wishlist.map((item) => (
-            <ContentItem key={item.contentId}>
-              <CheckBox
-                checked={!!checkedItems[item.contentId]}
-                onChange={onCheckChange(item.contentId)}
-              />
-              <PosterCardWish
-                src={item.poster}
-                title={item.title}
-                runningTime={item.runningTime}
-                releaseDate={item.releaseDate}
-                madeIn={item.madeIn}
-                crew={item.crewName}
-                cast={item.castName}
-                ott={item.ottName}
-              />
-            </ContentItem>
-          ))}
-        </LeftPanel>
-
-        <RightPanel>
-          선택한 작품
-          <SelectedList>
-            선택한 작품 수 {selectedTitles.length}개
-            <br />
-            {selectedTitles.map((item) => item.title).join(", ")}
-          </SelectedList>
-          <BodyButton onClick={handleRecommend}>OTT 추천받기</BodyButton>
-        </RightPanel>
+        <LeftWrapper>
+          <Title>보고싶다한 작품</Title>
+          <LeftPanel>
+            {wishlist.map((item) => (
+              <ContentItem key={item.contentId}>
+                <CheckBox
+                  checked={!!checkedItems[item.contentId]}
+                  onChange={onCheckChange(item.contentId)}
+                />
+                <PosterCardWish
+                  src={item.poster}
+                  title={item.title}
+                  runningTime={item.runningTime}
+                  releaseDate={item.releaseDate}
+                  madeIn={item.madeIn}
+                  crew={item.crewName}
+                  cast={item.castName}
+                  ott={item.ottName}
+                />
+              </ContentItem>
+            ))}
+          </LeftPanel>
+        </LeftWrapper>
       </Layout>
+
+      <RightPanel>
+        선택한 작품
+        <SelectedList>
+          <span>선택한 작품 수</span>
+          <span>{selectedTitles.length}개</span>
+        </SelectedList>
+        <SelectedList>
+          {selectedTitles.map((item) => item.title).join(", ")}
+        </SelectedList>
+        <BodyButton width="220px" onClick={handleRecommend}>
+          OTT 추천받기
+        </BodyButton>
+      </RightPanel>
     </PageWrapper>
   );
 };
