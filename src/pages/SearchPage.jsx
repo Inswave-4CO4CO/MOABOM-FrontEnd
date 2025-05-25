@@ -43,6 +43,12 @@ import {
 } from "../styles/pages/SearchPage";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getInitialStateFromUrlParams } from "../utils/urlUtils";
+import {
+  Stack,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+} from "@chakra-ui/react";
 
 // OTT 이름 배열 추가
 const allOttNames = ottList.map((ott) => ott.alt);
@@ -353,6 +359,105 @@ const SearchPage = () => {
     setActiveTab(tabValue);
     window.scrollTo(0, 0);
   };
+
+  if (isQueryLoading) {
+    return (
+      <SearchContainer>
+        {searchText && (
+          <Text
+            textAlign="center"
+            fontSize="30px"
+            fontWeight="bold"
+            marginTop={30}
+            marginBottom={30}
+          >
+            <SkeletonText noOfLines={1} width="300px" margin="auto" />
+          </Text>
+        )}
+
+        <Skeleton height="40px" mb="4" />
+
+        {activeTab === "content" ? (
+          <>
+            <SelectedFiltersWrapper>
+              <SelectedFiltersContainer>
+                {Array.from({ length: 2 }).map((_, idx) => (
+                  <FilterBoxWrapper key={idx}></FilterBoxWrapper>
+                ))}
+              </SelectedFiltersContainer>
+            </SelectedFiltersWrapper>
+
+            <SearchContent>
+              <FilterSection>
+                <FilterContainer>
+                  <GenreGroup>
+                    <Skeleton height="24px" width="50px" mb="2" />
+                    <GenreOptionsGrid>
+                      {Array.from({ length: 6 }).map((_, idx) => (
+                        <FilterOption key={idx}>
+                          <Skeleton height="20px" width="70px" />
+                        </FilterOption>
+                      ))}
+                    </GenreOptionsGrid>
+                  </GenreGroup>
+                  <VerticalDivider />
+                  <CategoryGroup>
+                    <Skeleton height="24px" width="70px" mb="2" />
+                    <CategoryOptionsGrid>
+                      {Array.from({ length: 4 }).map((_, idx) => (
+                        <FilterOption key={idx}>
+                          <Skeleton height="20px" width="80px" />
+                        </FilterOption>
+                      ))}
+                    </CategoryOptionsGrid>
+                  </CategoryGroup>
+                </FilterContainer>
+                <ControlsContainer>
+                  <Skeleton height="40px" flexGrow={1} mr="2" />
+                  <Skeleton height="40px" width="100px" />
+                </ControlsContainer>
+              </FilterSection>
+            </SearchContent>
+            <ResultsSection
+              $isContentTab={true}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(5, minmax(180px, 1fr))",
+                gap: "16px",
+              }}
+            >
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <Stack key={idx} spacing="2">
+                  <Skeleton height="270px" borderRadius="md" />
+                  <SkeletonText noOfLines={1} spacing="1" />
+                  <SkeletonText noOfLines={1} spacing="1" width="50%" />
+                </Stack>
+              ))}
+            </ResultsSection>
+          </>
+        ) : (
+          <ResultsSection $isContentTab={false}>
+            <ProfileGrid>
+              {Array.from({ length: 18 }).map((_, idx) => (
+                <ProfileIconWrapper key={idx}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <SkeletonCircle size="150px" />
+                    <SkeletonText noOfLines={1} width="100px" mt="4" />
+                  </div>
+                </ProfileIconWrapper>
+              ))}
+            </ProfileGrid>
+          </ResultsSection>
+        )}
+      </SearchContainer>
+    );
+  }
 
   return (
     <SearchContainer>
