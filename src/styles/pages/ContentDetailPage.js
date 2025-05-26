@@ -2,8 +2,9 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  min-height: 100vh;
+  /* overflow-y: auto;
+  min-height: 100vh; */
 `;
 export const ContentGroup = styled.div`
   display: flex;

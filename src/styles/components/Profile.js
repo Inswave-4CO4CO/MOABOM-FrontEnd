@@ -13,7 +13,7 @@ export const Container = styled.div`
   padding: 60px 40px;
   width: 100%;
   max-height: 400px;
-  max-width: 300px;
+  min-width: 300px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 
@@ -43,4 +43,11 @@ export const Container = styled.div`
 export const Icon = styled.p`
   font-size: 20px;
   color: #555;
+`;
+
+export const ProfileWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;

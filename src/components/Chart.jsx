@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { getMyGenreContents } from "../services/api/myPageService";
 import {
   Chart as ChartJS,
   PieController,
@@ -19,6 +18,8 @@ import {
   Select,
   DynamicMessage,
 } from "../styles/components/Chart";
+import { useMyGenreStats } from "../hooks/useMyStats";
+import { Skeleton } from "@chakra-ui/react";
 
 ChartJS.register(
   PieController,
@@ -36,14 +37,12 @@ const Chart = () => {
   const [chartType, setChartType] = useState("pie");
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
-  const [stats, setStats] = useState([]);
+  const { data, isLoading } = useMyGenreStats();
+  const stats = data?.data ?? [];
 
   useEffect(() => {
-    getMyGenreContents().then((response) => {
-      console.log(response.data);
-      setStats(response.data);
-    });
-  }, []);
+    console.log(data);
+  }, [data]);
 
   useEffect(() => {
     if (!chartRef.current || stats.length === 0) return;
@@ -143,13 +142,20 @@ const Chart = () => {
           <option value="line">꺾은선 차트</option>
         </Select>
       </Header>
-      <ChartWrapper>
-        {stats.length === 0 ? (
-          <DynamicMessage>아직 시청 통계가 없어요.</DynamicMessage>
-        ) : (
-          <canvas ref={chartRef} />
-        )}
-      </ChartWrapper>
+      <Skeleton
+        loading={isLoading}
+        height="500px"
+        width="100%"
+        borderRadius="20px"
+      >
+        <ChartWrapper>
+          {stats.length === 0 ? (
+            <DynamicMessage>아직 시청 통계가 없어요.</DynamicMessage>
+          ) : (
+            <canvas ref={chartRef} />
+          )}
+        </ChartWrapper>
+      </Skeleton>
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 // 스타일드 컴포넌트로 분리
 export const ContentBoxContainer = styled.div`
@@ -11,9 +11,9 @@ export const ContentBoxContainer = styled.div`
   margin: 0 auto;
   background-color: white;
   width: 100%;
-  height: 100%;
   padding: 10px;
   border: 1px solid #dcdcdc;
+
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 `;
 
@@ -42,12 +42,12 @@ export const OttButtonContainer = styled.div`
 
 export const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: ${({ isReview }) =>
-    isReview ? "repeat(1, 1fr)" : "repeat(2, 1fr)"};
+  grid-template-columns: ${({ $isReview }) =>
+    $isReview ? "repeat(1, 1fr)" : "repeat(2, 1fr)"};
   gap: 10px;
   padding: 8px 16px;
   overflow-y: auto;
-  height: auto;
+  min-height: 250px;
   width: 100%;
   place-items: center;
 
@@ -64,23 +64,23 @@ export const ContentGrid = styled.div`
   }
 
   @media (min-width: 400px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(1, 1fr)" : "repeat(1, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(1, 1fr)" : "repeat(1, 1fr)"};
   }
 
   @media (min-width: 714px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(2, 1fr)" : "repeat(2, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(2, 1fr)" : "repeat(2, 1fr)"};
   }
 
   @media (min-width: 1000px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(3, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(3, 1fr)" : "repeat(3, 1fr)"};
   }
 
   @media (min-width: 1200px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
   }
 `;
 
@@ -95,4 +95,31 @@ export const PosterContainer = styled.div`
   width: 100%;
   height: auto;
   position: relative;
+`;
+
+export const fadeIn = keyframes`
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+`;
+
+export const DynamicMessage = styled.p`
+  text-align: center;
+  animation: ${fadeIn} 1s ease-in-out;
+  font-size: 1.2rem;
+  color: #777;
+  width: 100%;
+`;
+
+export const DynamicMessageWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 330px;
 `;

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 export const useUserInfo = () => {
   const queryClient = useQueryClient();
 
-  const { data: myInfo, isLoading } = useQuery({
+  const { data: myInfo, isLoading: isMyInfoLoading } = useQuery({
     queryKey: ["myInfo"],
     queryFn: getMyInfo,
   });
@@ -25,7 +25,7 @@ export const useUserInfo = () => {
 
   return {
     myInfo,
-    isLoading,
+    isMyInfoLoading,
     editMyInfo,
   };
 };

@@ -9,17 +9,18 @@ import {
   ContentBoxTitle,
   OttButtonContainer,
   ContentGrid,
-  PosterItem,
-  PosterContainer,
+  DynamicMessage,
+  DynamicMessageWrapper,
 } from "../styles/components/ContentBox";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "@chakra-ui/react";
 
 const ContentBox = ({
   contentList = [],
   title,
   tabs,
   defaultTab,
-  value,
+  isLoading,
   onTabChange,
   selectedOtts,
   setSelectedOtts,
@@ -27,6 +28,7 @@ const ContentBox = ({
   isReview = false,
   handleReviewUpdated,
   image,
+  name,
   ...props
 }) => {
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ const ContentBox = ({
   };
 
   return (
-    <ContentBoxContainer>
+    <ContentBoxContainer {...props}>
       <ContentBoxHeader>
         <ContentBoxTitle>{title}</ContentBoxTitle>
         {!isReview ? (
@@ -68,48 +70,62 @@ const ContentBox = ({
           value={defaultTab}
         />
       </ContentBoxHeader>
-
-      <ContentGrid
-        className="content-scroll-area"
-        ref={scrollContainerRef}
-        $isReview={isReview}
-      >
-        {contentList.length !== 0 ? (
-          isReview ? (
-            contentList.map((value) => (
-              <Review
-                reviewId={value.reviewId}
-                contentId={value.contentId}
-                key={value.reviewId}
-                rating={value.rating}
-                date={value.createdAt}
-                text={value.reviewText}
-                nickname={value.userId}
-                isUser={true}
-                title={value.title}
-                imagePath={image}
-                onUpdate={handleReviewUpdated}
-              />
-            ))
-          ) : (
-            contentList.map((content, index) => (
-              <PosterItem key={content.contentId || index}>
-                <PosterContainer>
-                  <PosterCard
-                    src={content.poster}
-                    title={content.title}
-                    onClick={() => {
-                      navigate(`/detail/${content.contentId}`);
-                    }}
+      {isLoading === false && contentList.length === 0 ? (
+        <DynamicMessageWrapper>
+          <DynamicMessage>이곳은 비어있어요</DynamicMessage>
+        </DynamicMessageWrapper>
+      ) : (
+        <ContentGrid
+          className="content-scroll-area"
+          ref={scrollContainerRef}
+          $isReview={isReview}
+        >
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, idx) =>
+                isReview ? (
+                  <Skeleton
+                    key={idx}
+                    height="300px"
+                    width="250px"
+                    borderRadius="10px"
                   />
-                </PosterContainer>
-              </PosterItem>
-            ))
-          )
-        ) : (
-          <>보관함이 비어있어요</>
-        )}
-      </ContentGrid>
+                ) : (
+                  <Skeleton
+                    key={idx}
+                    height="300px"
+                    width="200px"
+                    borderRadius="10px"
+                  />
+                )
+              )
+            : isReview
+            ? contentList.map((value) => (
+                <Review
+                  key={value.reviewId}
+                  reviewId={value.reviewId}
+                  contentId={value.contentId}
+                  rating={value.rating}
+                  date={value.createdAt}
+                  text={value.reviewText}
+                  nickname={name}
+                  isUser={true}
+                  title={value.title}
+                  imagePath={image}
+                  onUpdate={handleReviewUpdated}
+                />
+              ))
+            : contentList.map((content, index) => (
+                <PosterCard
+                  key={content.contentId || index}
+                  src={content.poster}
+                  title={content.title}
+                  onClick={() => {
+                    navigate(`/detail/${content.contentId}`);
+                  }}
+                />
+              ))}
+        </ContentGrid>
+      )}
     </ContentBoxContainer>
   );
 };
