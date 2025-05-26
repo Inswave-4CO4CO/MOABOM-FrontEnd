@@ -57,7 +57,7 @@ const Header = () => {
           <FloatContainer>
             <HeaderButton
               style={{ marginRight: "20px" }}
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/recommend")}
             >
               OTT 추천받기
             </HeaderButton>
