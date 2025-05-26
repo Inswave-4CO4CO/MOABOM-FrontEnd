@@ -30,8 +30,6 @@ const ProfileEditPage = () => {
 
   const navigate = useNavigate();
 
-  const { VITE_API_URL } = import.meta.env;
-
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
@@ -66,7 +64,7 @@ const ProfileEditPage = () => {
           <Profile
             isEdit={true}
             name={myInfo?.nickName}
-            image={myInfo ? VITE_API_URL + myInfo?.userImage : ""}
+            image={myInfo ? myInfo?.userImage : ""}
             isLoading={isMyInfoLoading}
           />
         </LeftGroupContainer>
@@ -94,7 +92,7 @@ const ProfileEditPage = () => {
                         />
                       ) : imageUrl ? (
                         <Image
-                          src={VITE_API_URL + imageUrl}
+                          src={imageUrl}
                           alt="프로필 이미지"
                           boxSize="120px"
                           objectFit="cover"

@@ -16,10 +16,13 @@ import {
   Container,
   Header,
   Select,
-  DynamicMessage,
 } from "../styles/components/Chart";
 import { useMyGenreStats } from "../hooks/useMyStats";
 import { Skeleton } from "@chakra-ui/react";
+import {
+  DynamicMessage,
+  DynamicMessageWrapper,
+} from "../styles/components/ContentBox";
 
 ChartJS.register(
   PieController,

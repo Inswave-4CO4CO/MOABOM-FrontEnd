@@ -84,19 +84,6 @@ export const ContentGrid = styled.div`
   }
 `;
 
-export const PosterItem = styled.div`
-  width: 100%;
-  max-width: 200px;
-  margin-bottom: 24px;
-  cursor: pointer;
-`;
-
-export const PosterContainer = styled.div`
-  width: 100%;
-  height: auto;
-  position: relative;
-`;
-
 export const fadeIn = keyframes`
   from { 
     opacity: 0; 
@@ -118,8 +105,8 @@ export const DynamicMessage = styled.p`
 
 export const DynamicMessageWrapper = styled.div`
   width: 100%;
-  height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 330px;
 `;

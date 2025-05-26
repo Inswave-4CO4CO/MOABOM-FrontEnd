@@ -30,9 +30,8 @@ import {
 // Auth 상태 관리
 import useAuthStore from "../store/useAuthStore";
 import { useContent } from "../hooks/useContent";
-import { useInfiniteReviewList } from "../hooks/useReview";
 import { Skeleton, SkeletonText } from "@chakra-ui/react";
-import { green } from "@mui/material/colors";
+import { useReview } from "../hooks/useReview";
 
 const ContentDetailPage = () => {
   const { contentId } = useParams();
@@ -52,12 +51,12 @@ const ContentDetailPage = () => {
 
   //한줄평
   const {
-    data: reviewData,
+    reviewData,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-    error: reviewError,
-  } = useInfiniteReviewList(contentId);
+    reviewError,
+  } = useReview(contentId);
 
   useEffect(() => {
     if (reviewError) {

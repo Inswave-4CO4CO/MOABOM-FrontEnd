@@ -2,19 +2,16 @@ import React, { useEffect, useState } from "react";
 import WatchButton from "./WatchButton";
 import { Container } from "../styles/components/WatchBox";
 import { FaPlus, FaCheck, FaEye } from "react-icons/fa";
-import {
-  useCreateWatch,
-  useDeleteWatch,
-  useUpdateWatch,
-} from "../hooks/useWatch";
+import { useWatch } from "../hooks/useWatch";
+import { toast } from "react-toastify";
 
 const WatchBox = ({ type, contentId, genre }) => {
   const [activeType, setActiveType] = useState(null);
   const [isCreated, setIsCreated] = useState(false);
+  const [prevType, setPrevType] = useState(null);
 
-  const { mutate: createMutate } = useCreateWatch();
-  const { mutate: deleteMutate } = useDeleteWatch();
-  const { mutate: updateMutate } = useUpdateWatch();
+  const { createWatchMutate, updateWatchMutate, deleteWatchMutate } =
+    useWatch(contentId);
 
   useEffect(() => {
     if (type) {
@@ -24,40 +21,54 @@ const WatchBox = ({ type, contentId, genre }) => {
   }, [type]);
 
   const handleClick = (selectedType) => {
+    setPrevType(activeType); // 롤백을 위해 이전 값 저장
+
     if (activeType === selectedType) {
-      // 같은 버튼 누르면 삭제
-      deleteMutate(
+      // 삭제: 낙관적 UI 업데이트
+      setActiveType(null);
+      setIsCreated(false);
+
+      deleteWatchMutate(
         { contentId, type: selectedType, genre },
         {
-          onSuccess: () => {
-            setActiveType(null);
-            setIsCreated(false);
+          onError: (err) => {
+            // 실패 시 롤백
+            setActiveType(prevType);
+            setIsCreated(true);
+            toast.error("삭제 실패", err);
           },
-          onError: (err) => console.error("삭제 실패", err),
         }
       );
     } else if (!isCreated) {
-      // 아직 생성되지 않았으면 생성
-      createMutate(
+      // 생성: 낙관적 UI 업데이트
+      setActiveType(selectedType);
+      setIsCreated(true);
+
+      createWatchMutate(
         { contentId, type: selectedType, genre },
         {
-          onSuccess: () => {
-            setActiveType(selectedType);
-            setIsCreated(true);
+          onError: (err) => {
+            // 실패 시 롤백
+            setActiveType(prevType);
+            setIsCreated(false);
+            toast.error("생성실패", err);
           },
-          onError: (err) => console.error("생성실패", err),
         }
       );
     } else {
-      // 이미 생성된 경우면 수정
-      updateMutate(
+      // 수정: 낙관적 UI 업데이트
+      setActiveType(selectedType);
+      setIsCreated(true);
+
+      updateWatchMutate(
         { contentId, type: selectedType, genre },
         {
-          onSuccess: () => {
-            setActiveType(selectedType);
+          onError: (err) => {
+            // 실패 시 롤백
+            setActiveType(prevType);
             setIsCreated(true);
+            toast.error("수정실패", err);
           },
-          onError: (err) => console.error("생성실패", err),
         }
       );
     }
