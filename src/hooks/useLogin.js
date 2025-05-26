@@ -16,7 +16,6 @@ export const useLogin = () => {
         toast.success("로그인 성공!");
         navigate("/");
       }
-      console.log(data);
     },
     onError: (e) => {
       toast.error(e?.response?.data?.error || "문제가 발생했습니다.");
@@ -27,9 +26,11 @@ export const useLogin = () => {
   const { mutate: logoutUser } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
+      setLogout();
+      navigate("/");
       toast.success("로그아웃 되었습니다.");
     },
-    onMutate: () => {
+    onError: () => {
       // 실패해도 토큰 삭제 > 보안적으로 좋음
       setLogout();
       navigate("/");
