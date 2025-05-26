@@ -4,12 +4,24 @@ import {
   ProfileName,
 } from "../styles/components/ProfileIcon";
 import defaultImage from "../assets/images/defaultImage.png";
-import { FaCircleUser } from "react-icons/fa6";
-
+import { useNavigate } from "react-router-dom";
 //프로필
-const ProfileIcon = ({ imagePath, name, role, cast, onClick }) => {
+const ProfileIcon = ({
+  imagePath,
+  name,
+  role,
+  cast,
+  personId,
+  isProfile = false,
+}) => {
+  const navigate = useNavigate();
+
+  const handlePersonClick = () => {
+    navigate(`/person/${personId}`);
+  };
+
   return (
-    <ProfileContainer onClick={onClick}>
+    <ProfileContainer onClick={!isProfile ? handlePersonClick : undefined}>
       {imagePath ? (
         <ProfileImage src={imagePath} alt={name} />
       ) : (

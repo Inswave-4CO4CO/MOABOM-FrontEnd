@@ -27,7 +27,7 @@ authInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const { isLogin, userId, setLogin } = useAuthStore.getState();
+    const { isLogin, userId, setLogin, setLogout } = useAuthStore.getState();
 
     // 로그아웃 상태
     if (!isLogin) {
@@ -37,19 +37,28 @@ authInstance.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      // refresh token으로 access token 재발급
-      const res = await baseInstance.post(
-        DOMAIN.REFRESH_ACCESSS_TOKEN,
-        {},
-        { withCredentials: true }
-      );
+      try {
+        // refresh token으로 access token 재발급
+        const res = await baseInstance.post(
+          DOMAIN.REFRESH_ACCESSS_TOKEN,
+          {},
+          { withCredentials: true }
+        );
 
-      if (res.status === 200) {
-        const newAccessToken = res.data.token;
-        setLogin(newAccessToken, userId);
+        if (res.status === 200) {
+          const newAccessToken = res.data.token;
+          setLogin(newAccessToken, userId);
 
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return authInstance(originalRequest); // 실패한 요청 재시도
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return authInstance(originalRequest); // 실패한 요청 재시도
+        }
+      } catch (refreshError) {
+        setLogout();
+        console.error(refreshError);
+
+        window.location.href = "/?toast=expired";
+
+        return Promise.reject(error);
       }
     }
     return Promise.reject(error);

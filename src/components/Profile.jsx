@@ -23,7 +23,7 @@ const Profile = ({
     <Skeleton loading={isLoading} borderRadius="10px">
       <Container>
         <ProfileWrap>
-          <ProfileIcon imagePath={image} />
+          <ProfileIcon imagePath={image} isProfile={true} />
           <h1 className="name">{name}</h1>
         </ProfileWrap>
         <div className="buttonBox">

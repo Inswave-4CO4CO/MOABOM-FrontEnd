@@ -1,18 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Profile from "../components/Profile";
 import ContentBox from "../components/ContentBox";
 import { ottList } from "../components/OttButtonList";
-import api from "../services/api";
 import { DOMAIN } from "../services/domain";
-import { Skeleton } from "@chakra-ui/react";
 import { SearchContainer } from "../styles/pages/SearchPage";
 import {
   LeftGroupContainer,
   PageContainer,
   RigthGroupContainer,
 } from "../styles/pages/ProfileEditPage";
+import { baseInstance } from "../services/axiosInstance";
 
 const allOttNames = ottList.map((ott) => ott.alt);
 
@@ -31,7 +30,7 @@ const PersonDetailPage = () => {
 
   // 데이터를 페이지 단위로 가져오는 함수
   const fetchPersonData = async ({ pageParam = 0 }) => {
-    const { data } = await api.get(DOMAIN.PERSON_DETAIL(personId), {
+    const { data } = await baseInstance.get(DOMAIN.PERSON_DETAIL(personId), {
       params: { otts: selectedOtts.join(","), page: pageParam },
       withCredentials: true,
     });

@@ -65,6 +65,7 @@ const CastSlider = ({ castList }) => {
               imagePath={cast.image}
               name={cast.personName}
               onClick={() => navigate(`/person/${cast.personId}`)}
+              personId={cast.personId}
             />
           </SwiperSlide>
         ))}

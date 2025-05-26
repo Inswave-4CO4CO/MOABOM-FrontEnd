@@ -25,7 +25,6 @@ export const login = async ({ userId, password }) => {
     userId,
     password,
   });
-  console.log(DOMAIN.LOGIN_USER);
   return res.data;
 };
 
