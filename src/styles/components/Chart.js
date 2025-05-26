@@ -24,10 +24,14 @@ export const Header = styled.div`
     align-self: flex-start;
     font-size: 1.25rem;
     font-weight: bold;
+    min-height: 20px;
+    width: 100%;
   }
 
   .select {
     align-self: flex-end;
+    min-height: 20px;
+    width: 150px;
   }
 `;
 

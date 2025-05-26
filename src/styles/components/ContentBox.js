@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 // 스타일드 컴포넌트로 분리
 export const ContentBoxContainer = styled.div`
@@ -14,6 +14,7 @@ export const ContentBoxContainer = styled.div`
   height: 100%;
   padding: 10px;
   border: 1px solid #dcdcdc;
+
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 `;
 
@@ -95,4 +96,24 @@ export const PosterContainer = styled.div`
   width: 100%;
   height: auto;
   position: relative;
+`;
+
+export const fadeIn = keyframes`
+  from { 
+    opacity: 0; 
+    transform: translateY(-10px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
+`;
+
+export const DynamicMessage = styled.p`
+  text-align: center;
+  margin-top: 100px;
+  animation: ${fadeIn} 1s ease-in-out;
+  font-size: 1.2rem;
+  margin-top: 200px;
+  color: #777;
 `;

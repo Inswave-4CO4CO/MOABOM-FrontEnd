@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { getMyGenreContents } from "../services/api/myPageService";
 import {
   Chart as ChartJS,
   PieController,
@@ -19,6 +18,7 @@ import {
   Select,
   DynamicMessage,
 } from "../styles/components/Chart";
+import { useMyGenreStats } from "../hooks/useMyStats";
 
 ChartJS.register(
   PieController,
@@ -36,14 +36,8 @@ const Chart = () => {
   const [chartType, setChartType] = useState("pie");
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
-  const [stats, setStats] = useState([]);
-
-  useEffect(() => {
-    getMyGenreContents().then((response) => {
-      console.log(response.data);
-      setStats(response.data);
-    });
-  }, []);
+  const { data, isLoading } = useMyGenreStats();
+  const stats = data?.data ?? [];
 
   useEffect(() => {
     if (!chartRef.current || stats.length === 0) return;
@@ -144,7 +138,7 @@ const Chart = () => {
         </Select>
       </Header>
       <ChartWrapper>
-        {stats.length === 0 ? (
+        {isLoading ? null : stats.length === 0 ? (
           <DynamicMessage>아직 시청 통계가 없어요.</DynamicMessage>
         ) : (
           <canvas ref={chartRef} />

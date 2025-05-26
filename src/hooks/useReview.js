@@ -12,6 +12,7 @@ import {
   getReviewByPage,
 } from "../services/api/reviewService";
 import { toast } from "react-toastify";
+import { getMyReviewList } from "../services/api/myPageService";
 
 export const useReview = (contentId) => {
   const queryClient = useQueryClient();
@@ -88,5 +89,39 @@ export const useInfiniteReviewList = (contentId) => {
         ? data.currentPage + 1
         : undefined;
     },
+  });
+};
+
+export const useMyReviews = (enabled) => {
+  const fetchReviews = async ({ pageParam = 1 }) => {
+    const res = await getMyReviewList(pageParam);
+    const { content, currentPage, totalPages, totalCount } = res.data;
+
+    return {
+      content,
+      currentPage,
+      totalPages,
+      totalCount,
+      nextPage: currentPage < totalPages ? currentPage + 1 : null,
+    };
+  };
+
+  return useInfiniteQuery({
+    queryKey: ["myReviewList"],
+    queryFn: fetchReviews,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+};
+
+export const useMyReviewCount = () => {
+  return useQuery({
+    queryKey: ["myReviewCount"],
+    queryFn: async () => {
+      const res = await getMyReviewList(1);
+      return res.data.totalCount;
+    },
+    staleTime: 1000 * 60 * 5,
   });
 };
