@@ -4,7 +4,6 @@ import BodyButton from "./BodyButton";
 import { useNavigate } from "react-router-dom";
 import { Container, Icon, ProfileWrap } from "../styles/components/Profile";
 import PasswordModal from "./PasswordModal";
-import { useEffect } from "react";
 import { Skeleton } from "@chakra-ui/react";
 
 const Profile = ({
@@ -19,10 +18,6 @@ const Profile = ({
   isLoading = false,
 }) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(image);
-  }, []);
 
   return (
     <Skeleton loading={isLoading} borderRadius="10px">
