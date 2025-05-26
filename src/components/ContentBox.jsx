@@ -12,6 +12,7 @@ import {
   PosterItem,
   PosterContainer,
   DynamicMessage,
+  DynamicMessageWrapper,
 } from "../styles/components/ContentBox";
 import { useNavigate } from "react-router-dom";
 
@@ -71,45 +72,45 @@ const ContentBox = ({
         />
       </ContentBoxHeader>
 
-      <ContentGrid
-        className="content-scroll-area"
-        ref={scrollContainerRef}
-        $isReview={isReview}
-      >
-        {isLoading ? null : contentList.length > 0 ? (
-          isReview ? (
-            contentList.map((value) => (
-              <Review
-                key={value.reviewId}
-                reviewId={value.reviewId}
-                contentId={value.contentId}
-                rating={value.rating}
-                date={value.createdAt}
-                text={value.reviewText}
-                nickname={name}
-                isUser={true}
-                title={value.title}
-                imagePath={image}
-                onUpdate={handleReviewUpdated}
-              />
-            ))
-          ) : (
-            contentList.map((content, index) => (
-              <PosterItem key={content.contentId || index}>
-                <PosterContainer>
-                  <PosterCard
-                    src={content.poster}
-                    title={content.title}
-                    onClick={() => navigate(`/detail/${content.contentId}`)}
-                  />
-                </PosterContainer>
-              </PosterItem>
-            ))
-          )
-        ) : !isLoading && contentList.length === 0 ? (
+      {isLoading ? null : contentList.length === 0 ? (
+        <DynamicMessageWrapper>
           <DynamicMessage>이곳은 비어있어요</DynamicMessage>
-        ) : null}
-      </ContentGrid>
+        </DynamicMessageWrapper>
+      ) : (
+        <ContentGrid
+          className="content-scroll-area"
+          ref={scrollContainerRef}
+          $isReview={isReview}
+        >
+          {isReview
+            ? contentList.map((value) => (
+                <Review
+                  key={value.reviewId}
+                  reviewId={value.reviewId}
+                  contentId={value.contentId}
+                  rating={value.rating}
+                  date={value.createdAt}
+                  text={value.reviewText}
+                  nickname={name}
+                  isUser={true}
+                  title={value.title}
+                  imagePath={image}
+                  onUpdate={handleReviewUpdated}
+                />
+              ))
+            : contentList.map((content, index) => (
+                <PosterItem key={content.contentId || index}>
+                  <PosterContainer>
+                    <PosterCard
+                      src={content.poster}
+                      title={content.title}
+                      onClick={() => navigate(`/detail/${content.contentId}`)}
+                    />
+                  </PosterContainer>
+                </PosterItem>
+              ))}
+        </ContentGrid>
+      )}
     </ContentBoxContainer>
   );
 };

@@ -111,9 +111,16 @@ export const fadeIn = keyframes`
 
 export const DynamicMessage = styled.p`
   text-align: center;
-  margin-top: 100px;
   animation: ${fadeIn} 1s ease-in-out;
   font-size: 1.2rem;
-  margin-top: 200px;
   color: #777;
+  width: 100%;
+`;
+
+export const DynamicMessageWrapper = styled.div`
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

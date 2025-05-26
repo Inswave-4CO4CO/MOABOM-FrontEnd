@@ -123,11 +123,11 @@ const ContentDetailPage = () => {
 
           <ReviewGroup>
             <p>한줄평</p>
-            {[...Array(3)].map((_, idx) => (
-              <div key={idx} style={{ marginBottom: "16px" }}>
-                <Skeleton height={80} />
-              </div>
-            ))}
+            <Reviews>
+              {[...Array(4)].map((_, idx) => (
+                <Skeleton height={280} width={280} key={idx} />
+              ))}
+            </Reviews>
           </ReviewGroup>
         </ContentGroup>
       </Container>
