@@ -2,7 +2,7 @@ import ProfileIcon from "./ProfileIcon";
 import WatchButton from "./WatchButton";
 import BodyButton from "./BodyButton";
 import { useNavigate } from "react-router-dom";
-import { Container, Icon } from "../styles/components/Profile";
+import { Container, Icon, ProfileWrap } from "../styles/components/Profile";
 import PasswordModal from "./PasswordModal";
 import { useEffect } from "react";
 import { Skeleton } from "@chakra-ui/react";
@@ -25,12 +25,12 @@ const Profile = ({
   }, []);
 
   return (
-    <Skeleton loading={isLoading}>
+    <Skeleton loading={isLoading} borderRadius="10px">
       <Container>
-        <div>
+        <ProfileWrap>
           <ProfileIcon imagePath={image} />
           <h1 className="name">{name}</h1>
-        </div>
+        </ProfileWrap>
         <div className="buttonBox">
           {isMyPage ? (
             <BodyButton onClick={() => navigate("/mypage/edit")}>

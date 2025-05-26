@@ -131,21 +131,20 @@ const PersonDetailPage = () => {
     <SearchContainer>
       <PageContainer>
         <LeftGroupContainer>
-          <Skeleton loading={isLoading}>
-            <Profile
-              isMyPage={false}
-              image={personDetails?.image}
-              name={personDetails?.personName}
-              firstCount={initialCounts?.actor}
-              secondCount={initialCounts?.director}
-              onFirstClick={() => {
-                setActiveTab("actor");
-              }}
-              onSecondClick={() => {
-                setActiveTab("director");
-              }}
-            />
-          </Skeleton>
+          <Profile
+            isMyPage={false}
+            image={personDetails?.image}
+            name={personDetails?.personName}
+            firstCount={initialCounts?.actor}
+            secondCount={initialCounts?.director}
+            onFirstClick={() => {
+              setActiveTab("actor");
+            }}
+            onSecondClick={() => {
+              setActiveTab("director");
+            }}
+            loading={isLoading}
+          />
         </LeftGroupContainer>
         <RigthGroupContainer>
           <ContentBox
@@ -162,9 +161,7 @@ const PersonDetailPage = () => {
             observerRef={observerRef}
             isLoading={isLoading}
           />
-          {hasNextPage && (
-            <div ref={observerRef} style={{ width: "100%", height: "1px" }} />
-          )}
+          {hasNextPage && <div ref={observerRef} />}
         </RigthGroupContainer>
       </PageContainer>
     </SearchContainer>

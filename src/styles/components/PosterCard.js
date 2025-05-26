@@ -22,4 +22,7 @@ export const PosterWrapper = styled(Box)`
 export const Title = styled(Heading)`
   margin-top: 8px; /* Chakra 의 mt={2} */
   width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;

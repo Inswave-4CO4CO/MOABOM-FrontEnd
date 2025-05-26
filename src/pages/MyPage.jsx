@@ -12,7 +12,7 @@ import {
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { useUserInfo } from "../hooks/useUserInfo";
-import { Skeleton, Stack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import { SearchContainer } from "../styles/pages/SearchPage";
 import {
   LeftGroupContainer,

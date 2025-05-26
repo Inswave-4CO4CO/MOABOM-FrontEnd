@@ -44,3 +44,10 @@ export const Icon = styled.p`
   font-size: 20px;
   color: #555;
 `;
+
+export const ProfileWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
