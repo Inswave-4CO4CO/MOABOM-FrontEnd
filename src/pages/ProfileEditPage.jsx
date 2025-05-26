@@ -66,7 +66,7 @@ const ProfileEditPage = () => {
           <Profile
             isEdit={true}
             name={myInfo?.nickName}
-            image={myInfo ? VITE_API_URL + myInfo?.userImage : ""}
+            image={myInfo ? myInfo?.userImage : ""}
           />
         </LeftGroupContainer>
         <RigthGroupContainer>
