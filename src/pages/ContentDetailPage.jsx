@@ -58,12 +58,6 @@ const ContentDetailPage = () => {
     reviewError,
   } = useReview(contentId);
 
-  useEffect(() => {
-    if (reviewError) {
-      console.error("리뷰 데이터 오류:", reviewError);
-    }
-  }, [reviewError]);
-
   const reviewList = reviewData
     ? reviewData.pages.flatMap((page) => page.data?.content || [])
     : [];
@@ -87,10 +81,6 @@ const ContentDetailPage = () => {
     },
     [hasNextPage, isFetchingNextPage, fetchNextPage]
   );
-
-  useEffect(() => {
-    console.log(genre);
-  }, [genre]);
 
   //로딩 스켈레톤
   if (loading) {
