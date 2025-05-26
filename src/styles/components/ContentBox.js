@@ -118,8 +118,8 @@ export const DynamicMessage = styled.p`
 
 export const DynamicMessageWrapper = styled.div`
   width: 100%;
-  height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 330px;
 `;
