@@ -4,7 +4,6 @@ import {
   ProfileName,
 } from "../styles/components/ProfileIcon";
 import defaultImage from "../assets/images/defaultImage.png";
-import { FaCircleUser } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 //프로필
 const ProfileIcon = ({ imagePath, name, role, cast, personId }) => {
