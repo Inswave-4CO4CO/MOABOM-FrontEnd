@@ -8,7 +8,7 @@ import {
   useUpdateWatch,
 } from "../hooks/useWatch";
 
-const WatchBox = ({ type, contentId }) => {
+const WatchBox = ({ type, contentId, genre }) => {
   const [activeType, setActiveType] = useState(null);
   const [isCreated, setIsCreated] = useState(false);
 
@@ -26,17 +26,20 @@ const WatchBox = ({ type, contentId }) => {
   const handleClick = (selectedType) => {
     if (activeType === selectedType) {
       // 같은 버튼 누르면 삭제
-      deleteMutate(contentId, {
-        onSuccess: () => {
-          setActiveType(null);
-          setIsCreated(false);
-        },
-        onError: (err) => console.error("삭제 실패", err),
-      });
+      deleteMutate(
+        { contentId, type: selectedType, genre },
+        {
+          onSuccess: () => {
+            setActiveType(null);
+            setIsCreated(false);
+          },
+          onError: (err) => console.error("삭제 실패", err),
+        }
+      );
     } else if (!isCreated) {
       // 아직 생성되지 않았으면 생성
       createMutate(
-        { contentId, type: selectedType },
+        { contentId, type: selectedType, genre },
         {
           onSuccess: () => {
             setActiveType(selectedType);
@@ -48,7 +51,7 @@ const WatchBox = ({ type, contentId }) => {
     } else {
       // 이미 생성된 경우면 수정
       updateMutate(
-        { contentId, type: selectedType },
+        { contentId, type: selectedType, genre },
         {
           onSuccess: () => {
             setActiveType(selectedType);

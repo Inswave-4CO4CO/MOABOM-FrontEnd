@@ -32,6 +32,7 @@ import useAuthStore from "../store/useAuthStore";
 import { useContent } from "../hooks/useContent";
 import { useInfiniteReviewList } from "../hooks/useReview";
 import { Skeleton, SkeletonText } from "@chakra-ui/react";
+import { green } from "@mui/material/colors";
 
 const ContentDetailPage = () => {
   const { contentId } = useParams();
@@ -88,6 +89,10 @@ const ContentDetailPage = () => {
     [hasNextPage, isFetchingNextPage, fetchNextPage]
   );
 
+  useEffect(() => {
+    console.log(genre);
+  }, [genre]);
+
   //로딩 스켈레톤
   if (loading) {
     return (
@@ -143,7 +148,7 @@ const ContentDetailPage = () => {
         rating={content.rating}
         src={content.image}
         title={content.title}
-        genre={genre.join(", ")}
+        genre={genre.map((genre) => genre.genreName).join(", ")}
         category={content.category}
         madeIn={content.madeIn}
         ageRating={content.ageRating}
@@ -172,7 +177,7 @@ const ContentDetailPage = () => {
               ))}
             </OttGroup>
             <WatchGroup>
-              <WatchBox type={type} contentId={contentId} />
+              <WatchBox type={type} contentId={contentId} genre={genre} />
               <ReviewModal contentId={contentId}>
                 <WatchButton />
               </ReviewModal>

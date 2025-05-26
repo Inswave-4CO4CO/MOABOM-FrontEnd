@@ -9,7 +9,8 @@ export const useCreateWatch = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ contentId, type }) => createWatch(contentId, type),
+    mutationFn: ({ contentId, type, genre }) =>
+      createWatch(contentId, type, genre),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["watch"] });
     },
@@ -20,7 +21,8 @@ export const useUpdateWatch = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ contentId, type }) => modifyWatch(contentId, type),
+    mutationFn: ({ contentId, type, genre }) =>
+      modifyWatch(contentId, type, genre),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["watch"] });
     },
@@ -31,7 +33,8 @@ export const useDeleteWatch = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (contentId) => deleteWatch(contentId),
+    mutationFn: ({ contentId, type, genre }) =>
+      deleteWatch(contentId, type, genre),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["watch"] });
     },
