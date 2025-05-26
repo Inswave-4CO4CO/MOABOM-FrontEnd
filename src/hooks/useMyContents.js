@@ -25,7 +25,7 @@ export const useMyContents = (activeTab, selectedOtts) => {
   };
 
   return useInfiniteQuery({
-    queryKey: ["myContent", activeTab, selectedOtts, userId],
+    queryKey: ["myContent", activeTab, userId],
     queryFn: fetchContents,
     getNextPageParam: (lastPage) => lastPage.nextPage,
     staleTime: 1000 * 60 * 5,
