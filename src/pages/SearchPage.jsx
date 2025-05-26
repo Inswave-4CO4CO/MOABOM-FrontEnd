@@ -194,10 +194,6 @@ const SearchPage = () => {
     setSearchParams,
   ]);
 
-  const handlePersonClick = (personId) => {
-    navigate(`/person/${personId}`);
-  };
-
   const handleContentClick = (contentId) => {
     navigate(`/detail/${contentId}`);
   };
@@ -360,105 +356,6 @@ const SearchPage = () => {
     window.scrollTo(0, 0);
   };
 
-  if (isQueryLoading) {
-    return (
-      <SearchContainer>
-        {searchText && (
-          <Text
-            textAlign="center"
-            fontSize="30px"
-            fontWeight="bold"
-            marginTop={30}
-            marginBottom={30}
-          >
-            <SkeletonText noOfLines={1} width="300px" margin="auto" />
-          </Text>
-        )}
-
-        <Skeleton height="40px" mb="4" />
-
-        {activeTab === "content" ? (
-          <>
-            <SelectedFiltersWrapper>
-              <SelectedFiltersContainer>
-                {Array.from({ length: 2 }).map((_, idx) => (
-                  <FilterBoxWrapper key={idx}></FilterBoxWrapper>
-                ))}
-              </SelectedFiltersContainer>
-            </SelectedFiltersWrapper>
-
-            <SearchContent>
-              <FilterSection>
-                <FilterContainer>
-                  <GenreGroup>
-                    <Skeleton height="24px" width="50px" mb="2" />
-                    <GenreOptionsGrid>
-                      {Array.from({ length: 6 }).map((_, idx) => (
-                        <FilterOption key={idx}>
-                          <Skeleton height="20px" width="70px" />
-                        </FilterOption>
-                      ))}
-                    </GenreOptionsGrid>
-                  </GenreGroup>
-                  <VerticalDivider />
-                  <CategoryGroup>
-                    <Skeleton height="24px" width="70px" mb="2" />
-                    <CategoryOptionsGrid>
-                      {Array.from({ length: 4 }).map((_, idx) => (
-                        <FilterOption key={idx}>
-                          <Skeleton height="20px" width="80px" />
-                        </FilterOption>
-                      ))}
-                    </CategoryOptionsGrid>
-                  </CategoryGroup>
-                </FilterContainer>
-                <ControlsContainer>
-                  <Skeleton height="40px" flexGrow={1} mr="2" />
-                  <Skeleton height="40px" width="100px" />
-                </ControlsContainer>
-              </FilterSection>
-            </SearchContent>
-            <ResultsSection
-              $isContentTab={true}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(5, minmax(180px, 1fr))",
-                gap: "16px",
-              }}
-            >
-              {Array.from({ length: 5 }).map((_, idx) => (
-                <Stack key={idx} spacing="2">
-                  <Skeleton height="270px" borderRadius="md" />
-                  <SkeletonText noOfLines={1} spacing="1" />
-                  <SkeletonText noOfLines={1} spacing="1" width="50%" />
-                </Stack>
-              ))}
-            </ResultsSection>
-          </>
-        ) : (
-          <ResultsSection $isContentTab={false}>
-            <ProfileGrid>
-              {Array.from({ length: 18 }).map((_, idx) => (
-                <ProfileIconWrapper key={idx}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <SkeletonCircle size="150px" />
-                    <SkeletonText noOfLines={1} width="100px" mt="4" />
-                  </div>
-                </ProfileIconWrapper>
-              ))}
-            </ProfileGrid>
-          </ResultsSection>
-        )}
-      </SearchContainer>
-    );
-  }
-
   return (
     <SearchContainer>
       {searchText && (
@@ -479,7 +376,7 @@ const SearchPage = () => {
         onTabChange={handleTabClick}
       />
 
-      {/* 작품 탭일 때만 필터 컴포넌트들 렌더링 */}
+      {/* 작품 탭일 때만 필터 컴포넌트들 렌더링 (로딩 중에도 표시) */}
       {activeTab === "content" && (
         <>
           {selectedFilters.length > 0 && (
@@ -499,7 +396,9 @@ const SearchPage = () => {
             </SelectedFiltersWrapper>
           )}
 
-          {queryError && (
+          {/* queryError는 로딩 완료 후 에러 발생 시 여기에 표시되거나, ResultsSection 내부에 표시될 수 있음 */}
+          {/* 현재는 SearchContent와 ResultsSection 사이에 위치 */}
+          {queryError && !isQueryLoading && (
             <ErrorMessage>
               검색 중 오류가 발생했습니다. 다시 시도해주세요.
             </ErrorMessage>
@@ -518,9 +417,7 @@ const SearchPage = () => {
                     ))}
                   </GenreOptionsGrid>
                 </GenreGroup>
-
                 <VerticalDivider />
-
                 <CategoryGroup>
                   <FilterTitle>카테고리</FilterTitle>
                   <CategoryOptionsGrid>
@@ -532,7 +429,6 @@ const SearchPage = () => {
                   </CategoryOptionsGrid>
                 </CategoryGroup>
               </FilterContainer>
-
               <ControlsContainer>
                 <OttButtonList
                   onToggleOtt={handleOttSelect}
@@ -549,8 +445,8 @@ const SearchPage = () => {
         </>
       )}
 
-      {/* 에러 메시지는 모든 탭에서 표시 */}
-      {activeTab !== "content" && queryError && (
+      {/* 배우/감독 탭에서 에러 발생 시 (로딩 완료 후) */}
+      {activeTab !== "content" && queryError && !isQueryLoading && (
         <ErrorMessage>
           검색 중 오류가 발생했습니다. 다시 시도해주세요.
         </ErrorMessage>
@@ -558,54 +454,88 @@ const SearchPage = () => {
 
       <ResultsSection $isContentTab={activeTab === "content"}>
         {isQueryLoading ? (
-          <LoadingMessage>검색 결과를 불러오는 중...</LoadingMessage>
+          activeTab === "content" ? (
+            // 작품 탭 스켈레톤
+            <>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(5, 1fr)", // 5개의 컬럼으로 변경
+                  gap: "16px",
+                  width: "100%",
+                  gridColumn: "1 / -1", // 부모 ResultsSection 그리드의 모든 컬럼을 차지하도록 설정
+                }}
+              >
+                {Array.from({ length: 5 }).map(
+                  (
+                    _,
+                    idx // 5개의 아이템만 생성
+                  ) => (
+                    <Stack key={idx} spacing="2">
+                      <Skeleton height="270px" borderRadius="md" />
+                      <SkeletonText noOfLines={1} spacing="1" />
+                      <SkeletonText noOfLines={1} spacing="1" width="50%" />
+                    </Stack>
+                  )
+                )}
+              </div>
+            </>
+          ) : (
+            // 배우/감독 탭 스켈레톤 (ProfileGrid 사용 - 이전과 동일)
+            <ProfileGrid>
+              {Array.from({ length: 18 }).map((_, idx) => (
+                <ProfileIconWrapper key={idx}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <SkeletonCircle size="150px" />
+                    <SkeletonText noOfLines={1} width="100px" mt="4" />
+                  </div>
+                </ProfileIconWrapper>
+              ))}
+            </ProfileGrid>
+          )
         ) : data?.pages?.flatMap(
             (pageData) =>
               pageData.content ?? pageData.cast ?? pageData.crew ?? []
           ).length > 0 ? (
+          // 로딩 완료 후 데이터가 있을 때 실제 결과 렌더링
           <>
             {activeTab === "content" &&
-              // 작품 탭일 때 PosterCard 렌더링
               data.pages
                 .flatMap((pageData) => pageData.content ?? [])
-                .map((resultItem, index, array) => {
-                  console.log(
-                    "Rendering PosterCard with title:",
-                    resultItem.title
-                  );
-                  return (
-                    <PosterCard
-                      key={`${resultItem.contentId}-${index}`}
-                      ref={
-                        index === array.length - 1 ? lastResultElementRef : null
-                      }
-                      onClick={() => handleContentClick(resultItem.contentId)}
-                      src={resultItem.poster}
-                      title={resultItem.title}
-                      ottname={resultItem.ottname || ""}
-                    />
-                  );
-                })}
+                .map((resultItem, index, array) => (
+                  <PosterCard
+                    key={`${resultItem.contentId}-${index}`}
+                    ref={
+                      index === array.length - 1 ? lastResultElementRef : null
+                    }
+                    onClick={() => handleContentClick(resultItem.contentId)}
+                    src={resultItem.poster}
+                    title={resultItem.title}
+                    ottname={resultItem.ottname || ""}
+                  />
+                ))}
 
             {activeTab === "cast" && (
-              // 배우 탭일 때 ProfileIcon 렌더링
               <ProfileGrid>
                 {data.pages
                   .flatMap((pageData) => pageData.cast ?? [])
                   .map((personItem, index, array) => (
                     <ProfileIconWrapper
                       key={`${personItem.personId}-${index}`}
-                      onClick={() => handlePersonClick(personItem.personId)}
                       ref={
                         index === array.length - 1 ? lastResultElementRef : null
                       }
                     >
                       <ProfileIcon
-                        imagePath={
-                          personItem.image ||
-                          "https://via.placeholder.com/100x100?text=No+Image"
-                        }
+                        imagePath={personItem.image}
                         name={personItem.personName}
+                        personId={personItem.personId}
                       />
                     </ProfileIconWrapper>
                   ))}
@@ -613,24 +543,20 @@ const SearchPage = () => {
             )}
 
             {activeTab === "crew" && (
-              // 감독/작가 탭일 때 ProfileIcon 렌더링
               <ProfileGrid>
                 {data.pages
                   .flatMap((pageData) => pageData.crew ?? [])
                   .map((personItem, index, array) => (
                     <ProfileIconWrapper
                       key={`${personItem.personId}-${index}`}
-                      onClick={() => handlePersonClick(personItem.personId)}
                       ref={
                         index === array.length - 1 ? lastResultElementRef : null
                       }
                     >
                       <ProfileIcon
-                        imagePath={
-                          personItem.image ||
-                          "https://via.placeholder.com/100x100?text=No+Image"
-                        }
+                        imagePath={personItem.image}
                         name={personItem.personName}
+                        personId={personItem.personId}
                       />
                     </ProfileIconWrapper>
                   ))}
@@ -644,8 +570,11 @@ const SearchPage = () => {
             )}
           </>
         ) : (
+          // 로딩 완료 후 결과가 없을 때
           <NoResults>
-            {searchText.trim() || selectedFilters.length > 0
+            {queryError
+              ? "검색 중 오류가 발생했습니다. 다시 시도해주세요."
+              : searchText.trim() || selectedFilters.length > 0
               ? "검색 결과가 없습니다."
               : "검색어 또는 필터를 선택해주세요."}
           </NoResults>

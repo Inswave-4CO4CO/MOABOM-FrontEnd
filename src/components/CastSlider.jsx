@@ -59,7 +59,11 @@ const CastSlider = ({ castList }) => {
       >
         {castList.map((cast, index) => (
           <SwiperSlide key={`cast-${index}`}>
-            <ProfileIcon imagePath={cast.image} name={cast.personName} />
+            <ProfileIcon
+              imagePath={cast.image}
+              name={cast.personName}
+              personId={cast.personId}
+            />
           </SwiperSlide>
         ))}
       </Swiper>
