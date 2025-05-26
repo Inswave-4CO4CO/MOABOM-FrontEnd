@@ -11,6 +11,7 @@ import {
   ContentGrid,
   PosterItem,
   PosterContainer,
+  DynamicMessage,
 } from "../styles/components/ContentBox";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +20,7 @@ const ContentBox = ({
   title,
   tabs,
   defaultTab,
-  value,
+  isLoading,
   onTabChange,
   selectedOtts,
   setSelectedOtts,
@@ -27,6 +28,7 @@ const ContentBox = ({
   isReview = false,
   handleReviewUpdated,
   image,
+  name,
   ...props
 }) => {
   const navigate = useNavigate();
@@ -74,17 +76,17 @@ const ContentBox = ({
         ref={scrollContainerRef}
         $isReview={isReview}
       >
-        {contentList.length !== 0 ? (
+        {isLoading ? null : contentList.length > 0 ? (
           isReview ? (
             contentList.map((value) => (
               <Review
+                key={value.reviewId}
                 reviewId={value.reviewId}
                 contentId={value.contentId}
-                key={value.reviewId}
                 rating={value.rating}
                 date={value.createdAt}
                 text={value.reviewText}
-                nickname={value.userId}
+                nickname={name}
                 isUser={true}
                 title={value.title}
                 imagePath={image}
@@ -98,17 +100,15 @@ const ContentBox = ({
                   <PosterCard
                     src={content.poster}
                     title={content.title}
-                    onClick={() => {
-                      navigate(`/detail/${content.contentId}`);
-                    }}
+                    onClick={() => navigate(`/detail/${content.contentId}`)}
                   />
                 </PosterContainer>
               </PosterItem>
             ))
           )
-        ) : (
-          <>보관함이 비어있어요</>
-        )}
+        ) : !isLoading && contentList.length === 0 ? (
+          <DynamicMessage>이곳은 비어있어요</DynamicMessage>
+        ) : null}
       </ContentGrid>
     </ContentBoxContainer>
   );

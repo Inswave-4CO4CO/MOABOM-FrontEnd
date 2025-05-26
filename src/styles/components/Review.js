@@ -9,6 +9,7 @@ export const ReviewContainer = styled.div`
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  max-width: 300px;
 `;
 
 export const ReviewHeader = styled.div`
