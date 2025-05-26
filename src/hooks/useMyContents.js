@@ -8,6 +8,17 @@ import useAuthStore from "../store/useAuthStore";
 
 export const useMyContents = (activeTab, selectedOtts) => {
   const { userId } = useAuthStore();
+
+  const { data: watchCount } = useQuery({
+    queryKey: ["myWatchCount", userId],
+    queryFn: async () => {
+      const res = await getMyWatchCount();
+      return res.data.count;
+    },
+    staleTime: 1000 * 60 * 5,
+    enabled: !!userId,
+  });
+
   const fetchContents = async ({ pageParam = 1 }) => {
     const res =
       activeTab === "watching"
@@ -24,24 +35,26 @@ export const useMyContents = (activeTab, selectedOtts) => {
     };
   };
 
-  return useInfiniteQuery({
+  const {
+    data: contentData,
+    fetchNextPage: fetchNextContentPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isContentLoading,
+  } = useInfiniteQuery({
     queryKey: ["myContent", activeTab, userId],
     queryFn: fetchContents,
     getNextPageParam: (lastPage) => lastPage.nextPage,
     staleTime: 1000 * 60 * 5,
     enabled: !!userId,
   });
-};
 
-export const useMyWatchCount = () => {
-  const { userId } = useAuthStore();
-  return useQuery({
-    queryKey: ["myWatchCount", userId],
-    queryFn: async () => {
-      const res = await getMyWatchCount();
-      return res.data.count;
-    },
-    staleTime: 1000 * 60 * 5,
-    enabled: !!userId,
-  });
+  return {
+    watchCount,
+    contentData,
+    fetchNextContentPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isContentLoading,
+  };
 };

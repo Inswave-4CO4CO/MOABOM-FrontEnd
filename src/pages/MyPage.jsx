@@ -6,14 +6,14 @@ import { ottList } from "../components/OttButtonList";
 import { Stack } from "@chakra-ui/react";
 
 import { useUserInfo } from "../hooks/useUserInfo";
-import { useMyContents, useMyWatchCount } from "../hooks/useMyContents";
-import { useMyReviewCount, useMyReviews } from "../hooks/useReview";
+import { useMyContents } from "../hooks/useMyContents";
 import { SearchContainer } from "../styles/pages/SearchPage";
 import {
   LeftGroupContainer,
   PageContainer,
   RigthGroupContainer,
 } from "../styles/pages/ProfileEditPage";
+import { useMyReviews } from "../hooks/useMyReviews";
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState("watching"); //탭(보는중, 봤다)
@@ -27,24 +27,23 @@ const MyPage = () => {
   const scrollContainerRef = useRef(null);
   const observerRef = useRef(null);
 
-  const { data: watchCount } = useMyWatchCount(); //보관함 개수
-  const { data: reviewCount } = useMyReviewCount(); //한줄평 개수
-
   const {
-    data: contentData,
-    fetchNextPage: fetchNextContentPage,
+    watchCount,
+    contentData,
+    fetchNextContentPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading: isContentLoading,
+    isContentLoading,
   } = useMyContents(activeTab, selectedOtts); //나의 보관함(보는중, 봤다) 컨텐츠 목록
 
   const {
-    data: reviewData,
-    fetchNextPage: fetchNextReviewPage,
-    hasNextPage: hasMoreReviews,
-    isFetchingNextPage: isLoadingNextReview,
-    isLoading: isReviewLoading,
-    refetch: refetchReviewList,
+    reviewCount,
+    reviewData,
+    fetchNextReviewPage,
+    hasMoreReviews,
+    isLoadingNextReview,
+    isReviewLoading,
+    refetchReviewList,
   } = useMyReviews(isReviewView); //한줄평 목록
 
   const allContents = contentData?.pages.flatMap((page) => page.content) ?? [];
