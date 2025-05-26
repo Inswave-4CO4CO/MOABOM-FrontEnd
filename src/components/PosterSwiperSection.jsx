@@ -36,17 +36,12 @@ const PosterSwiperSection = ({ title, data, isLoading }) => {
             ))
           : data.map((item) => (
               <SwiperSlide key={item.contentId} style={{ width: "100%" }}>
-                <Flex
-                  justify="center"
-                  align="center"
-                  h="100%"
-                  my={4}
-                  onClick={() => navigate(`/detail/${item.contentId}`)}
-                >
+                <Flex justify="center" align="center" h="100%" my={4}>
                   <PosterCard
                     title={item.title}
                     src={item.poster}
                     ottname={item.ottName}
+                    onClick={() => navigate(`/detail/${item.contentId}`)}
                   />
                 </Flex>
               </SwiperSlide>
