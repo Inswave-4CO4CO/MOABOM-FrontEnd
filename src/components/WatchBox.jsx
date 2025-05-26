@@ -11,6 +11,7 @@ import {
 const WatchBox = ({ type, contentId }) => {
   const [activeType, setActiveType] = useState(null);
   const [isCreated, setIsCreated] = useState(false);
+  const [prevType, setPrevType] = useState(null);
 
   const { mutate: createMutate } = useCreateWatch();
   const { mutate: deleteMutate } = useDeleteWatch();
@@ -24,37 +25,51 @@ const WatchBox = ({ type, contentId }) => {
   }, [type]);
 
   const handleClick = (selectedType) => {
+    setPrevType(activeType); // 롤백을 위해 이전 값 저장
+
     if (activeType === selectedType) {
-      // 같은 버튼 누르면 삭제
+      // 삭제: 낙관적 UI 업데이트
+      setActiveType(null);
+      setIsCreated(false);
+
       deleteMutate(contentId, {
-        onSuccess: () => {
-          setActiveType(null);
-          setIsCreated(false);
+        onError: (err) => {
+          // 실패 시 롤백
+          setActiveType(prevType);
+          setIsCreated(true);
+          console.error("삭제 실패", err);
         },
-        onError: (err) => console.error("삭제 실패", err),
       });
     } else if (!isCreated) {
-      // 아직 생성되지 않았으면 생성
+      // 생성: 낙관적 UI 업데이트
+      setActiveType(selectedType);
+      setIsCreated(true);
+
       createMutate(
         { contentId, type: selectedType },
         {
-          onSuccess: () => {
-            setActiveType(selectedType);
-            setIsCreated(true);
+          onError: (err) => {
+            // 실패 시 롤백
+            setActiveType(prevType);
+            setIsCreated(false);
+            console.error("생성실패", err);
           },
-          onError: (err) => console.error("생성실패", err),
         }
       );
     } else {
-      // 이미 생성된 경우면 수정
+      // 수정: 낙관적 UI 업데이트
+      setActiveType(selectedType);
+      setIsCreated(true);
+
       updateMutate(
         { contentId, type: selectedType },
         {
-          onSuccess: () => {
-            setActiveType(selectedType);
+          onError: (err) => {
+            // 실패 시 롤백
+            setActiveType(prevType);
             setIsCreated(true);
+            console.error("수정실패", err);
           },
-          onError: (err) => console.error("생성실패", err),
         }
       );
     }
