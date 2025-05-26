@@ -13,6 +13,7 @@ import {
 } from "../services/api/reviewService";
 import { toast } from "react-toastify";
 import { getMyReviewList } from "../services/api/myPageService";
+import useAuthStore from "../store/useAuthStore";
 
 export const useReview = (contentId) => {
   const queryClient = useQueryClient();
@@ -20,7 +21,7 @@ export const useReview = (contentId) => {
   const { data: userReview } = useQuery({
     queryKey: ["myReview", contentId],
     queryFn: () => findByContentIdAndUserId(contentId).then((res) => res.data),
-    enabled: !!contentId, // contentId가 있을 때만 동작
+    enabled: !!contentId,
   });
 
   const { mutate: createReviewMutate } = useMutation({
@@ -93,6 +94,7 @@ export const useInfiniteReviewList = (contentId) => {
 };
 
 export const useMyReviews = (enabled) => {
+  const { userId } = useAuthStore();
   const fetchReviews = async ({ pageParam = 1 }) => {
     const res = await getMyReviewList(pageParam);
     const { content, currentPage, totalPages, totalCount } = res.data;
@@ -107,7 +109,7 @@ export const useMyReviews = (enabled) => {
   };
 
   return useInfiniteQuery({
-    queryKey: ["myReviewList"],
+    queryKey: ["myReviewList", userId],
     queryFn: fetchReviews,
     getNextPageParam: (lastPage) => lastPage.nextPage,
     enabled,
@@ -116,12 +118,14 @@ export const useMyReviews = (enabled) => {
 };
 
 export const useMyReviewCount = () => {
+  const { userId } = useAuthStore();
   return useQuery({
-    queryKey: ["myReviewCount"],
+    queryKey: ["myReviewCount", userId],
     queryFn: async () => {
       const res = await getMyReviewList(1);
       return res.data.totalCount;
     },
     staleTime: 1000 * 60 * 5,
+    enabled: !!userId,
   });
 };
