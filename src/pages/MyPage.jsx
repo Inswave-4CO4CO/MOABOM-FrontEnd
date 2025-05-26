@@ -12,7 +12,7 @@ import {
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { useUserInfo } from "../hooks/useUserInfo";
-import { Stack } from "@chakra-ui/react";
+import { Skeleton, Stack } from "@chakra-ui/react";
 import { SearchContainer } from "../styles/pages/SearchPage";
 import {
   LeftGroupContainer,
@@ -42,7 +42,7 @@ const MyPage = () => {
     setActiveTab("myReview");
   }; // 리뷰 보기
 
-  const { myInfo } = useUserInfo();
+  const { myInfo, isMyInfoLoading } = useUserInfo();
   const { VITE_API_URL } = import.meta.env;
 
   const scrollContainerRef = useRef(null); //ContentBox를 참조
@@ -66,13 +66,19 @@ const MyPage = () => {
   };
 
   //보관함 무한 스크롤 쿼리
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
-    useInfiniteQuery({
-      queryKey: ["myContent", activeTab, selectedOtts],
-      queryFn: fetchContents,
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-      staleTime: 1000 * 60 * 5,
-    });
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ["myContent", activeTab, selectedOtts],
+    queryFn: fetchContents,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    staleTime: 1000 * 60 * 5,
+  });
 
   //보관함 데이터
   const allContents = data?.pages.flatMap((page) => page.content) ?? [];
@@ -97,6 +103,7 @@ const MyPage = () => {
     fetchNextPage: fetchNextReviewPage,
     hasNextPage: hasMoreReviews,
     isFetchingNextPage: isLoadingNextReview,
+    isLoading: isLoadingReview,
     refetch: refetchReviewList,
   } = useInfiniteQuery({
     queryKey: ["myReviewList"],
@@ -198,11 +205,12 @@ const MyPage = () => {
             handleSecondAction={handleSecondClick}
             image={myInfo ? VITE_API_URL + myInfo?.userImage : ""}
             name={myInfo?.nickName}
+            isLoading={isMyInfoLoading}
           />
         </LeftGroupContainer>
         <RigthGroupContainer>
           <Stack gap="10">
-            <Chart />
+            <Chart isLoading={isMyInfoLoading} />
             <ContentBox
               contentList={isReviewView ? allReviews : allContents}
               title={isReviewView ? "한줄평" : "보관함"}
@@ -224,6 +232,7 @@ const MyPage = () => {
               userReview={allReviews}
               onUpdate={handleReviewUpdated}
               image={myInfo?.userImage}
+              isLoading={isLoading || isLoadingReview}
             />
           </Stack>
         </RigthGroupContainer>

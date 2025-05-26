@@ -41,12 +41,12 @@ export const OttButtonContainer = styled.div`
 
 export const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: ${({ isReview }) =>
-    isReview ? "repeat(1, 1fr)" : "repeat(2, 1fr)"};
+  grid-template-columns: ${({ $isReview }) =>
+    $isReview ? "repeat(1, 1fr)" : "repeat(2, 1fr)"};
   gap: 10px;
   padding: 8px 16px;
   overflow-y: auto;
-  height: auto;
+  min-height: 250px;
   width: 100%;
   place-items: center;
 
@@ -63,23 +63,23 @@ export const ContentGrid = styled.div`
   }
 
   @media (min-width: 400px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(1, 1fr)" : "repeat(1, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(1, 1fr)" : "repeat(1, 1fr)"};
   }
 
   @media (min-width: 714px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(2, 1fr)" : "repeat(2, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(2, 1fr)" : "repeat(2, 1fr)"};
   }
 
   @media (min-width: 1000px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(3, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(3, 1fr)" : "repeat(3, 1fr)"};
   }
 
   @media (min-width: 1200px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
   }
 `;
 

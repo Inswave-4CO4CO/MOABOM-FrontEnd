@@ -6,26 +6,7 @@ import ContentBox from "../components/ContentBox";
 import { ottList } from "../components/OttButtonList";
 import api from "../services/api";
 import { DOMAIN } from "../services/domain";
-import {
-  Stack,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-} from "@chakra-ui/react";
-import { Container as ProfileContainer } from "../styles/components/Profile";
-import {
-  ContentBoxContainer,
-  ContentBoxHeader,
-  ContentBoxTitle,
-  OttButtonContainer,
-  ContentGrid,
-  PosterItem,
-} from "../styles/components/ContentBox";
-import {
-  ProfileWrapper,
-  ContentWrapper,
-  Container,
-} from "../styles/pages/PersonDetailPage";
+import { Skeleton } from "@chakra-ui/react";
 import { SearchContainer } from "../styles/pages/SearchPage";
 import {
   LeftGroupContainer,
@@ -144,83 +125,27 @@ const PersonDetailPage = () => {
     }
   }, [pages, initialCounts.actor]);
 
-  // 1) 초기 로딩 중엔 스켈레톤 보여주기
-  if (isLoading) {
-    return (
-      <SearchContainer>
-        {/* 프로필 영역 */}
-        <ProfileWrapper>
-          <ProfileContainer>
-            {/* 아바타 */}
-            <SkeletonCircle size="24" />
-
-            {/* 이름 */}
-            <div className="name">
-              <Skeleton height="6" width="60%" mx="auto" />
-            </div>
-
-            {/* 주요 버튼들 */}
-            <div className="buttonBox">
-              <Skeleton height="40px" width="40%" borderRadius="md" />
-              <Skeleton height="40px" width="40%" borderRadius="md" />
-            </div>
-          </ProfileContainer>
-        </ProfileWrapper>
-
-        {/* 콘텐츠 박스 영역 */}
-        <ContentWrapper>
-          <ContentBoxContainer>
-            <ContentBoxHeader>
-              {/* 타이틀 */}
-              <ContentBoxTitle>
-                <Skeleton height="24px" width="40%" />
-              </ContentBoxTitle>
-
-              <OttButtonContainer>
-                {Array.from({ length: 2 }).map((_, idx) => (
-                  <Skeleton
-                    key={idx}
-                    height="32px"
-                    width="49%"
-                    borderRadius="full"
-                  />
-                ))}
-              </OttButtonContainer>
-            </ContentBoxHeader>
-
-            {/* 포스터 그리드 */}
-            <ContentGrid>
-              {Array.from({ length: 6 }).map((_, idx) => (
-                <PosterItem key={idx}>
-                  <Skeleton height="300px" borderRadius="md" />
-                  <SkeletonText noOfLines={2} spacing="2" mt="2" />
-                </PosterItem>
-              ))}
-            </ContentGrid>
-          </ContentBoxContainer>
-        </ContentWrapper>
-      </SearchContainer>
-    );
-  }
   if (isError) return <p>Error: {error.message}</p>;
 
   return (
     <SearchContainer>
       <PageContainer>
         <LeftGroupContainer>
-          <Profile
-            isMyPage={false}
-            image={personDetails.image}
-            name={personDetails.personName}
-            firstCount={initialCounts.actor}
-            secondCount={initialCounts.director}
-            onFirstClick={() => {
-              setActiveTab("actor");
-            }}
-            onSecondClick={() => {
-              setActiveTab("director");
-            }}
-          />
+          <Skeleton loading={isLoading}>
+            <Profile
+              isMyPage={false}
+              image={personDetails?.image}
+              name={personDetails?.personName}
+              firstCount={initialCounts?.actor}
+              secondCount={initialCounts?.director}
+              onFirstClick={() => {
+                setActiveTab("actor");
+              }}
+              onSecondClick={() => {
+                setActiveTab("director");
+              }}
+            />
+          </Skeleton>
         </LeftGroupContainer>
         <RigthGroupContainer>
           <ContentBox
@@ -235,6 +160,7 @@ const PersonDetailPage = () => {
             contentList={personDetails?.filmography?.[activeTab] ?? []}
             scrollContainerRef={scrollContainerRef}
             observerRef={observerRef}
+            isLoading={isLoading}
           />
           {hasNextPage && (
             <div ref={observerRef} style={{ width: "100%", height: "1px" }} />

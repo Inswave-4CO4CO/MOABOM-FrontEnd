@@ -7,7 +7,7 @@ import {
 import Poster from "./Poster";
 
 const PosterCard = React.forwardRef(
-  ({ src, title, ottname, onClick, sx, ...props }, ref) => {
+  ({ src, title, onClick, sx, ...props }, ref) => {
     return (
       <StyledCard ref={ref} onClick={onClick} sx={sx} {...props}>
         <PosterWrapper>

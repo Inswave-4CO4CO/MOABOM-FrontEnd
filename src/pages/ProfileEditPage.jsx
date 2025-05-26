@@ -43,7 +43,7 @@ const ProfileEditPage = () => {
     setImageFile(null);
   };
 
-  const { myInfo, editMyInfo, isLoading } = useUserInfo();
+  const { myInfo, editMyInfo, isMyInfoLoading } = useUserInfo();
 
   useEffect(() => {
     if (myInfo) {
@@ -67,15 +67,16 @@ const ProfileEditPage = () => {
             isEdit={true}
             name={myInfo?.nickName}
             image={myInfo ? VITE_API_URL + myInfo?.userImage : ""}
+            isLoading={isMyInfoLoading}
           />
         </LeftGroupContainer>
         <RigthGroupContainer>
           <form onSubmit={handleEdit}>
             <Stack gap="10">
-              <Skeleton w="80%" loading={isLoading}>
+              <Skeleton w="80%" loading={isMyInfoLoading}>
                 <LabelInput label="아이디" value={myInfo?.userId} disabled />
               </Skeleton>
-              <Skeleton w="80%" loading={isLoading}>
+              <Skeleton w="80%" loading={isMyInfoLoading}>
                 <FileUpload.Root maxW="xl" alignItems="stretch" maxFiles={10}>
                   <FileUpload.HiddenInput
                     accept="image/*"
@@ -125,14 +126,14 @@ const ProfileEditPage = () => {
                   )}
                 </FileUpload.Root>
               </Skeleton>
-              <Skeleton w="80%" loading={isLoading}>
+              <Skeleton w="80%" loading={isMyInfoLoading}>
                 <LabelInput
                   label="닉네임"
                   value={nickName}
                   onChange={(e) => setNickName(e.target.value)}
                 />
               </Skeleton>
-              <Skeleton w="80%" loading={isLoading}>
+              <Skeleton w="80%" loading={isMyInfoLoading}>
                 <ButtonContainer>
                   <HeaderButton
                     onClick={() => navigate(-1)}

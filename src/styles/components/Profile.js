@@ -13,7 +13,7 @@ export const Container = styled.div`
   padding: 60px 40px;
   width: 100%;
   max-height: 400px;
-  max-width: 300px;
+  min-width: 300px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 
