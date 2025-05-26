@@ -30,8 +30,6 @@ const ProfileEditPage = () => {
 
   const navigate = useNavigate();
 
-  const { VITE_API_URL } = import.meta.env;
-
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {

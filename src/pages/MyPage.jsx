@@ -23,7 +23,6 @@ const MyPage = () => {
   const [isReviewView, setIsReviewView] = useState(false);
 
   const { myInfo, isMyInfoLoading } = useUserInfo(); //user 정보
-  const { VITE_API_URL } = import.meta.env; //이미지 경로
 
   const scrollContainerRef = useRef(null);
   const observerRef = useRef(null);
@@ -115,7 +114,7 @@ const MyPage = () => {
             secondCount={reviewCount}
             handleFirstAction={handleFirstClick}
             handleSecondAction={handleSecondClick}
-            image={myInfo ? VITE_API_URL + myInfo?.userImage : ""}
+            image={myInfo ? myInfo?.userImage : ""}
             name={myInfo?.nickName}
             isLoading={isMyInfoLoading}
           />
