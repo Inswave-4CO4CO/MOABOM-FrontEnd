@@ -8,6 +8,7 @@ export const ProfileContainer = styled.div`
   gap: 10px;
   text-align: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 export const ProfileImage = styled.img`

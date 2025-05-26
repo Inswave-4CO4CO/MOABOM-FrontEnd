@@ -58,12 +58,6 @@ const ContentDetailPage = () => {
     reviewError,
   } = useReview(contentId);
 
-  useEffect(() => {
-    if (reviewError) {
-      console.error("리뷰 데이터 오류:", reviewError);
-    }
-  }, [reviewError]);
-
   const reviewList = reviewData
     ? reviewData.pages.flatMap((page) => page.data?.content || [])
     : [];
@@ -143,7 +137,7 @@ const ContentDetailPage = () => {
         rating={content.rating}
         src={content.image}
         title={content.title}
-        genre={genre.join(", ")}
+        genre={genre.map((genre) => genre.genreName).join(", ")}
         category={content.category}
         madeIn={content.madeIn}
         ageRating={content.ageRating}
@@ -172,7 +166,7 @@ const ContentDetailPage = () => {
               ))}
             </OttGroup>
             <WatchGroup>
-              <WatchBox type={type} contentId={contentId} />
+              <WatchBox type={type} contentId={contentId} genre={genre} />
               <ReviewModal contentId={contentId}>
                 <WatchButton />
               </ReviewModal>

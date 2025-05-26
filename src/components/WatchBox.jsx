@@ -5,7 +5,7 @@ import { FaPlus, FaCheck, FaEye } from "react-icons/fa";
 import { useWatch } from "../hooks/useWatch";
 import { toast } from "react-toastify";
 
-const WatchBox = ({ type, contentId }) => {
+const WatchBox = ({ type, contentId, genre }) => {
   const [activeType, setActiveType] = useState(null);
   const [isCreated, setIsCreated] = useState(false);
   const [prevType, setPrevType] = useState(null);
@@ -27,22 +27,25 @@ const WatchBox = ({ type, contentId }) => {
       // 삭제: 낙관적 UI 업데이트
       setActiveType(null);
       setIsCreated(false);
-
-      deleteWatchMutate(contentId, {
-        onError: (err) => {
-          // 실패 시 롤백
-          setActiveType(prevType);
-          setIsCreated(true);
-          toast.error("삭제 실패", err);
-        },
-      });
+      console.log(genre);
+      deleteWatchMutate(
+        { contentId, type: selectedType, genre },
+        {
+          onError: (err) => {
+            // 실패 시 롤백
+            setActiveType(prevType);
+            setIsCreated(true);
+            toast.error("삭제 실패", err);
+          },
+        }
+      );
     } else if (!isCreated) {
       // 생성: 낙관적 UI 업데이트
       setActiveType(selectedType);
       setIsCreated(true);
 
       createWatchMutate(
-        { contentId, type: selectedType },
+        { contentId, type: selectedType, genre },
         {
           onError: (err) => {
             // 실패 시 롤백
@@ -58,7 +61,7 @@ const WatchBox = ({ type, contentId }) => {
       setIsCreated(true);
 
       updateWatchMutate(
-        { contentId, type: selectedType },
+        { contentId, type: selectedType, genre },
         {
           onError: (err) => {
             // 실패 시 롤백

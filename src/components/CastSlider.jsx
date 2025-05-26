@@ -7,8 +7,10 @@ import "swiper/css/navigation";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import ProfileIcon from "../components/ProfileIcon";
 import { SliderWrapper, SwiperButton } from "../styles/components/CastSlider";
+import { useNavigate } from "react-router-dom";
 
 const CastSlider = ({ castList }) => {
+  const navigate = useNavigate();
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const [swiperInstance, setSwiperInstance] = useState(null);
@@ -62,6 +64,7 @@ const CastSlider = ({ castList }) => {
             <ProfileIcon
               imagePath={cast.image}
               name={cast.personName}
+              onClick={() => navigate(`/person/${cast.personId}`)}
               personId={cast.personId}
             />
           </SwiperSlide>
