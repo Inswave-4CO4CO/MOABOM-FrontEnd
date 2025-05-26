@@ -12,6 +12,8 @@ export const modifyWatch = (contentId, type, genre) => {
 };
 
 //시청상태 삭제(보고싶다, 보는중, 봤어요)
-export const deleteWatch = (contentId, type, genre) => {
-  return authInstance.delete(DOMAIN.USER_WATCH, { contentId, type, genre });
+export const deleteWatch = ({ contentId, type, genre }) => {
+  return authInstance.delete(DOMAIN.USER_WATCH, {
+    data: { contentId, type, genre },
+  });
 };

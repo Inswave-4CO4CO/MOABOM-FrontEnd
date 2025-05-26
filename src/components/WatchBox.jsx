@@ -27,7 +27,7 @@ const WatchBox = ({ type, contentId, genre }) => {
       // 삭제: 낙관적 UI 업데이트
       setActiveType(null);
       setIsCreated(false);
-
+      console.log(genre);
       deleteWatchMutate(
         { contentId, type: selectedType, genre },
         {

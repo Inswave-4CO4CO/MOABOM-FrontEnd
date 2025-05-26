@@ -7,9 +7,9 @@ import defaultImage from "../assets/images/defaultImage.png";
 import { FaCircleUser } from "react-icons/fa6";
 
 //프로필
-const ProfileIcon = ({ imagePath, name, role, cast }) => {
+const ProfileIcon = ({ imagePath, name, role, cast, onClick }) => {
   return (
-    <ProfileContainer>
+    <ProfileContainer onClick={onClick}>
       {imagePath ? (
         <ProfileImage src={imagePath} alt={name} />
       ) : (
