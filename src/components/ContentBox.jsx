@@ -15,6 +15,7 @@ import {
   DynamicMessageWrapper,
 } from "../styles/components/ContentBox";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "@chakra-ui/react";
 
 const ContentBox = ({
   contentList = [],
@@ -52,7 +53,7 @@ const ContentBox = ({
   };
 
   return (
-    <ContentBoxContainer>
+    <ContentBoxContainer {...props}>
       <ContentBoxHeader>
         <ContentBoxTitle>{title}</ContentBoxTitle>
         {!isReview ? (
@@ -71,50 +72,62 @@ const ContentBox = ({
           value={defaultTab}
         />
       </ContentBoxHeader>
-
-      {!isLoading && contentList.length === 0 ? (
-        <DynamicMessageWrapper>
+      <ContentGrid
+        className="content-scroll-area"
+        ref={scrollContainerRef}
+        $isReview={isReview}
+      >
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, idx) =>
+            isReview ? (
+              <Skeleton
+                key={idx}
+                height="300px"
+                width="250px"
+                borderRadius="10px"
+              />
+            ) : (
+              <Skeleton
+                key={idx}
+                height="300px"
+                width="200px"
+                borderRadius="10px"
+              />
+            )
+          )
+        ) : contentList.length !== 0 ? (
+          isReview ? (
+            contentList.map((value) => (
+              <Review
+                key={value.reviewId}
+                reviewId={value.reviewId}
+                contentId={value.contentId}
+                rating={value.rating}
+                date={value.createdAt}
+                text={value.reviewText}
+                nickname={name}
+                isUser={true}
+                title={value.title}
+                imagePath={image}
+                onUpdate={handleReviewUpdated}
+              />
+            ))
+          ) : (
+            contentList.map((content, index) => (
+              <PosterCard
+                key={content.contentId || index}
+                src={content.poster}
+                title={content.title}
+                onClick={() => {
+                  navigate(`/detail/${content.contentId}`);
+                }}
+              />
+            ))
+          )
+        ) : (
           <DynamicMessage>이곳은 비어있어요</DynamicMessage>
-        </DynamicMessageWrapper>
-      ) : (
-        <ContentGrid
-          className="content-scroll-area"
-          ref={scrollContainerRef}
-          $isReview={isReview}
-        >
-          {isLoading
-            ? null
-            : contentList.length > 0
-            ? isReview
-              ? contentList.map((value) => (
-                  <Review
-                    key={value.reviewId}
-                    reviewId={value.reviewId}
-                    contentId={value.contentId}
-                    rating={value.rating}
-                    date={value.createdAt}
-                    text={value.reviewText}
-                    nickname={name}
-                    isUser={true}
-                    title={value.title}
-                    imagePath={image}
-                    onUpdate={handleReviewUpdated}
-                  />
-                ))
-              : contentList.map((content, index) => (
-                  <PosterItem key={content.contentId || index}>
-                    <PosterContainer>
-                      <PosterCard
-                        src={content.poster}
-                        title={content.title}
-                        onClick={() => navigate(`/detail/${content.contentId}`)}
-                      />
-                    </PosterContainer>
-                  </PosterItem>
-                ))
-            : null}
-        </ContentGrid>
-      )}
+        )}
+      </ContentGrid>
     </ContentBoxContainer>
   );
 };

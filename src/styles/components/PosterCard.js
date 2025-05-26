@@ -6,6 +6,7 @@ export const StyledCard = styled(Stack)`
   spacing: 8px; /* Chakra 의 spacing={2} 정도 값 */
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  margin-bottom: 15px;
 
   &:hover {
     transform: scale(1.05);
@@ -21,4 +22,7 @@ export const PosterWrapper = styled(Box)`
 export const Title = styled(Heading)`
   margin-top: 8px; /* Chakra 의 mt={2} */
   width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;

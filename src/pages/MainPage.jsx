@@ -65,40 +65,21 @@ const MainPage = () => {
         )}
       </Flex>
 
-      {isLoading ? (
-        <>
-          {[1, 2, 3].map((_, idx) => (
-            <Box key={idx} px={6} py={4}>
-              <SkeletonText mt="4" noOfLines={1} width="200px" />
-              <Flex mt={4} gap={4} overflowX="auto">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Skeleton
-                    key={i}
-                    width="150px"
-                    height="220px"
-                    borderRadius="md"
-                  />
-                ))}
-              </Flex>
-            </Box>
-          ))}
-        </>
-      ) : (
-        <>
-          <PosterSwiperSection
-            title="지금 막 나온 따끈따끈 신작!"
-            data={filterIncludeSelected(data.new)}
-          />
-          <PosterSwiperSection
-            title="요즘 가장 핫한 콘텐츠는?"
-            data={filterIncludeSelected(data.rating)}
-          />
-          <PosterSwiperSection
-            title="곧 사라져요! 놓치면 후회할 작품들"
-            data={filterIncludeSelected(data.end)}
-          />
-        </>
-      )}
+      <PosterSwiperSection
+        title="지금 막 나온 따끈따끈 신작!"
+        data={filterIncludeSelected(data.new)}
+        isLoading={isLoading}
+      />
+      <PosterSwiperSection
+        title="요즘 가장 핫한 콘텐츠는?"
+        data={filterIncludeSelected(data.rating)}
+        isLoading={isLoading}
+      />
+      <PosterSwiperSection
+        title="곧 사라져요! 놓치면 후회할 작품들"
+        data={filterIncludeSelected(data.end)}
+        isLoading={isLoading}
+      />
     </Box>
   );
 };
