@@ -14,6 +14,7 @@ import {
   DynamicMessage,
 } from "../styles/components/ContentBox";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "@chakra-ui/react";
 
 const ContentBox = ({
   contentList = [],
@@ -51,7 +52,7 @@ const ContentBox = ({
   };
 
   return (
-    <ContentBoxContainer>
+    <ContentBoxContainer {...props}>
       <ContentBoxHeader>
         <ContentBoxTitle>{title}</ContentBoxTitle>
         {!isReview ? (
@@ -70,13 +71,30 @@ const ContentBox = ({
           value={defaultTab}
         />
       </ContentBoxHeader>
-
       <ContentGrid
         className="content-scroll-area"
         ref={scrollContainerRef}
         $isReview={isReview}
       >
-        {isLoading ? null : contentList.length > 0 ? (
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, idx) =>
+            isReview ? (
+              <Skeleton
+                key={idx}
+                height="300px"
+                width="250px"
+                borderRadius="10px"
+              />
+            ) : (
+              <Skeleton
+                key={idx}
+                height="300px"
+                width="200px"
+                borderRadius="10px"
+              />
+            )
+          )
+        ) : contentList.length !== 0 ? (
           isReview ? (
             contentList.map((value) => (
               <Review
@@ -95,20 +113,19 @@ const ContentBox = ({
             ))
           ) : (
             contentList.map((content, index) => (
-              <PosterItem key={content.contentId || index}>
-                <PosterContainer>
-                  <PosterCard
-                    src={content.poster}
-                    title={content.title}
-                    onClick={() => navigate(`/detail/${content.contentId}`)}
-                  />
-                </PosterContainer>
-              </PosterItem>
+              <PosterCard
+                key={content.contentId || index}
+                src={content.poster}
+                title={content.title}
+                onClick={() => {
+                  navigate(`/detail/${content.contentId}`);
+                }}
+              />
             ))
           )
-        ) : !isLoading && contentList.length === 0 ? (
+        ) : (
           <DynamicMessage>이곳은 비어있어요</DynamicMessage>
-        ) : null}
+        )}
       </ContentGrid>
     </ContentBoxContainer>
   );

@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 // 스타일드 컴포넌트로 분리
 export const ContentBoxContainer = styled.div`
@@ -11,7 +11,6 @@ export const ContentBoxContainer = styled.div`
   margin: 0 auto;
   background-color: white;
   width: 100%;
-  height: 100%;
   padding: 10px;
   border: 1px solid #dcdcdc;
 
@@ -43,12 +42,12 @@ export const OttButtonContainer = styled.div`
 
 export const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: ${({ isReview }) =>
-    isReview ? "repeat(1, 1fr)" : "repeat(2, 1fr)"};
+  grid-template-columns: ${({ $isReview }) =>
+    $isReview ? "repeat(1, 1fr)" : "repeat(2, 1fr)"};
   gap: 10px;
   padding: 8px 16px;
   overflow-y: auto;
-  height: auto;
+  min-height: 250px;
   width: 100%;
   place-items: center;
 
@@ -65,23 +64,23 @@ export const ContentGrid = styled.div`
   }
 
   @media (min-width: 400px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(1, 1fr)" : "repeat(1, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(1, 1fr)" : "repeat(1, 1fr)"};
   }
 
   @media (min-width: 714px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(2, 1fr)" : "repeat(2, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(2, 1fr)" : "repeat(2, 1fr)"};
   }
 
   @media (min-width: 1000px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(3, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(3, 1fr)" : "repeat(3, 1fr)"};
   }
 
   @media (min-width: 1200px) {
-    grid-template-columns: ${({ isReview }) =>
-      isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
+    grid-template-columns: ${({ $isReview }) =>
+      $isReview ? "repeat(3, 1fr)" : "repeat(4, 1fr)"};
   }
 `;
 
@@ -111,9 +110,7 @@ export const fadeIn = keyframes`
 
 export const DynamicMessage = styled.p`
   text-align: center;
-  margin-top: 100px;
   animation: ${fadeIn} 1s ease-in-out;
   font-size: 1.2rem;
-  margin-top: 200px;
   color: #777;
 `;

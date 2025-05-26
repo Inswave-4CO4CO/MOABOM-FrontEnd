@@ -19,6 +19,7 @@ import {
   DynamicMessage,
 } from "../styles/components/Chart";
 import { useMyGenreStats } from "../hooks/useMyStats";
+import { Skeleton } from "@chakra-ui/react";
 
 ChartJS.register(
   PieController,
@@ -137,13 +138,20 @@ const Chart = () => {
           <option value="line">꺾은선 차트</option>
         </Select>
       </Header>
-      <ChartWrapper>
-        {isLoading ? null : stats.length === 0 ? (
-          <DynamicMessage>아직 시청 통계가 없어요.</DynamicMessage>
-        ) : (
-          <canvas ref={chartRef} />
-        )}
-      </ChartWrapper>
+      <Skeleton
+        loading={isLoading}
+        height="500px"
+        width="100%"
+        borderRadius="20px"
+      >
+        <ChartWrapper>
+          {stats.length === 0 ? (
+            <DynamicMessage>아직 시청 통계가 없어요.</DynamicMessage>
+          ) : (
+            <canvas ref={chartRef} />
+          )}
+        </ChartWrapper>
+      </Skeleton>
     </Container>
   );
 };
