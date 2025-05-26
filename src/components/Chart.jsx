@@ -33,7 +33,7 @@ ChartJS.register(
   Legend
 );
 
-const Chart = ({ isLoading }) => {
+const Chart = () => {
   const [chartType, setChartType] = useState("pie");
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);

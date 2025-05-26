@@ -3,32 +3,11 @@ import Chart from "../components/chart";
 import Profile from "../components/Profile";
 import ContentBox from "../components/ContentBox";
 import { ottList } from "../components/OttButtonList";
-import {
-  HStack,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-  Stack,
-} from "@chakra-ui/react";
-import { Container as ProfileContainer } from "../styles/components/Profile";
+import { Stack } from "@chakra-ui/react";
 
 import { useUserInfo } from "../hooks/useUserInfo";
 import { useMyContents, useMyWatchCount } from "../hooks/useMyContents";
 import { useMyReviewCount, useMyReviews } from "../hooks/useReview";
-import {
-  ChartWrapper,
-  Header,
-  Container as ChartContainer,
-} from "../styles/components/Chart";
-import {
-  ContentBoxContainer,
-  ContentBoxHeader,
-  ContentBoxTitle,
-  OttButtonContainer,
-  ContentGrid,
-  PosterItem,
-  PosterContainer,
-} from "../styles/components/ContentBox";
 import { SearchContainer } from "../styles/pages/SearchPage";
 import {
   LeftGroupContainer,
@@ -65,7 +44,7 @@ const MyPage = () => {
     fetchNextPage: fetchNextReviewPage,
     hasNextPage: hasMoreReviews,
     isFetchingNextPage: isLoadingNextReview,
-    isLoading: isLoadingReview,
+    isLoading: isReviewLoading,
     refetch: refetchReviewList,
   } = useMyReviews(isReviewView); //한줄평 목록
 
@@ -92,6 +71,7 @@ const MyPage = () => {
 
     observer.observe(target);
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isReviewView,
     hasMoreReviews,
@@ -142,7 +122,7 @@ const MyPage = () => {
         </LeftGroupContainer>
         <RigthGroupContainer>
           <Stack gap="10">
-            <Chart isLoading={isMyInfoLoading} />
+            <Chart />
             <ContentBox
               contentList={isReviewView ? allReviews : allContents}
               title={isReviewView ? "한줄평" : "보관함"}
@@ -164,7 +144,7 @@ const MyPage = () => {
               userReview={allReviews}
               onUpdate={handleReviewUpdated}
               image={myInfo?.userImage}
-              isLoading={isLoading || isLoadingReview}
+              isLoading={isContentLoading || isReviewLoading}
             />
           </Stack>
         </RigthGroupContainer>

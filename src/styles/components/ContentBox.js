@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 // 스타일드 컴포넌트로 분리
 export const ContentBoxContainer = styled.div`
