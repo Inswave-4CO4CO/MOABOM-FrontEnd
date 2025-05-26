@@ -2,20 +2,16 @@ import React, { useEffect, useState } from "react";
 import WatchButton from "./WatchButton";
 import { Container } from "../styles/components/WatchBox";
 import { FaPlus, FaCheck, FaEye } from "react-icons/fa";
-import {
-  useCreateWatch,
-  useDeleteWatch,
-  useUpdateWatch,
-} from "../hooks/useWatch";
+import { useWatch } from "../hooks/useWatch";
+import { toast } from "react-toastify";
 
 const WatchBox = ({ type, contentId }) => {
   const [activeType, setActiveType] = useState(null);
   const [isCreated, setIsCreated] = useState(false);
   const [prevType, setPrevType] = useState(null);
 
-  const { mutate: createMutate } = useCreateWatch();
-  const { mutate: deleteMutate } = useDeleteWatch();
-  const { mutate: updateMutate } = useUpdateWatch();
+  const { createWatchMutate, updateWatchMutate, deleteWatchMutate } =
+    useWatch(contentId);
 
   useEffect(() => {
     if (type) {
@@ -32,12 +28,12 @@ const WatchBox = ({ type, contentId }) => {
       setActiveType(null);
       setIsCreated(false);
 
-      deleteMutate(contentId, {
+      deleteWatchMutate(contentId, {
         onError: (err) => {
           // 실패 시 롤백
           setActiveType(prevType);
           setIsCreated(true);
-          console.error("삭제 실패", err);
+          toast.error("삭제 실패", err);
         },
       });
     } else if (!isCreated) {
@@ -45,14 +41,14 @@ const WatchBox = ({ type, contentId }) => {
       setActiveType(selectedType);
       setIsCreated(true);
 
-      createMutate(
+      createWatchMutate(
         { contentId, type: selectedType },
         {
           onError: (err) => {
             // 실패 시 롤백
             setActiveType(prevType);
             setIsCreated(false);
-            console.error("생성실패", err);
+            toast.error("생성실패", err);
           },
         }
       );
@@ -61,14 +57,14 @@ const WatchBox = ({ type, contentId }) => {
       setActiveType(selectedType);
       setIsCreated(true);
 
-      updateMutate(
+      updateWatchMutate(
         { contentId, type: selectedType },
         {
           onError: (err) => {
             // 실패 시 롤백
             setActiveType(prevType);
             setIsCreated(true);
-            console.error("수정실패", err);
+            toast.error("수정실패", err);
           },
         }
       );

@@ -6,14 +6,14 @@ import {
 } from "../services/api/watchService";
 import useAuthStore from "../store/useAuthStore";
 
-export const useCreateWatch = () => {
+export const useWatch = (contentId) => {
   const queryClient = useQueryClient();
   const { userId } = useAuthStore();
 
-  return useMutation({
+  const { mutate: createWatchMutate } = useMutation({
     mutationFn: ({ contentId, type }) => createWatch(contentId, type),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["watch"] });
+      queryClient.invalidateQueries({ queryKey: ["content", contentId] });
       queryClient.invalidateQueries({
         queryKey: ["myContent", "watching", userId],
       });
@@ -25,15 +25,11 @@ export const useCreateWatch = () => {
       });
     },
   });
-};
 
-export const useUpdateWatch = () => {
-  const queryClient = useQueryClient();
-  const { userId } = useAuthStore();
-  return useMutation({
+  const { mutate: updateWatchMutate } = useMutation({
     mutationFn: ({ contentId, type }) => modifyWatch(contentId, type),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["watch"] });
+      queryClient.invalidateQueries({ queryKey: ["content", contentId] });
       queryClient.invalidateQueries({
         queryKey: ["myContent", "watching", userId],
       });
@@ -42,15 +38,11 @@ export const useUpdateWatch = () => {
       });
     },
   });
-};
 
-export const useDeleteWatch = () => {
-  const queryClient = useQueryClient();
-  const { userId } = useAuthStore();
-  return useMutation({
+  const { mutate: deleteWatchMutate } = useMutation({
     mutationFn: (contentId) => deleteWatch(contentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["watch"] });
+      queryClient.invalidateQueries({ queryKey: ["content", contentId] });
       queryClient.invalidateQueries({
         queryKey: ["myContent", "watching", userId],
       });
@@ -62,4 +54,10 @@ export const useDeleteWatch = () => {
       });
     },
   });
+
+  return {
+    createWatchMutate,
+    updateWatchMutate,
+    deleteWatchMutate,
+  };
 };
