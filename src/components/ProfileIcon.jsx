@@ -6,7 +6,14 @@ import {
 import defaultImage from "../assets/images/defaultImage.png";
 import { useNavigate } from "react-router-dom";
 //프로필
-const ProfileIcon = ({ imagePath, name, role, cast, personId }) => {
+const ProfileIcon = ({
+  imagePath,
+  name,
+  role,
+  cast,
+  personId,
+  isProfile = false,
+}) => {
   const navigate = useNavigate();
 
   const handlePersonClick = () => {
@@ -14,7 +21,7 @@ const ProfileIcon = ({ imagePath, name, role, cast, personId }) => {
   };
 
   return (
-    <ProfileContainer onClick={handlePersonClick}>
+    <ProfileContainer onClick={!isProfile ? handlePersonClick : undefined}>
       {imagePath ? (
         <ProfileImage src={imagePath} alt={name} />
       ) : (
