@@ -1,4 +1,11 @@
-import { Box, Flex, Skeleton, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Skeleton,
+  SkeletonText,
+  SkeletonCircle,
+  Stack,
+} from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PosterSwiperSection from "../components/PosterSwiperSection";
@@ -44,24 +51,20 @@ const RecommendPage = () => {
 
   return (
     <Flex direction="column" align="center">
-      <Box width="100%" px={170}>
+      <Box width="100%" px={170} mt={10}>
         {isLoading ? (
-          <Skeleton height="40px" mb={2} />
+          <SkeletonText noOfLines={1} spacing="4" width="200px" />
         ) : (
           <Text text={data.first.ottName} count={data.first.contents.length} />
         )}
       </Box>
       <Box width="100%">
-        {isLoading ? (
-          <Skeleton height="250px" />
-        ) : (
-          <PosterSwiperSection data={data.first.contents} />
-        )}
+        <PosterSwiperSection data={data.first.contents} isLoading={isLoading} />
       </Box>
 
       <Box width="100%" px={170}>
         {isLoading ? (
-          <Skeleton height="40px" mb={2} />
+          <SkeletonText noOfLines={1} spacing="4" width="200px" />
         ) : (
           <Text
             text={data.second.ottName}
@@ -70,38 +73,25 @@ const RecommendPage = () => {
         )}
       </Box>
       <Box width="100%">
-        {isLoading ? (
-          <Skeleton height="250px" />
-        ) : (
-          <PosterSwiperSection data={data.second.contents} />
-        )}
+        <PosterSwiperSection
+          data={data.second.contents}
+          isLoading={isLoading}
+        />
       </Box>
 
       <Box width="100%" px={170}>
         {isLoading ? (
-          <Skeleton height="40px" mb={2} />
+          <SkeletonText noOfLines={1} spacing="4" width="200px" />
         ) : (
           <Text text={data.third.ottName} count={data.third.contents.length} />
         )}
       </Box>
       <Box width="100%">
-        {isLoading ? (
-          <Skeleton height="250px" />
-        ) : (
-          <PosterSwiperSection data={data.third.contents} />
-        )}
+        <PosterSwiperSection data={data.third.contents} isLoading={isLoading} />
       </Box>
 
       <Box width="100%" px={170} mt={10}>
-        {isLoading ? (
-          <Stack gap="4">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} height="40px" />
-            ))}
-          </Stack>
-        ) : (
-          <PlanTable plans={mergedPlans} />
-        )}
+        <PlanTable plans={mergedPlans} isLoading={isLoading} />
       </Box>
     </Flex>
   );

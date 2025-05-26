@@ -1,7 +1,67 @@
-import { Stack, Table } from "@chakra-ui/react";
+import { Stack, Table, Skeleton } from "@chakra-ui/react";
 
-const PlanTable = ({ plans }) => {
-  // OTT 이름별로 묶기
+const PlanTable = ({ plans, isLoading }) => {
+  if (isLoading) {
+    return (
+      <Stack gap="10">
+        <Table.Root
+          width="100%"
+          border="1px solid #ddd"
+          borderCollapse="collapse"
+          fontSize="md"
+        >
+          <Table.Header>
+            <Table.Row bg="#fbe4d5">
+              <Table.ColumnHeader
+                textAlign="center"
+                color="#ff9266"
+                fontWeight="bold"
+                border="1px solid #ddd"
+                py={3}
+              >
+                OTT
+              </Table.ColumnHeader>
+              <Table.ColumnHeader
+                textAlign="center"
+                color="#ff9266"
+                fontWeight="bold"
+                border="1px solid #ddd"
+                py={3}
+              >
+                요금제명
+              </Table.ColumnHeader>
+              <Table.ColumnHeader
+                textAlign="center"
+                color="#ff9266"
+                fontWeight="bold"
+                border="1px solid #ddd"
+                py={3}
+              >
+                가격
+              </Table.ColumnHeader>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {[...Array(5)].map((_, idx) => (
+              <Table.Row key={idx}>
+                <Table.Cell border="1px solid #ddd" py={3} textAlign="center">
+                  <Skeleton height="20px" />
+                </Table.Cell>
+                <Table.Cell border="1px solid #ddd" py={3} textAlign="center">
+                  <Skeleton height="20px" />
+                </Table.Cell>
+                <Table.Cell border="1px solid #ddd" py={3} textAlign="center">
+                  <Skeleton height="20px" />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
+      </Stack>
+    );
+  }
+
+  // 로딩이 아니면 기존 테이블 렌더링
   const grouped = plans.reduce((acc, plan) => {
     if (!acc[plan.ottName]) acc[plan.ottName] = [];
     acc[plan.ottName].push(plan);
