@@ -20,10 +20,11 @@ const BannerImage = ({
   ottname,
   isMain = false,
   isDetail = false,
+  onClick,
 }) => {
   // rating 추후 추가 예정
   return (
-    <BannerImageContainer>
+    <BannerImageContainer onClick={onClick} style={{ cursor: "pointer" }}>
       <Image src={src} />
       <TextContainer $isDetail={isDetail} $isMain={isMain} gap="1">
         {isDetail && <Rate style={{ fontSize: "35px" }} rating={rating} />}

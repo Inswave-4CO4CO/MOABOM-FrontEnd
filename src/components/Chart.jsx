@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { getMyGenreContents } from "../services/api/myPageService";
 import {
   Chart as ChartJS,
   PieController,
@@ -19,6 +18,7 @@ import {
   Select,
   DynamicMessage,
 } from "../styles/components/Chart";
+import { useMyGenreStats } from "../hooks/useMyStats";
 import { Skeleton } from "@chakra-ui/react";
 
 ChartJS.register(
@@ -37,14 +37,8 @@ const Chart = ({ isLoading }) => {
   const [chartType, setChartType] = useState("pie");
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
-  const [stats, setStats] = useState([]);
-
-  useEffect(() => {
-    getMyGenreContents().then((response) => {
-      console.log(response.data);
-      setStats(response.data);
-    });
-  }, []);
+  const { data, isLoading } = useMyGenreStats();
+  const stats = data?.data ?? [];
 
   useEffect(() => {
     if (!chartRef.current || stats.length === 0) return;

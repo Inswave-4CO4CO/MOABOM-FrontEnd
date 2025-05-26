@@ -18,6 +18,8 @@ import SearchPage from "./pages/SearchPage";
 import MyPage from "./pages/MyPage";
 import MainPage from "./pages/MainPage";
 import ProfileEditPage from "./pages/ProfileEditPage";
+import WishlistPage from "./pages/WishlistPage";
+import RecommendPage from "./pages/RecommendPage";
 import PersonDetailPage from "./pages/PersonDetailPage";
 
 const queryClient = new QueryClient({
@@ -74,6 +76,8 @@ const App = () => {
               <Route path="/search" element={<SearchPage />} />
               <Route path="/mypage/edit" element={<ProfileEditPage />} />
               <Route path="/person/:personId" element={<PersonDetailPage />} />
+              <Route path="/recommend" element={<WishlistPage />} />
+              <Route path="/recommend/ott" element={<RecommendPage />} />
             </Routes>
           </Layout>
         </Router>

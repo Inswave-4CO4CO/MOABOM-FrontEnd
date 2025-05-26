@@ -39,22 +39,25 @@ const Header = () => {
   return (
     <HeaderContainer>
       <Logo />
-      <InputBtnGroupContainer>
-        <InputBtnGroup
-          placeholder="검색어를 입력하세요"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          handleClick={handleSearch}
-        >
-          <FaSearch />
-        </InputBtnGroup>
-      </InputBtnGroupContainer>
+      <form onSubmit={handleSearch}>
+        <InputBtnGroupContainer>
+          <InputBtnGroup
+            placeholder="검색어를 입력하세요"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            handleClick={handleSearch}
+            isHeader={true}
+          >
+            <FaSearch />
+          </InputBtnGroup>
+        </InputBtnGroupContainer>
+      </form>
       <ButtonWrapContainer>
         {isLogin ? (
           <FloatContainer>
             <HeaderButton
               style={{ marginRight: "20px" }}
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/recommend")}
             >
               OTT 추천받기
             </HeaderButton>

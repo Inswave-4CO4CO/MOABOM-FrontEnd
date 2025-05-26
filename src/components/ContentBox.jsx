@@ -11,6 +11,7 @@ import {
   ContentGrid,
   PosterItem,
   PosterContainer,
+  DynamicMessage,
 } from "../styles/components/ContentBox";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@chakra-ui/react";
@@ -20,6 +21,7 @@ const ContentBox = ({
   title,
   tabs,
   defaultTab,
+  isLoading,
   onTabChange,
   selectedOtts,
   setSelectedOtts,
@@ -27,7 +29,7 @@ const ContentBox = ({
   isReview = false,
   handleReviewUpdated,
   image,
-  isLoading,
+  name,
   ...props
 }) => {
   const navigate = useNavigate();
@@ -96,13 +98,13 @@ const ContentBox = ({
           isReview ? (
             contentList.map((value) => (
               <Review
+                key={value.reviewId}
                 reviewId={value.reviewId}
                 contentId={value.contentId}
-                key={value.reviewId}
                 rating={value.rating}
                 date={value.createdAt}
                 text={value.reviewText}
-                nickname={value.userId}
+                nickname={name}
                 isUser={true}
                 title={value.title}
                 imagePath={image}
@@ -122,7 +124,7 @@ const ContentBox = ({
             ))
           )
         ) : (
-          <div style={{ marginBottom: "100px" }}>저장된 목록이 없습니다</div>
+          <DynamicMessage>이곳은 비어있어요</DynamicMessage>
         )}
       </ContentGrid>
     </ContentBoxContainer>

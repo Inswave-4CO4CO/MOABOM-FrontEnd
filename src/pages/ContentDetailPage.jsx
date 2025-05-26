@@ -1,5 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 // 컴포넌트들
@@ -14,9 +13,7 @@ import WatchBox from "../components/WatchBox";
 import ReviewModal from "../components/ReviewModal";
 
 // 컨텐츠 및 스타일 관련
-import watchType from "../contents/watchType";
 import ott from "../contents/ottType";
-import { getContentById } from "../services/api/contentDetailService";
 import {
   Container,
   ContentGroup,
@@ -32,44 +29,29 @@ import {
 
 // Auth 상태 관리
 import useAuthStore from "../store/useAuthStore";
-
+import { useContent } from "../hooks/useContent";
 import { useInfiniteReviewList } from "../hooks/useReview";
+import { Skeleton, SkeletonText } from "@chakra-ui/react";
 
 const ContentDetailPage = () => {
-  // 콘텐츠 데이터 관리
-  const [content, setContent] = useState(null);
-  const [type, setType] = useState("");
-
-  // 로딩 및 에러 상태 (콘텐츠 관련)
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
   const { contentId } = useParams();
   const { userId } = useAuthStore();
 
-  const getContent = async () => {
-    try {
-      const res = await getContentById(contentId);
-      setContent(res.data);
-      setType(watchType[res.data.type]);
-    } catch (err) {
-      setError(err);
-      console.error("[컨텐츠 데이터 가져오기 실패]:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //컨텐츠 가져오기
+  const {
+    content,
+    type,
+    genre,
+    cast,
+    crew,
+    ott: ottList,
+    loading,
+    error,
+  } = useContent(contentId);
 
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    getContent();
-  }, [contentId]);
-
-  // 무한 스크롤 Infinite Query
+  //한줄평
   const {
     data: reviewData,
-    isLoading: reviewLoading,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
@@ -86,57 +68,99 @@ const ContentDetailPage = () => {
     ? reviewData.pages.flatMap((page) => page.data?.content || [])
     : [];
 
-  const observerRef = useRef(null);
+  const observer = useRef(null);
 
-  useLayoutEffect(() => {
-    if (!observerRef.current) return;
+  //무한 스크롤
+  const setObserverRef = useCallback(
+    (node) => {
+      if (observer.current) observer.current.disconnect();
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        console.log("Observer entries:", entries);
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0, rootMargin: "100px" }
+      if (node) {
+        observer.current = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        });
+
+        observer.current.observe(node);
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage]
+  );
+
+  //로딩 스켈레톤
+  if (loading) {
+    return (
+      <Container>
+        <Skeleton height={400} />
+        <ContentGroup>
+          <ContentDetail>
+            <Skeleton height={350} width={250} />
+            <ContentDescription style={{ display: "flex" }}>
+              <SkeletonText />
+              <Skeleton count={4} />
+              <OttGroup>
+                <Skeleton
+                  height={20}
+                  width={300}
+                  inline
+                  style={{ marginRight: 10 }}
+                  count={4}
+                />
+              </OttGroup>
+              <WatchGroup>
+                <Skeleton height={45} width={300} />
+              </WatchGroup>
+            </ContentDescription>
+          </ContentDetail>
+
+          <ContentCastAndCrew>
+            <p>출연자</p>
+            <Skeleton height={100} />
+            <p>제작진</p>
+            <Skeleton height={100} />
+          </ContentCastAndCrew>
+
+          <ReviewGroup>
+            <p>한줄평</p>
+            {[...Array(3)].map((_, idx) => (
+              <div key={idx} style={{ marginBottom: "16px" }}>
+                <Skeleton height={80} />
+              </div>
+            ))}
+          </ReviewGroup>
+        </ContentGroup>
+      </Container>
     );
-
-    observer.observe(observerRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage, observerRef.current]);
-
-  if (loading) return <div>콘텐츠 정보를 로딩 중입니다...</div>;
+  }
+  //에러
   if (error)
     return <div>콘텐츠 정보를 가져오는데 실패했습니다: {error.message}</div>;
 
   return (
     <Container>
       <BannerImage
-        rating={content.content.rating}
-        src={content.content.image}
-        title={content.content.title}
-        genre={content.genre.join(", ")}
-        category={content.content.category}
-        madeIn={content.content.madeIn}
-        ageRating={content.content.ageRating}
-        runningTime={content.content.runningTime}
-        releaseDate={content.content.releaseDate}
-        imdbRating={content.content.imdbRating}
+        rating={content.rating}
+        src={content.image}
+        title={content.title}
+        genre={genre.join(", ")}
+        category={content.category}
+        madeIn={content.madeIn}
+        ageRating={content.ageRating}
+        runningTime={content.runningTime}
+        releaseDate={content.releaseDate}
+        imdbRating={content.imdbRating}
         isDetail={true}
       />
       <ContentGroup>
         <ContentDetail>
-          <PosterCard src={content.content.poster} />
+          <PosterCard src={content.poster} />
           <ContentDescription>
             <p>줄거리</p>
-            <span>{content.content.description}</span>
+            <span>{content.description}</span>
             <p>보러가기</p>
             <OttGroup>
-              {content.ott.map((value, index) => (
+              {ottList.map((value, index) => (
                 <a
                   key={index}
                   href={value.url}
@@ -158,9 +182,9 @@ const ContentDetailPage = () => {
 
         <ContentCastAndCrew>
           <Text text={"출연자"} />
-          <CastSlider castList={content.cast} />
+          <CastSlider castList={cast} />
           <Text text={"제작진"} />
-          <CastSlider castList={content.crew} />
+          <CastSlider castList={crew} />
         </ContentCastAndCrew>
 
         <ReviewGroup>
@@ -183,7 +207,7 @@ const ContentDetailPage = () => {
         </ReviewGroup>
       </ContentGroup>
       <div
-        ref={observerRef}
+        ref={setObserverRef}
         style={{ height: "20px", background: "transparent" }}
       />
     </Container>

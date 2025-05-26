@@ -13,6 +13,9 @@ const CastSlider = ({ castList }) => {
   const nextRef = useRef(null);
   const [swiperInstance, setSwiperInstance] = useState(null);
 
+  const [isPrevDisabled, setIsPrevDisabled] = useState(true);
+  const [isNextDisabled, setIsNextDisabled] = useState(false);
+
   useEffect(() => {
     if (
       swiperInstance &&
@@ -23,9 +26,21 @@ const CastSlider = ({ castList }) => {
       swiperInstance.params.navigation.prevEl = prevRef.current;
       swiperInstance.params.navigation.nextEl = nextRef.current;
       swiperInstance.navigation.init();
+
+      handleSlideChange();
       swiperInstance.navigation.update();
     }
   }, [swiperInstance]);
+
+  const handleSlideChange = () => {
+    if (!swiperInstance) return;
+
+    const isAtStart = swiperInstance.isBeginning;
+    const isAtEnd = swiperInstance.isEnd;
+
+    setIsPrevDisabled(isAtStart);
+    setIsNextDisabled(isAtEnd);
+  };
 
   return (
     <SliderWrapper>
@@ -34,6 +49,7 @@ const CastSlider = ({ castList }) => {
         spaceBetween={10}
         slidesPerGroup={5}
         onSwiper={setSwiperInstance}
+        onSlideChange={handleSlideChange}
         breakpoints={{
           320: { slidesPerView: 3, slidesPerGroup: 3 },
           768: { slidesPerView: 5, slidesPerGroup: 5 },
@@ -48,10 +64,19 @@ const CastSlider = ({ castList }) => {
         ))}
       </Swiper>
 
-      <SwiperButton className="nav-button prev" ref={prevRef}>
+      <SwiperButton
+        className={`nav-button prev ${isPrevDisabled ? "disabled" : ""}`}
+        ref={prevRef}
+        disabled={isPrevDisabled}
+      >
         <FiChevronLeft />
       </SwiperButton>
-      <SwiperButton className="nav-button next" ref={nextRef}>
+
+      <SwiperButton
+        className={`nav-button next ${isNextDisabled ? "disabled" : ""}`}
+        ref={nextRef}
+        disabled={isNextDisabled}
+      >
         <FiChevronRight />
       </SwiperButton>
     </SliderWrapper>
