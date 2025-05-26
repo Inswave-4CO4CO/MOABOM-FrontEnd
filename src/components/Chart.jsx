@@ -41,6 +41,10 @@ const Chart = () => {
   const stats = data?.data ?? [];
 
   useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  useEffect(() => {
     if (!chartRef.current || stats.length === 0) return;
 
     if (chartInstanceRef.current) {

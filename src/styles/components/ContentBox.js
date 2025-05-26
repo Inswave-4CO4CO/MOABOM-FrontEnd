@@ -113,4 +113,13 @@ export const DynamicMessage = styled.p`
   animation: ${fadeIn} 1s ease-in-out;
   font-size: 1.2rem;
   color: #777;
+  width: 100%;
+`;
+
+export const DynamicMessageWrapper = styled.div`
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

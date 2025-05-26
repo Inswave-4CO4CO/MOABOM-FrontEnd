@@ -12,6 +12,7 @@ import {
   PosterItem,
   PosterContainer,
   DynamicMessage,
+  DynamicMessageWrapper,
 } from "../styles/components/ContentBox";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "@chakra-ui/react";

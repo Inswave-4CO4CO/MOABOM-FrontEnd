@@ -4,8 +4,10 @@ import {
   getMyWatchedContents,
   getMyWatchCount,
 } from "../services/api/myPageService";
+import useAuthStore from "../store/useAuthStore";
 
 export const useMyContents = (activeTab, selectedOtts) => {
+  const { userId } = useAuthStore();
   const fetchContents = async ({ pageParam = 1 }) => {
     const res =
       activeTab === "watching"
@@ -23,20 +25,23 @@ export const useMyContents = (activeTab, selectedOtts) => {
   };
 
   return useInfiniteQuery({
-    queryKey: ["myContent", activeTab, selectedOtts],
+    queryKey: ["myContent", activeTab, selectedOtts, userId],
     queryFn: fetchContents,
     getNextPageParam: (lastPage) => lastPage.nextPage,
     staleTime: 1000 * 60 * 5,
+    enabled: !!userId,
   });
 };
 
 export const useMyWatchCount = () => {
+  const { userId } = useAuthStore();
   return useQuery({
-    queryKey: ["myWatchCount"],
+    queryKey: ["myWatchCount", userId],
     queryFn: async () => {
       const res = await getMyWatchCount();
       return res.data.count;
     },
     staleTime: 1000 * 60 * 5,
+    enabled: !!userId,
   });
 };
