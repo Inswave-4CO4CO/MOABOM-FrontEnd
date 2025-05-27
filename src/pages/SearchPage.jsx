@@ -224,8 +224,9 @@ const SearchPage = () => {
       sort,
       activeTab,
     ],
-    queryFn: ({ pageParam = 0 }) =>
-      fetchSearchResults({
+    queryFn: async ({ pageParam = 0 }) => {
+      // fetchSearchResults 함수 호출
+      const result = await fetchSearchResults({
         searchText,
         selectedFilters,
         selectedOtts,
@@ -233,7 +234,10 @@ const SearchPage = () => {
         sort,
         activeTab,
         pageParam,
-      }),
+      });
+
+      return result; // 기존과 동일하게 결과 반환
+    },
     getNextPageParam: (lastPage) =>
       lastPage.hasNext ? lastPage.page + 1 : undefined,
     keepPreviousData: true,
