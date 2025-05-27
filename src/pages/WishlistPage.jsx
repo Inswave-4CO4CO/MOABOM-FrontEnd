@@ -26,6 +26,11 @@ const WishlistPage = () => {
       (item) => checkedItems[item.contentId]
     );
 
+    if (selectedContents.length === 0) {
+      alert("최소 1개 이상의 작품을 선택해주세요.");
+      return;
+    }
+
     const response = await postRecommendOtts(selectedContents);
     navigate("/recommend/ott", { state: { result: response } });
   };
