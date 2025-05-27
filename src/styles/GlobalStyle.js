@@ -6,6 +6,13 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
   }
+
+.poster .swiper-button-prev::after,
+.poster .swiper-button-next::after {
+  display: none !important;
+  content: '' !important;
+}
+
 `;
 
 export default GlobalStyle;
