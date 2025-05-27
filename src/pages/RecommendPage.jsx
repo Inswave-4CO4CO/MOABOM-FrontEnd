@@ -44,9 +44,18 @@ const RecommendPage = () => {
   }
 
   const mergedPlans = [
-    ...data.first.plan.map((p) => ({ ...p, ottName: data.first.ottName })),
-    ...data.second.plan.map((p) => ({ ...p, ottName: data.second.ottName })),
-    ...data.third.plan.map((p) => ({ ...p, ottName: data.third.ottName })),
+    ...(data.first.plan ?? []).map((p) => ({
+      ...p,
+      ottName: data.first.ottName,
+    })),
+    ...(data.second?.plan ?? []).map((p) => ({
+      ...p,
+      ottName: data.second?.ottName,
+    })),
+    ...(data.third?.plan ?? []).map((p) => ({
+      ...p,
+      ottName: data.third?.ottName,
+    })),
   ];
 
   return (
@@ -62,33 +71,47 @@ const RecommendPage = () => {
         <PosterSwiperSection data={data.first.contents} isLoading={isLoading} />
       </Box>
 
-      <Box width="100%" px={170}>
-        {isLoading ? (
-          <SkeletonText noOfLines={1} spacing="4" width="200px" />
-        ) : (
-          <Text
-            text={data.second.ottName}
-            count={data.second.contents.length}
-          />
-        )}
-      </Box>
-      <Box width="100%">
-        <PosterSwiperSection
-          data={data.second.contents}
-          isLoading={isLoading}
-        />
-      </Box>
+      {data.second && (
+        <>
+          <Box width="100%" px={170}>
+            {isLoading ? (
+              <SkeletonText noOfLines={1} spacing="4" width="200px" />
+            ) : (
+              <Text
+                text={data.second.ottName}
+                count={data.second.contents.length}
+              />
+            )}
+          </Box>
+          <Box width="100%">
+            <PosterSwiperSection
+              data={data.second.contents}
+              isLoading={isLoading}
+            />
+          </Box>
+        </>
+      )}
 
-      <Box width="100%" px={170}>
-        {isLoading ? (
-          <SkeletonText noOfLines={1} spacing="4" width="200px" />
-        ) : (
-          <Text text={data.third.ottName} count={data.third.contents.length} />
-        )}
-      </Box>
-      <Box width="100%">
-        <PosterSwiperSection data={data.third.contents} isLoading={isLoading} />
-      </Box>
+      {data.third && (
+        <>
+          <Box width="100%" px={170}>
+            {isLoading ? (
+              <SkeletonText noOfLines={1} spacing="4" width="200px" />
+            ) : (
+              <Text
+                text={data.third.ottName}
+                count={data.third.contents.length}
+              />
+            )}
+          </Box>
+          <Box width="100%">
+            <PosterSwiperSection
+              data={data.third.contents}
+              isLoading={isLoading}
+            />
+          </Box>
+        </>
+      )}
 
       <Box width="100%" px={170} mt={10}>
         <PlanTable plans={mergedPlans} isLoading={isLoading} />
