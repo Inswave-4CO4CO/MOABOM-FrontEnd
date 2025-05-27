@@ -33,7 +33,6 @@ export const DOMAIN = {
 
   //시청상태
   USER_WATCH: "/content/watch",
-  USER_WATCH_DELETE: (contentId) => `/content/watch/${contentId}`,
 
   //한줄평
   REVIEW_BY_PAGE: (contentID, page) =>

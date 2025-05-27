@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 // 컴포넌트들
@@ -24,7 +24,6 @@ import {
   ContentCastAndCrew,
   ReviewGroup,
   Reviews,
-  AddButton,
 } from "../styles/pages/ContentDetailPage";
 
 // Auth 상태 관리
@@ -51,19 +50,8 @@ const ContentDetailPage = () => {
   } = useContent(contentId);
 
   //한줄평
-  const {
-    reviewData,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-    reviewError,
-  } = useReview(contentId);
-
-  useEffect(() => {
-    if (reviewError) {
-      console.error("리뷰 데이터 오류:", reviewError);
-    }
-  }, [reviewError]);
+  const { reviewData, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useReview(contentId);
 
   const reviewList = reviewData
     ? reviewData.pages.flatMap((page) => page.data?.content || [])
@@ -144,7 +132,7 @@ const ContentDetailPage = () => {
         rating={content.rating}
         src={content.image}
         title={content.title}
-        genre={genre.join(", ")}
+        genre={genre.map((genre) => genre.genreName).join(", ")}
         category={content.category}
         madeIn={content.madeIn}
         ageRating={content.ageRating}
@@ -173,7 +161,7 @@ const ContentDetailPage = () => {
               ))}
             </OttGroup>
             <WatchGroup>
-              <WatchBox type={type} contentId={contentId} />
+              <WatchBox type={type} contentId={contentId} genre={genre} />
               {isLogin ? (
                 <ReviewModal contentId={contentId}>
                   <WatchButton />
