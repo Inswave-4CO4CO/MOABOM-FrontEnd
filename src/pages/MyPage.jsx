@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Chart from "../components/chart";
+import Chart from "../components/Chart";
 import Profile from "../components/Profile";
 import ContentBox from "../components/ContentBox";
 import { ottList } from "../components/OttButtonList";
