@@ -9,6 +9,11 @@ export const ProfileContainer = styled.div`
   text-align: center;
   justify-content: center;
   cursor: pointer;
+
+  .profileGroup {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const ProfileImage = styled.img`
