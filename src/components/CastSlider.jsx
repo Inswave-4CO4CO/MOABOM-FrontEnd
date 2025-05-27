@@ -9,6 +9,8 @@ import ProfileIcon from "../components/ProfileIcon";
 import { SliderWrapper, SwiperButton } from "../styles/components/CastSlider";
 import { useNavigate } from "react-router-dom";
 
+import personInfoType from "../contents/personInfoType";
+
 const CastSlider = ({ castList }) => {
   const navigate = useNavigate();
   const prevRef = useRef(null);
@@ -66,6 +68,7 @@ const CastSlider = ({ castList }) => {
               name={cast.personName}
               onClick={() => navigate(`/person/${cast.personId}`)}
               personId={cast.personId}
+              role={personInfoType[cast.role]}
             />
           </SwiperSlide>
         ))}

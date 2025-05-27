@@ -177,9 +177,17 @@ const ContentDetailPage = () => {
 
         <ContentCastAndCrew>
           <Text text={"출연자"} />
-          <CastSlider castList={cast} />
+          {cast.length === 0 ? (
+            <div style={{ height: "100px" }}></div>
+          ) : (
+            <CastSlider castList={cast} />
+          )}
           <Text text={"제작진"} />
-          <CastSlider castList={crew} />
+          {cast.length === 0 ? (
+            <div style={{ height: "50px" }}></div>
+          ) : (
+            <CastSlider castList={crew} />
+          )}
         </ContentCastAndCrew>
 
         <ReviewGroup>

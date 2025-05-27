@@ -27,9 +27,11 @@ const ProfileIcon = ({
       ) : (
         <ProfileImage src={defaultImage} alt={name} />
       )}
-      {role}
-      <ProfileName>{name}</ProfileName>
       {cast}
+      <div className="profileGroup">
+        <ProfileName>{name}</ProfileName>
+        <span>{role}</span>
+      </div>
     </ProfileContainer>
   );
 };
