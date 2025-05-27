@@ -135,7 +135,7 @@ const ContentDetailPage = () => {
         genre={genre.map((genre) => genre.genreName).join(", ")}
         category={content.category}
         madeIn={content.madeIn}
-        ageRating={content.ageRating}
+        ageRating={content.ageRating + "세 이상 관람가"}
         runningTime={content.runningTime}
         releaseDate={content.releaseDate}
         imdbRating={content.imdbRating}

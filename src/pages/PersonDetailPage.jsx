@@ -23,9 +23,13 @@ const PersonDetailPage = () => {
   const observerRef = useRef(null);
   // 한 번만 연결 플래그
   const observerAttached = useRef(false);
-  const [initialCounts, setInitialCounts] = useState({
-    actor: null,
-    director: null,
+
+  // 1. 프로필 정보를 위한 별도 상태
+  const [profileInfo, setProfileInfo] = useState({
+    personName: null,
+    image: null,
+    initialActorCount: null, // 초기 출연작 수
+    initialDirectorCount: null, // 초기 연출작 수
   });
 
   // 데이터를 페이지 단위로 가져오는 함수
@@ -34,7 +38,8 @@ const PersonDetailPage = () => {
       params: { otts: selectedOtts.join(","), page: pageParam },
       withCredentials: true,
     });
-
+    // API 응답 데이터 콘솔 출력 (디버깅용)
+    // console.log(`[PersonDetailPage] API Response for page ${pageParam}, tab ${activeTab}:`, data);
     const currentTabData = data.filmography?.[activeTab] || [];
     return {
       response: data,
@@ -43,7 +48,6 @@ const PersonDetailPage = () => {
     };
   };
 
-  // React Query 무한 스크롤 설정
   const {
     data: pages,
     fetchNextPage,
@@ -58,6 +62,38 @@ const PersonDetailPage = () => {
     getNextPageParam: (last) => last.nextPage,
     initialPageParam: 0,
   });
+
+  // 2. 첫 페이지 데이터 로드 시 프로필 정보 설정하는 useEffect
+  useEffect(() => {
+    const firstPageData = pages?.pages?.[0]?.response;
+    if (firstPageData && !profileInfo.personName) {
+      // 프로필 정보가 아직 설정되지 않았을 때만
+      setProfileInfo({
+        personName: firstPageData.personName,
+        image: firstPageData.image,
+        initialActorCount: firstPageData.totalCounts?.actor,
+        initialDirectorCount: firstPageData.totalCounts?.director,
+      });
+    }
+  }, [pages, profileInfo.personName]); // profileInfo.personName을 의존성 배열에 추가하여 한 번만 실행되도록 유도
+
+  // API에서 받아온 여러 페이지를 합쳐서 filmography 데이터만 생성
+  const filmographyData = pages?.pages.reduce(
+    (acc, page) => {
+      acc.filmography = acc.filmography || {};
+      const currentTabFilmography = acc.filmography[activeTab] || [];
+      const newItemsFromPage = page.response.filmography?.[activeTab] || [];
+      const uniqueNewItems = newItemsFromPage.filter(
+        (newItem) =>
+          !currentTabFilmography.some(
+            (existingItem) => existingItem.contentId === newItem.contentId
+          )
+      );
+      acc.filmography[activeTab] = currentTabFilmography.concat(uniqueNewItems);
+      return acc;
+    },
+    { filmography: {} }
+  );
 
   // IntersectionObserver 로 다음 페이지 요청
   useEffect(() => {
@@ -98,51 +134,22 @@ const PersonDetailPage = () => {
     setActiveTab(tabValue);
   };
 
-  // API에서 받아온 여러 페이지를 합쳐서 렌더용 데이터로 변환
-  const personDetails = pages?.pages.reduce(
-    (acc, page) => {
-      if (!acc.personName) {
-        acc.personName = page.response.personName;
-        acc.image = page.response.image;
-        acc.totalCounts = page.response.totalCounts;
-      }
-      acc.filmography = acc.filmography || {};
-      const arr = page.response.filmography?.[activeTab] || [];
-      acc.filmography[activeTab] = (acc.filmography[activeTab] || []).concat(
-        arr
-      );
-      return acc;
-    },
-    { filmography: { [activeTab]: [] } }
-  );
-
-  useEffect(() => {
-    const firstPage = pages?.pages?.[0]?.response;
-    // actor가 null일 때(아직 한 번도 설정되지 않았을 때)만 set
-    if (firstPage?.totalCounts && initialCounts.actor === null) {
-      setInitialCounts(firstPage.totalCounts);
-    }
-  }, [pages, initialCounts.actor]);
-
   if (isError) return <p>Error: {error.message}</p>;
 
   return (
     <SearchContainer>
       <PageContainer>
         <LeftGroupContainer>
+          {/* 3. Profile 컴포넌트에 별도 상태 값 전달 */}
           <Profile
             isMyPage={false}
-            image={personDetails?.image}
-            name={personDetails?.personName}
-            firstCount={initialCounts?.actor}
-            secondCount={initialCounts?.director}
-            onFirstClick={() => {
-              setActiveTab("actor");
-            }}
-            onSecondClick={() => {
-              setActiveTab("director");
-            }}
-            loading={isLoading}
+            image={profileInfo.image}
+            name={profileInfo.personName}
+            firstCount={profileInfo.initialActorCount}
+            secondCount={profileInfo.initialDirectorCount}
+            handleFirstAction={() => setActiveTab("actor")}
+            handleSecondAction={() => setActiveTab("director")}
+            loading={isLoading && !profileInfo.personName}
           />
         </LeftGroupContainer>
         <RigthGroupContainer>
@@ -155,7 +162,7 @@ const PersonDetailPage = () => {
             ]}
             defaultTab={activeTab}
             onTabChange={handleTabClick}
-            contentList={personDetails?.filmography?.[activeTab] ?? []}
+            contentList={filmographyData?.filmography?.[activeTab] ?? []}
             scrollContainerRef={scrollContainerRef}
             observerRef={observerRef}
             isLoading={isLoading}
