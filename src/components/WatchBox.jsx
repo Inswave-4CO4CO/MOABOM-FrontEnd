@@ -4,6 +4,7 @@ import { Container } from "../styles/components/WatchBox";
 import { FaPlus, FaCheck, FaEye } from "react-icons/fa";
 import { useWatch } from "../hooks/useWatch";
 import { toast } from "react-toastify";
+import useAuthStore from "../store/useAuthStore";
 
 const WatchBox = ({ type, contentId }) => {
   const [activeType, setActiveType] = useState(null);
@@ -12,6 +13,8 @@ const WatchBox = ({ type, contentId }) => {
 
   const { createWatchMutate, updateWatchMutate, deleteWatchMutate } =
     useWatch(contentId);
+
+  const { isLogin } = useAuthStore();
 
   useEffect(() => {
     if (type) {
@@ -22,6 +25,10 @@ const WatchBox = ({ type, contentId }) => {
 
   const handleClick = (selectedType) => {
     setPrevType(activeType); // 롤백을 위해 이전 값 저장
+    if (!isLogin) {
+      toast.warn("로그인이 필요합니다.");
+      return;
+    }
 
     if (activeType === selectedType) {
       // 삭제: 낙관적 UI 업데이트

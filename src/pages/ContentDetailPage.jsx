@@ -32,10 +32,11 @@ import useAuthStore from "../store/useAuthStore";
 import { useContent } from "../hooks/useContent";
 import { Skeleton, SkeletonText } from "@chakra-ui/react";
 import { useReview } from "../hooks/useReview";
+import { toast } from "react-toastify";
 
 const ContentDetailPage = () => {
   const { contentId } = useParams();
-  const { userId } = useAuthStore();
+  const { userId, isLogin } = useAuthStore();
 
   //컨텐츠 가져오기
   const {
@@ -173,9 +174,15 @@ const ContentDetailPage = () => {
             </OttGroup>
             <WatchGroup>
               <WatchBox type={type} contentId={contentId} />
-              <ReviewModal contentId={contentId}>
-                <WatchButton />
-              </ReviewModal>
+              {isLogin ? (
+                <ReviewModal contentId={contentId}>
+                  <WatchButton />
+                </ReviewModal>
+              ) : (
+                <WatchButton
+                  onClick={() => toast.warn("로그인이 필요합니다.")}
+                />
+              )}
             </WatchGroup>
           </ContentDescription>
         </ContentDetail>
