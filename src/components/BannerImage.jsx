@@ -5,6 +5,12 @@ import {
   TextContainer,
 } from "../styles/components/BannerImage";
 import Rate from "./Rate";
+import styled from "styled-components";
+
+const StyledHeading = styled(Heading)`
+  text-shadow: -2px 0px #666666, 0px 2px #666666, 2px 0px #666666,
+    0px -2px #666666;
+`;
 
 const BannerImage = ({
   rating,
@@ -28,7 +34,7 @@ const BannerImage = ({
       <Image src={src} />
       <TextContainer $isDetail={isDetail} $isMain={isMain} gap="1">
         {isDetail && <Rate style={{ fontSize: "35px" }} rating={rating} />}
-        <Heading size="6xl">{title}</Heading>
+        <StyledHeading size="6xl">{title}</StyledHeading>
         {isMain && (
           <>
             <Text textStyle="lg">
