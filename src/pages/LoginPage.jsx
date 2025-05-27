@@ -71,12 +71,7 @@ const LoginPage = () => {
                 <Image src={GoogleLogo} alt="구글" boxSize="28px" />
               </SocialButton>
             </HStack>
-
             <HStack spacing={2} color="#949494" fontSize="sm" pt={2}>
-              <LinkText text="아이디 찾기" />
-              <Text>|</Text>
-              <LinkText text="비밀번호 찾기" />
-              <Text>|</Text>
               <LinkText text="회원가입" link="/signup" />
             </HStack>
           </VStack>
