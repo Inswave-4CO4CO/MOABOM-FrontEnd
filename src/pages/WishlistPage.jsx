@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import PosterCardWish from "../components/PosterCardWish";
+import PosterCardWish from "../components/recommend/PosterCardWish";
 import { getWishContents } from "../services/api/wishlistService";
 import { postRecommendOtts } from "../services/api/recommendService";
-import CheckBox from "../components/CheckBox";
-import BodyButton from "../components/BodyButton";
+import CheckBox from "../components/common/CheckBox";
+import BodyButton from "../components/common/BodyButton";
 import { Skeleton } from "@chakra-ui/react";
 import {
   PageWrapper,

@@ -4,7 +4,7 @@ import {
   PosterWrapper,
   Title,
 } from "../styles/components/PosterCard";
-import Poster from "./detail/Poster";
+import Poster from "../detail/Poster";
 
 const PosterCard = React.forwardRef(
   ({ src, title, onClick, sx, ...props }, ref) => {
