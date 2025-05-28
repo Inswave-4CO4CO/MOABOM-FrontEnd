@@ -1,12 +1,12 @@
-import { Box, Flex, Skeleton, SkeletonText } from "@chakra-ui/react";
+import { Box, Flex, Skeleton } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { useQuery } from "@tanstack/react-query";
 import { getMainContents } from "../services/api/mainPageService";
 import { useOttFilter } from "../hooks/useOttFilter";
-import BannerImage from "../components/BannerImage";
-import OttButtonList from "../components/OttButtonList";
-import PosterSwiperSection from "../components/PosterSwiperSection";
+import BannerImage from "../components/common/BannerImage";
+import OttButtonList from "../components/common/OttButtonList";
+import PosterSwiperSection from "../components/common/PosterSwiperSection";
 import { useNavigate } from "react-router-dom";
 
 import "swiper/css";

@@ -1,16 +1,9 @@
-import {
-  Box,
-  Flex,
-  Skeleton,
-  SkeletonText,
-  SkeletonCircle,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Flex, SkeletonText } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import PosterSwiperSection from "../components/PosterSwiperSection";
-import Text from "../components/Text";
-import PlanTable from "../components/PlanTable";
+import PosterSwiperSection from "../components/common/PosterSwiperSection";
+import Text from "../components/common/Text";
+import PlanTable from "../components/recommend/PlanTable";
 
 const RecommendPage = () => {
   const location = useLocation();
