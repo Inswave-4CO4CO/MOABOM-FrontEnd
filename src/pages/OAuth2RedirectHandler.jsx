@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useAuthStore from "../store/useAuthStore";
+import { Spinner } from "@chakra-ui/react";
 
 const OAuth2RedirectHandler = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const OAuth2RedirectHandler = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
-  return <div>구글 로그인 처리 중...</div>;
+  return <Spinner size="sm" color="#FFA07A" />;
 };
 
 export default OAuth2RedirectHandler;
