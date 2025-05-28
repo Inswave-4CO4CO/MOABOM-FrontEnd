@@ -3,7 +3,7 @@ import WatchButton from "./WatchButton";
 import BodyButton from "./BodyButton";
 import { useNavigate } from "react-router-dom";
 import { Container, Icon, ProfileWrap } from "../../styles/components/Profile";
-import PasswordModal from "./PasswordModal";
+import PasswordModal from "../auth/PasswordModal";
 import { Skeleton } from "@chakra-ui/react";
 
 const ProfileCard = ({

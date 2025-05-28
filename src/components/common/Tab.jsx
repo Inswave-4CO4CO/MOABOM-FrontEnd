@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Tabs } from "@chakra-ui/react";
 
 const TabComponent = ({ list, onTabChange, value }) => {
