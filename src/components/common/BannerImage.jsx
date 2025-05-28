@@ -3,7 +3,7 @@ import {
   BannerImageContainer,
   Image,
   TextContainer,
-} from "../styles/components/BannerImage";
+} from "../../styles/components/BannerImage";
 import Rate from "./Rate";
 import styled from "styled-components";
 

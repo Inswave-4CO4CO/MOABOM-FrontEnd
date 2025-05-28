@@ -3,9 +3,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { changePassword } from "../../services/api/userService";
 import { toast } from "react-toastify";
-import BodyButton from "./BodyButton";
+import BodyButton from "../common/BodyButton";
 import LabelInput from "./LabelInput";
-import Modal from "./Modal";
+import Modal from "../common/Modal";
 
 const PasswordModal = () => {
   const [password, setPassword] = useState("");

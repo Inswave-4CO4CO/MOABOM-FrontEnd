@@ -1,15 +1,15 @@
 import { Flex } from "@chakra-ui/react";
 import OttButton from "./OttButton";
 
-import netflix from "../assets/images/Netflix.png";
-import wavve from "../assets/images/Wavve.png";
-import coupangplay from "../assets/images/CoupangPlay.png";
-import watcha from "../assets/images/Watcha.png";
-import tving from "../assets/images/Tving.png";
-import laftel from "../assets/images/Laftel.png";
-import disney from "../assets/images/Disney.png";
-import appletv from "../assets/images/AppleTv.png";
-import uplus from "../assets/images/Uplus.png";
+import netflix from "../../assets/images/Netflix.png";
+import wavve from "../../assets/images/Wavve.png";
+import coupangplay from "../../assets/images/CoupangPlay.png";
+import watcha from "../../assets/images/Watcha.png";
+import tving from "../../assets/images/Tving.png";
+import laftel from "../../assets/images/Laftel.png";
+import disney from "../../assets/images/Disney.png";
+import appletv from "../../assets/images/AppleTv.png";
+import uplus from "../../assets/images/Uplus.png";
 
 export const ottList = [
   { src: netflix, alt: "넷플릭스" },

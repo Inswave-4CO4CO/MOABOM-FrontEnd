@@ -3,7 +3,7 @@ import {
   StyledCard,
   PosterWrapper,
   Title,
-} from "../styles/components/PosterCard";
+} from "../../styles/components/PosterCard";
 import Poster from "../detail/Poster";
 
 const PosterCard = React.forwardRef(

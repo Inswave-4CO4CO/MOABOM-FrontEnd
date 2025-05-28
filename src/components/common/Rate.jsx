@@ -1,4 +1,3 @@
-import React from "react";
 import imdbLogo from "../assets/images/imdb.png";
 import {
   RateContainer,

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button as ChakraButton } from "@chakra-ui/react";
 
 const OttButton = ({
