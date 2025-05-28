@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import Profile from "../components/common/Profile";
+import Profile from "../components/common/ProfileCard";
 import ContentBox from "../components/common/ContentBox";
 import { ottList } from "../components/common/OttButtonList";
 import { DOMAIN } from "../services/domain";
