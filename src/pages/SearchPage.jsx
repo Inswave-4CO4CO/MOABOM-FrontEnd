@@ -5,15 +5,15 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import FilterBox from "../components/FilterBox";
-import Dropdown from "../components/Dropdown";
-import CheckBox from "../components/CheckBox";
-import PosterCard from "../components/PosterCard";
+import FilterBox from "../components/search/FilterBox";
+import Dropdown from "../components/common/Dropdown";
+import CheckBox from "../components/common/CheckBox";
+import PosterCard from "../components/common/PosterCard";
 import { createListCollection, Text } from "@chakra-ui/react";
-import OttButtonList, { ottList } from "../components/OttButtonList";
-import { fetchSearchResults } from "../services/searchPageService";
-import TabComponent from "../components/Tab";
-import ProfileIcon from "../components/ProfileIcon";
+import OttButtonList, { ottList } from "../components/common/OttButtonList";
+import { fetchSearchResults } from "../services/api/searchPageService";
+import TabComponent from "../components/common/Tab";
+import Profile from "../components/common/Profile";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import {
   SearchContainer,
@@ -536,7 +536,7 @@ const SearchPage = () => {
                         index === array.length - 1 ? lastResultElementRef : null
                       }
                     >
-                      <ProfileIcon
+                      <Profile
                         imagePath={personItem.image}
                         name={personItem.personName}
                         personId={personItem.personId}
@@ -557,7 +557,7 @@ const SearchPage = () => {
                         index === array.length - 1 ? lastResultElementRef : null
                       }
                     >
-                      <ProfileIcon
+                      <Profile
                         imagePath={personItem.image}
                         name={personItem.personName}
                         personId={personItem.personId}
