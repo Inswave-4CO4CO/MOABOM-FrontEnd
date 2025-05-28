@@ -1,5 +1,4 @@
 import {
-  AbsoluteCenter,
   Center,
   HStack,
   Image,
@@ -10,12 +9,12 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import GoogleLogo from "../assets/images/Google.png";
-import BodyButton from "../components/BodyButton";
+import BodyButton from "../components/common/BodyButton";
 import { LoginContainer, SocialButton } from "../styles/pages/LoginPage";
-import Logo from "../components/Logo";
+import Logo from "../components/common/Logo";
 import { useLogin } from "../hooks/useLogin";
-import LinkText from "../components/LinkText";
-import LabelInput from "../components/LabelInput";
+import LinkText from "../components/common/LinkText";
+import LabelInput from "../components/auth/LabelInput";
 
 const LoginPage = () => {
   const [userId, setUserId] = useState("");

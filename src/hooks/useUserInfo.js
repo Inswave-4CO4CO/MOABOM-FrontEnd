@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { changeMyInfo, getMyInfo } from "../services/api/user";
+import { changeMyInfo, getMyInfo } from "../services/api/userService";
 import { toast } from "react-toastify";
 
 export const useUserInfo = () => {
