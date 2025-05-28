@@ -1,12 +1,12 @@
 import { Center, Group, Input, Stack, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import BodyButton from "../components/BodyButton";
+import BodyButton from "../components/common/BodyButton";
 import { LoginContainer } from "../styles/pages/LoginPage";
 import { toast } from "react-toastify";
-import Logo from "../components/Logo";
+import Logo from "../components/common/Logo";
 import { useSignup } from "../hooks/useSignup";
-import LabelInput from "../components/LabelInput";
-import InputBtnGroup from "../components/InputBtnGroup";
+import LabelInput from "../components/auth/LabelInput";
+import InputBtnGroup from "../components/common/InputBtnGroup";
 
 const SignupPage = () => {
   const [userId, setUserId] = useState("");

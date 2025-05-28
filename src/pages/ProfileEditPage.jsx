@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import LabelInput from "../components/LabelInput";
-import BodyButton from "../components/BodyButton";
+import LabelInput from "../components/auth/LabelInput";
+import BodyButton from "../components/common/BodyButton";
 import { SearchContainer } from "../styles/pages/SearchPage";
-import Profile from "../components/Profile";
-import HeaderButton from "../components/HeaderButton";
+import ProfileCard from "../components/common/ProfileCard";
+import HeaderButton from "../components/common/HeaderButton";
 import {
   Box,
   FileUpload,
   Float,
   Image,
   Skeleton,
-  SkeletonText,
   Stack,
 } from "@chakra-ui/react";
 import { LuX } from "react-icons/lu";
@@ -61,7 +60,7 @@ const ProfileEditPage = () => {
     <SearchContainer>
       <PageContainer style={{ gap: "45px" }}>
         <LeftGroupContainer>
-          <Profile
+          <ProfileCard
             isEdit={true}
             name={myInfo?.nickName}
             image={myInfo ? myInfo?.userImage : ""}
