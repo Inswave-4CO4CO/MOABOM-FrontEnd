@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import Chart from "../components/Chart";
-import Profile from "../components/Profile";
-import ContentBox from "../components/ContentBox";
-import { ottList } from "../components/OttButtonList";
+import Chart from "../components/mypage/Chart";
+import Profile from "../components/common/ProfileCard";
+import ContentBox from "../components/common/ContentBox";
+import { ottList } from "../components/common/OttButtonList";
 import { Stack } from "@chakra-ui/react";
 
 import { useUserInfo } from "../hooks/useUserInfo";

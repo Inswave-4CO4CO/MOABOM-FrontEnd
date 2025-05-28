@@ -2,9 +2,9 @@ import { useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 // 컴포넌트들
-import CastSlider from "../components/CastSlider";
-import BannerImage from "../components/BannerImage";
-import PosterCard from "../components/PosterCard";
+import CastSlider from "../components/detail/CastSlider";
+import BannerImage from "../components/common/BannerImage";
+import PosterCard from "../components/common/PosterCard";
 import OttButton from "../components/common/OttButton";
 import WatchButton from "../components/detail/WatchButton";
 import Review from "../components/review/Review";
@@ -13,7 +13,7 @@ import WatchBox from "../components/detail/WatchBox";
 import ReviewModal from "../components/review/ReviewModal";
 
 // 컨텐츠 및 스타일 관련
-import ott from "../contents/ottType";
+import ott from "../types/ottType";
 import {
   Container,
   ContentGroup,
