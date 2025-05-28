@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Create .env file
+        run: echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
+
       - name: Install dependencies and build
         run: |
           npm install
