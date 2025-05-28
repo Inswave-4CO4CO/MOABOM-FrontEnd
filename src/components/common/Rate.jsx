@@ -5,7 +5,7 @@ import {
   IconContainer,
   RateImage,
   StyledFaStar,
-} from "../styles/components/Rate";
+} from "../../styles/components/Rate";
 
 const Rate = ({ rating, isIMDB = false, ...props }) => {
   return (

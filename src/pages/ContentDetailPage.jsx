@@ -5,12 +5,12 @@ import { useParams } from "react-router-dom";
 import CastSlider from "../components/CastSlider";
 import BannerImage from "../components/BannerImage";
 import PosterCard from "../components/PosterCard";
-import OttButton from "../components/OttButton";
-import WatchButton from "../components/WatchButton";
-import Review from "../components/Review";
-import Text from "../components/Text";
-import WatchBox from "../components/WatchBox";
-import ReviewModal from "../components/ReviewModal";
+import OttButton from "../components/common/OttButton";
+import WatchButton from "../components/detail/WatchButton";
+import Review from "../components/review/Review";
+import Text from "../components/common/Text";
+import WatchBox from "../components/detail/WatchBox";
+import ReviewModal from "../components/review/ReviewModal";
 
 // 컨텐츠 및 스타일 관련
 import ott from "../contents/ottType";

@@ -4,7 +4,7 @@ import {
   hiddenCheckboxStyle,
   getBoxStyle,
   labelTextStyle,
-} from "../styles/components/CheckBox";
+} from "../../styles/components/CheckBox";
 
 const CheckBox = ({ children, checked, onChange, onClick, ...props }) => {
   // 외부에서 checked prop이 제공되지 않을 경우에만 내부 상태 사용

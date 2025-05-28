@@ -1,12 +1,12 @@
-import ProfileIcon from "./ProfileIcon";
+import ProfileIcon from "./Profile";
 import WatchButton from "./WatchButton";
 import BodyButton from "./BodyButton";
 import { useNavigate } from "react-router-dom";
-import { Container, Icon, ProfileWrap } from "../styles/components/Profile";
+import { Container, Icon, ProfileWrap } from "../../styles/components/Profile";
 import PasswordModal from "./PasswordModal";
 import { Skeleton } from "@chakra-ui/react";
 
-const Profile = ({
+const ProfileCard = ({
   image = null,
   name = "로딩 중",
   isMyPage = false,
@@ -54,4 +54,4 @@ const Profile = ({
   );
 };
 
-export default Profile;
+export default ProfileCard;

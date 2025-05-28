@@ -1,4 +1,4 @@
-import { ButtonPtag, Container } from "../styles/components/WatchButton";
+import { ButtonPtag, Container } from "../../styles/components/WatchButton";
 import { RiPencilFill } from "react-icons/ri";
 
 const WatchButton = ({

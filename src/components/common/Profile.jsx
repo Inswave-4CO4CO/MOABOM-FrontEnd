@@ -2,18 +2,11 @@ import {
   ProfileContainer,
   ProfileImage,
   ProfileName,
-} from "../styles/components/ProfileIcon";
+} from "../../styles/components/ProfileIcon";
 import defaultImage from "../assets/images/defaultImage.png";
 import { useNavigate } from "react-router-dom";
 //프로필
-const ProfileIcon = ({
-  imagePath,
-  name,
-  role,
-  cast,
-  personId,
-  isProfile = false,
-}) => {
+const Profile = ({ imagePath, name, role, personId, isProfile = false }) => {
   const navigate = useNavigate();
 
   const handlePersonClick = () => {
@@ -27,7 +20,6 @@ const ProfileIcon = ({
       ) : (
         <ProfileImage src={defaultImage} alt={name} />
       )}
-      {cast}
       <div className="profileGroup">
         <ProfileName>{name}</ProfileName>
         <span>{role}</span>
@@ -36,4 +28,4 @@ const ProfileIcon = ({
   );
 };
 
-export default ProfileIcon;
+export default Profile;

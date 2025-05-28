@@ -9,9 +9,9 @@ import {
   HeaderContainer,
   InputBtnGroupContainer,
   FloatContainer,
-} from "../styles/components/Header";
-import useAuthStore from "../store/useAuthStore";
-import { useLogin } from "../hooks/useLogin";
+} from "../../styles/components/Header";
+import useAuthStore from "../../store/useAuthStore";
+import { useLogin } from "../../hooks/useLogin";
 import { useState } from "react";
 
 const Header = () => {

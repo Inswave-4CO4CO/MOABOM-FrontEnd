@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import {
   ReviewRating,
   ReviewTextarea,
-} from "../styles/pages/ContentDetailPage";
-import Modal from "./Modal";
+} from "../../styles/pages/ContentDetailPage";
+import Modal from "../common/Modal";
 import ReactStars from "react-stars";
 import { toast } from "react-toastify";
-import { useReview } from "../hooks/useReview";
+import { useReview } from "../../hooks/useReview";
 import { Dialog } from "@chakra-ui/react";
 
 const ReviewModal = ({ contentId, children }) => {

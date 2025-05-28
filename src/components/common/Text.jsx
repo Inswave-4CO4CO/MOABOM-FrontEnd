@@ -1,4 +1,8 @@
-import { CountSpan, TextContainer, TextSpan } from "../styles/components/Text";
+import {
+  CountSpan,
+  TextContainer,
+  TextSpan,
+} from "../../styles/components/Text";
 
 //텍스트
 const Text = ({ text, count }) => {

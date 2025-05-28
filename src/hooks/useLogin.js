@@ -1,6 +1,6 @@
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { login, logout } from "../services/api/auth";
+import { login, logout } from "../services/api/authService";
 import { toast } from "react-toastify";
 import useAuthStore from "../store/useAuthStore";
 

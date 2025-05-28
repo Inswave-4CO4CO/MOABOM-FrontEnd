@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import WatchButton from "./WatchButton";
-import { Container } from "../styles/components/WatchBox";
+import { Container } from "../../styles/components/WatchBox";
 import { FaPlus, FaCheck, FaEye } from "react-icons/fa";
-import { useWatch } from "../hooks/useWatch";
+import { useWatch } from "../../hooks/useWatch";
 import { toast } from "react-toastify";
-import useAuthStore from "../store/useAuthStore";
+import useAuthStore from "../../store/useAuthStore";
 
 const WatchBox = ({ type, contentId, genre }) => {
   const [activeType, setActiveType] = useState(null);

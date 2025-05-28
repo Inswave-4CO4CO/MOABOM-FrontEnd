@@ -12,9 +12,9 @@ import {
   ReviewText,
   RightGroup,
   Icon,
-} from "../styles/components/Review";
+} from "../../styles/components/Review";
 import ReviewModal from "./ReviewModal";
-import { useReview } from "../hooks/useReview";
+import { useReview } from "../../hooks/useReview";
 import defaultImage from "../assets/images/defaultImage.png";
 
 //리뷰

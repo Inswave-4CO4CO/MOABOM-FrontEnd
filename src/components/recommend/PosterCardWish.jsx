@@ -1,6 +1,6 @@
 import { Center, Heading, HStack, Stack } from "@chakra-ui/react";
-import Poster from "./Poster";
-import { GrayText } from "../styles/components/PosterCardWish";
+import Poster from "../detail/Poster";
+import { GrayText } from "../../styles/components/PosterCardWish";
 
 const PosterCardWish = ({
   src,

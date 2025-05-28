@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import PosterCard from "./PosterCard";
 import { useNavigate } from "react-router-dom";
-import { DynamicMessage } from "../styles/components/ContentBox";
+import { DynamicMessage } from "../../styles/components/ContentBox";
 import HeaderButton from "./HeaderButton";
 import styled from "styled-components";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";

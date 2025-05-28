@@ -1,7 +1,7 @@
 import { Dialog, VStack } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { changePassword } from "../services/api/user";
+import { changePassword } from "../../services/api/userService";
 import { toast } from "react-toastify";
 import BodyButton from "./BodyButton";
 import LabelInput from "./LabelInput";

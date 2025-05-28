@@ -1,4 +1,4 @@
-import { FooterContainer } from "../styles/components/Footer";
+import { FooterContainer } from "../../styles/components/Footer";
 
 //푸터
 const Footer = () => {
