@@ -5,11 +5,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import ProfileIcon from "../components/ProfileIcon";
-import { SliderWrapper, SwiperButton } from "../styles/components/CastSlider";
+import ProfileIcon from "../common/Profile";
+import {
+  SliderWrapper,
+  SwiperButton,
+} from "../../styles/components/CastSlider";
 import { useNavigate } from "react-router-dom";
 
-import personInfoType from "../contents/personInfoType";
+import personInfoType from "../../contents/personInfoType";
 
 const CastSlider = ({ castList }) => {
   const navigate = useNavigate();
