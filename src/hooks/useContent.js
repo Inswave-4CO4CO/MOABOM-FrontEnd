@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getContentById } from "../services/api/contentDetailService";
-import watchType from "../contents/watchType";
+import watchType from "../types/watchType";
 
 export const useContent = (contentId) => {
   const { data, isLoading, error } = useQuery({

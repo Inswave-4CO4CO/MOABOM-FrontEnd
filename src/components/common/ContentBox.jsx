@@ -2,7 +2,7 @@
 import OttButtonList, { ottList } from "./OttButtonList";
 import TabComponent from "./Tab";
 import PosterCard from "./PosterCard";
-import Review from "./Review";
+import Review from "../review/Review";
 import {
   ContentBoxContainer,
   ContentBoxHeader,

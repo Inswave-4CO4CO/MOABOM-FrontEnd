@@ -1,5 +1,5 @@
 import ProfileIcon from "./Profile";
-import WatchButton from "./WatchButton";
+import WatchButton from "../detail/WatchButton";
 import BodyButton from "./BodyButton";
 import { useNavigate } from "react-router-dom";
 import { Container, Icon, ProfileWrap } from "../../styles/components/Profile";

@@ -1,4 +1,4 @@
-import imdbLogo from "../assets/images/imdb.png";
+import imdbLogo from "../../assets/images/imdb.png";
 import {
   RateContainer,
   IconContainer,

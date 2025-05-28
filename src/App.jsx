@@ -5,8 +5,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "./components/common/Header";
+import Footer from "./components/common/Footer";
 import ContentDetailPage from "./pages/ContentDetailPage";
 import GlobalStyle from "./styles/GlobalStyle";
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";

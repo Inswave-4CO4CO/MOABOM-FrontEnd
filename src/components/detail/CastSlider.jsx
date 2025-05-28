@@ -12,7 +12,7 @@ import {
 } from "../../styles/components/CastSlider";
 import { useNavigate } from "react-router-dom";
 
-import personInfoType from "../../contents/personInfoType";
+import personInfoType from "../../types/personInfoType";
 
 const CastSlider = ({ castList }) => {
   const navigate = useNavigate();
