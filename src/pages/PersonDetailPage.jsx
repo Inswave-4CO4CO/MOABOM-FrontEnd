@@ -1,15 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import Profile from "../components/Profile";
-import ContentBox from "../components/ContentBox";
-import { ottList } from "../components/OttButtonList";
+import Profile from "../components/common/Profile";
+import ContentBox from "../components/common/ContentBox";
+import { ottList } from "../components/common/OttButtonList";
 import { DOMAIN } from "../services/domain";
 import { SearchContainer } from "../styles/pages/SearchPage";
 import {
   LeftGroupContainer,
   PageContainer,
-  RigthGroupContainer,
+  RightGroupContainer,
 } from "../styles/pages/ProfileEditPage";
 import { baseInstance } from "../services/axiosInstance";
 
@@ -152,7 +152,7 @@ const PersonDetailPage = () => {
             loading={isLoading && !profileInfo.personName}
           />
         </LeftGroupContainer>
-        <RigthGroupContainer>
+        <RightGroupContainer>
           <ContentBox
             selectedOtts={selectedOtts}
             setSelectedOtts={setSelectedOtts}
@@ -168,7 +168,7 @@ const PersonDetailPage = () => {
             isLoading={isLoading}
           />
           {hasNextPage && <div ref={observerRef} />}
-        </RigthGroupContainer>
+        </RightGroupContainer>
       </PageContainer>
     </SearchContainer>
   );
