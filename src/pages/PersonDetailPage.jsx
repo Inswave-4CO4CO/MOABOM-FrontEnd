@@ -9,7 +9,7 @@ import { SearchContainer } from "../styles/pages/SearchPage";
 import {
   LeftGroupContainer,
   PageContainer,
-  RightGroupContainer,
+  RigthGroupContainer,
 } from "../styles/pages/ProfileEditPage";
 import { baseInstance } from "../services/axiosInstance";
 
@@ -152,7 +152,7 @@ const PersonDetailPage = () => {
             loading={isLoading && !profileInfo.personName}
           />
         </LeftGroupContainer>
-        <RightGroupContainer>
+        <RigthGroupContainer>
           <ContentBox
             selectedOtts={selectedOtts}
             setSelectedOtts={setSelectedOtts}
@@ -168,7 +168,7 @@ const PersonDetailPage = () => {
             isLoading={isLoading}
           />
           {hasNextPage && <div ref={observerRef} />}
-        </RightGroupContainer>
+        </RigthGroupContainer>
       </PageContainer>
     </SearchContainer>
   );
