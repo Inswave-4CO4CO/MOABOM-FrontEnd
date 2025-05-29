@@ -82,9 +82,10 @@ export const ReviewGroup = styled.div`
 
 export const Reviews = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 300px));
+  gap: 50px;
   width: 100%;
+  margin: 0 auto;
 `;
 
 export const ReviewTextarea = styled.textarea`

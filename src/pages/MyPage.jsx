@@ -141,7 +141,7 @@ const MyPage = () => {
               isReview={isReviewView}
               userReview={allReviews}
               onUpdate={handleReviewUpdated}
-              image={myInfo?.userImage}
+              image={myInfo ? myInfo?.userImage : ""}
               isLoading={isContentLoading || isReviewLoading}
             />
           </Stack>

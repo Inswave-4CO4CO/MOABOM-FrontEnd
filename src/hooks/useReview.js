@@ -12,12 +12,14 @@ import {
   getReviewByPage,
 } from "../services/api/reviewService";
 import { toast } from "react-toastify";
+import useAuthStore from "../store/useAuthStore";
 
 export const useReview = (contentId) => {
   const queryClient = useQueryClient();
+  const { userId } = useAuthStore();
 
   const { data: userReview } = useQuery({
-    queryKey: ["myReview", contentId],
+    queryKey: ["myReview", contentId, userId],
     queryFn: () => findByContentIdAndUserId(contentId).then((res) => res.data),
     enabled: !!contentId,
   });

@@ -30,14 +30,14 @@ const Review = ({
   isUser,
 }) => {
   const { deleteReviewMutate } = useReview();
-  const { VITE_API_URL } = import.meta.env;
+  console.log(imagePath);
 
   return (
     <ReviewContainer>
       <ReviewHeader>
         <LeftGroup>
           {imagePath !== null ? (
-            <Image src={VITE_API_URL + imagePath} alt={nickname} />
+            <Image src={imagePath} alt={nickname} />
           ) : (
             <Image src={defaultImage} alt={nickname} />
           )}

@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 // 컴포넌트들
@@ -191,7 +191,10 @@ const ContentDetailPage = () => {
         </ContentCastAndCrew>
 
         <ReviewGroup>
-          <Text text={"한줄평"} count={reviewList.length} />
+          <Text
+            text={"한줄평"}
+            count={reviewData?.pages[0].data.totalCount ?? ""}
+          />
           <Reviews>
             {reviewList.map((value) => (
               <Review
