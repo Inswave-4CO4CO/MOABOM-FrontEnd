@@ -20,8 +20,19 @@ export const useReview = (contentId) => {
 
   const { data: userReview } = useQuery({
     queryKey: ["myReview", contentId, userId],
-    queryFn: () => findByContentIdAndUserId(contentId).then((res) => res.data),
+    queryFn: () =>
+      findByContentIdAndUserId(contentId)
+        .then((res) => res.data)
+        .catch((err) => {
+          if (err.response?.status === 404) {
+            return null;
+          }
+          throw err;
+        }),
     enabled: !!contentId,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    retry: false,
   });
 
   const { mutate: createReviewMutate } = useMutation({
@@ -30,7 +41,9 @@ export const useReview = (contentId) => {
     onSuccess: () => {
       toast.success("리뷰가 등록되었습니다!");
 
-      queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
+      queryClient.invalidateQueries({
+        queryKey: ["myReview", contentId, userId],
+      });
       queryClient.invalidateQueries(["reviewList"]);
       queryClient.invalidateQueries(["myReviewList"]);
     },
@@ -46,7 +59,9 @@ export const useReview = (contentId) => {
       modifyReview(reviewId, reviewText, rating),
     onSuccess: () => {
       toast.success("리뷰가 수정되었습니다!");
-      queryClient.invalidateQueries({ queryKey: ["myReview", contentId] });
+      queryClient.invalidateQueries({
+        queryKey: ["myReview", contentId, userId],
+      });
       queryClient.invalidateQueries(["reviewList"]);
       queryClient.invalidateQueries(["myReviewList"]);
     },
@@ -61,7 +76,11 @@ export const useReview = (contentId) => {
     mutationFn: (reviewId) => deleteReview(reviewId),
     onSuccess: () => {
       toast.success("리뷰가 삭제되었습니다!");
-      queryClient.removeQueries({ queryKey: ["myReview", contentId] });
+      queryClient.removeQueries({ queryKey: ["myReview", contentId, userId] });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["myReview", contentId, userId],
+      // });
+
       queryClient.invalidateQueries(["reviewList"]);
       queryClient.invalidateQueries(["myReviewList"]);
     },
