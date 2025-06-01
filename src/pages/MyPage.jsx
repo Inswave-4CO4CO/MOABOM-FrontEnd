@@ -143,6 +143,7 @@ const MyPage = () => {
               onUpdate={handleReviewUpdated}
               image={myInfo ? myInfo?.userImage : ""}
               isLoading={isContentLoading || isReviewLoading}
+              name={myInfo?.nickName}
             />
           </Stack>
         </RigthGroupContainer>
